@@ -93,10 +93,10 @@
   }
 
   @layer base {
-    * {
-      @apply border-border;
-    }
     body {
       @apply bg-background text-foreground;
+    }
+    button, input, textarea, select {
+      border-radius: 30px !important;
     }
   }

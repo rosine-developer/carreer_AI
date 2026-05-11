@@ -50,8 +50,7 @@ export default function ChatMessage({
           >
             {/* AI label */}
             <div className="flex items-center gap-1.5 mb-2">
-              <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#FF8A00" }} />
-              <span className="text-xs font-medium" style={{ color: "#FF8A00", fontFamily: "Manrope, sans-serif" }}>
+              <span className="text-xs font-medium" style={{ color: "#0095FF", fontFamily: "Manrope, sans-serif" }}>
                 CareerMind
               </span>
             </div>
@@ -107,3 +106,7 @@ export default function ChatMessage({
     </motion.div>
   );
 }
+
+
+
+

@@ -63,3 +63,5 @@ export async function generateAIResponse(
   // Fallback to rule-based system
   return null;
 }
+
+

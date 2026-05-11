@@ -54,3 +54,5 @@ export default function BrainPulse({ intensity }: BrainPulseProps) {
     </div>
   );
 }
+
+

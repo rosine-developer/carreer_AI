@@ -221,3 +221,5 @@ export function extractJobQuery(
 
   return { query: query || 'entry level', isInternship };
 }
+
+

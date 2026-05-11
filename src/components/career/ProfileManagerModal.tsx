@@ -174,7 +174,7 @@ export default function ProfileManagerModal({ isOpen, onClose }: ProfileManagerP
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-[#FF8A00]">
+          <DialogTitle className="text-2xl font-bold text-[#0095FF]">
             Manage Your Profile
           </DialogTitle>
           <DialogDescription>
@@ -185,7 +185,7 @@ export default function ProfileManagerModal({ isOpen, onClose }: ProfileManagerP
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           {/* Personal Information */}
           <section className="space-y-4">
-            <h3 className="text-lg font-semibold text-white">Personal Information</h3>
+            <h3 className="text-lg font-semibold text-gray-900">Personal Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="fullName">Full Name *</Label>
@@ -269,7 +269,7 @@ export default function ProfileManagerModal({ isOpen, onClose }: ProfileManagerP
           {/* Education */}
           <section className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-white">Education</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Education</h3>
               <Button
                 type="button"
                 variant="outline"
@@ -293,9 +293,9 @@ export default function ProfileManagerModal({ isOpen, onClose }: ProfileManagerP
             </div>
 
             {educationFields.map((field, index) => (
-              <div key={field.id} className="p-4 border border-gray-700 rounded-lg space-y-3">
+              <div key={field.id} className="p-4 border border-gray-200 rounded-lg space-y-3">
                 <div className="flex justify-between items-start">
-                  <h4 className="font-medium text-white">Education {index + 1}</h4>
+                  <h4 className="font-medium text-gray-900">Education {index + 1}</h4>
                   <Button
                     type="button"
                     variant="ghost"
@@ -370,7 +370,7 @@ export default function ProfileManagerModal({ isOpen, onClose }: ProfileManagerP
           {/* Experience */}
           <section className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-white">Experience</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Experience</h3>
               <Button
                 type="button"
                 variant="outline"
@@ -393,9 +393,9 @@ export default function ProfileManagerModal({ isOpen, onClose }: ProfileManagerP
             </div>
 
             {experienceFields.map((field, index) => (
-              <div key={field.id} className="p-4 border border-gray-700 rounded-lg space-y-3">
+              <div key={field.id} className="p-4 border border-gray-200 rounded-lg space-y-3">
                 <div className="flex justify-between items-start">
-                  <h4 className="font-medium text-white">Experience {index + 1}</h4>
+                  <h4 className="font-medium text-gray-900">Experience {index + 1}</h4>
                   <Button
                     type="button"
                     variant="ghost"
@@ -460,7 +460,7 @@ export default function ProfileManagerModal({ isOpen, onClose }: ProfileManagerP
 
           {/* Skills */}
           <section className="space-y-4">
-            <h3 className="text-lg font-semibold text-white">Skills</h3>
+            <h3 className="text-lg font-semibold text-gray-900">Skills</h3>
             <div className="flex gap-2">
               <Input
                 value={newSkill}
@@ -490,7 +490,7 @@ export default function ProfileManagerModal({ isOpen, onClose }: ProfileManagerP
 
           {/* Achievements */}
           <section className="space-y-4">
-            <h3 className="text-lg font-semibold text-white">Achievements</h3>
+            <h3 className="text-lg font-semibold text-gray-900">Achievements</h3>
             <div className="flex gap-2">
               <Input
                 value={newAchievement}
@@ -524,7 +524,7 @@ export default function ProfileManagerModal({ isOpen, onClose }: ProfileManagerP
           </section>
 
           {/* Actions */}
-          <div className="flex justify-between items-center pt-4 border-t border-gray-700">
+          <div className="flex justify-between items-center pt-4 border-t border-gray-200">
             <div>
               {saveStatus === 'saved' && (
                 <p className="text-green-500 text-sm">Profile saved successfully!</p>
@@ -539,7 +539,7 @@ export default function ProfileManagerModal({ isOpen, onClose }: ProfileManagerP
               </Button>
               <Button
                 type="submit"
-                className="bg-[#FF8A00] hover:bg-[#FF8A00]/90"
+                className="bg-[#0095FF] hover:bg-[#0095FF]/90"
                 disabled={saveStatus === 'saving'}
               >
                 {saveStatus === 'saving' ? (
@@ -561,3 +561,7 @@ export default function ProfileManagerModal({ isOpen, onClose }: ProfileManagerP
     </Dialog>
   );
 }
+
+
+
+

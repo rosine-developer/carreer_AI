@@ -361,3 +361,5 @@ export interface PDFGeneratorService {
   generateCombinedPDF(documents: Document[]): Promise<Blob>;
   validateATSCompatibility(document: any): ATSValidationResult;
 }
+
+

@@ -101,10 +101,6 @@ export default function ApplicationBuilderModal({
               style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
             >
               <div className="flex items-center gap-3">
-                <div
-                  className="w-2 h-2 rounded-full"
-                  style={{ background: "#00D4C8", boxShadow: "0 0 8px #00D4C8" }}
-                />
                 <div>
                   <h2
                     className="text-base font-bold"
@@ -380,3 +376,5 @@ export default function ApplicationBuilderModal({
     </AnimatePresence>
   );
 }
+
+

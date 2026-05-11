@@ -82,7 +82,7 @@ export default function AuthPage() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(circle at 30% 40%, rgba(255,138,0,0.1) 0%, transparent 40%), radial-gradient(circle at 70% 60%, rgba(0,149,255,0.08) 0%, transparent 50%)',
+            'radial-gradient(circle at 30% 40%, rgba(0,149,255,1) 0%, transparent 40%), radial-gradient(circle at 70% 60%, rgba(0,149,255,0.08) 0%, transparent 50%)',
         }}
       />
 
@@ -98,12 +98,12 @@ export default function AuthPage() {
             <div
               className="w-10 h-10 rounded-xl flex items-center justify-center"
               style={{
-                background: 'linear-gradient(135deg, rgba(255,138,0,0.2), rgba(255,87,34,0.15))',
-                border: '1px solid rgba(255,138,0,0.35)',
-                boxShadow: '0 0 20px rgba(255,138,0,0.2)',
+                background: 'linear-gradient(135deg, rgba(0,149,255,1), rgba(0,149,255,1))',
+                border: '1px solid rgba(0,149,255,1)',
+                boxShadow: '0 0 20px rgba(0,149,255,1)',
               }}
             >
-              <span className="text-sm font-black" style={{ color: '#FF8A00', fontFamily: 'Syne, sans-serif' }}>
+              <span className="text-sm font-black" style={{ color: '#0095FF', fontFamily: 'Syne, sans-serif' }}>
                 CM
               </span>
             </div>
@@ -111,7 +111,7 @@ export default function AuthPage() {
               <span className="text-xl font-extrabold" style={{ color: 'rgba(255,255,255,0.95)', fontFamily: 'Syne, sans-serif' }}>
                 CareerMind
               </span>
-              <span className="text-xl font-extrabold ml-1" style={{ color: '#FF8A00', fontFamily: 'Syne, sans-serif' }}>
+              <span className="text-xl font-extrabold ml-1" style={{ color: '#0095FF', fontFamily: 'Syne, sans-serif' }}>
                 AI
               </span>
             </div>
@@ -141,9 +141,9 @@ export default function AuthPage() {
                 onClick={() => { setMode(m); setError(''); setSuccess(''); }}
                 className="flex-1 py-2 rounded-lg text-sm font-medium transition-all"
                 style={{
-                  background: mode === m ? 'rgba(255,138,0,0.15)' : 'transparent',
-                  border: mode === m ? '1px solid rgba(255,138,0,0.3)' : '1px solid transparent',
-                  color: mode === m ? '#FF8A00' : 'rgba(255,255,255,0.45)',
+                  background: mode === m ? 'rgba(0,149,255,1)' : 'transparent',
+                  border: mode === m ? '1px solid rgba(0,149,255,1)' : '1px solid transparent',
+                  color: mode === m ? '#0095FF' : 'rgba(255,255,255,0.45)',
                 }}
               >
                 {m === 'login' ? 'Log In' : 'Register'}
@@ -208,7 +208,7 @@ export default function AuthPage() {
                         border: '1px solid rgba(255,255,255,0.1)',
                         color: 'rgba(255,255,255,0.9)',
                       }}
-                      onFocus={e => (e.target.style.borderColor = 'rgba(255,138,0,0.4)')}
+                      onFocus={e => (e.target.style.borderColor = 'rgba(0,149,255,1)')}
                       onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
                     />
                   </div>
@@ -230,7 +230,7 @@ export default function AuthPage() {
                   border: '1px solid rgba(255,255,255,0.1)',
                   color: 'rgba(255,255,255,0.9)',
                 }}
-                onFocus={e => (e.target.style.borderColor = 'rgba(255,138,0,0.4)')}
+                onFocus={e => (e.target.style.borderColor = 'rgba(0,149,255,1)')}
                 onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
               />
             </div>
@@ -249,7 +249,7 @@ export default function AuthPage() {
                   border: '1px solid rgba(255,255,255,0.1)',
                   color: 'rgba(255,255,255,0.9)',
                 }}
-                onFocus={e => (e.target.style.borderColor = 'rgba(255,138,0,0.4)')}
+                onFocus={e => (e.target.style.borderColor = 'rgba(0,149,255,1)')}
                 onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
               />
               <button
@@ -295,9 +295,9 @@ export default function AuthPage() {
               disabled={loading}
               className="w-full py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all"
               style={{
-                background: 'linear-gradient(135deg, #FF8A00, #FF5722)',
+                background: 'linear-gradient(135deg, #0095FF, #FF5722)',
                 color: '#FFFFFF',
-                boxShadow: '0 4px 16px rgba(255,138,0,0.3)',
+                boxShadow: '0 4px 16px rgba(0,149,255,1)',
               }}
             >
               {loading ? (
@@ -328,3 +328,5 @@ export default function AuthPage() {
     </div>
   );
 }
+
+

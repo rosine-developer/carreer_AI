@@ -64,7 +64,7 @@ export default function JobCard({
             </div>
           </div>
           <div className="flex flex-col items-end shrink-0">
-            <div className="text-xl font-bold" style={{ color: "#FF8A00", fontFamily: "Syne, sans-serif", lineHeight: 1 }}>
+            <div className="text-xl font-bold" style={{ color: "#0095FF", fontFamily: "Syne, sans-serif", lineHeight: 1 }}>
               {job.matchScore}%
             </div>
             <span className="text-xs mt-0.5" style={{ color: "#BBB" }}>match</span>
@@ -117,9 +117,9 @@ export default function JobCard({
               }
             }}
             className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-medium"
-            style={{ background: "#FF8A00", color: "#FFFFFF" }}
-            onMouseEnter={e => { e.currentTarget.style.background = "#E67A00"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = "#FF8A00"; }}
+            style={{ background: "#0095FF", color: "#FFFFFF" }}
+            onMouseEnter={e => { e.currentTarget.style.background = "#007ACC"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "#0095FF"; }}
           >
             <ExternalLink size={12} />
             {job.applyUrl && job.applyUrl !== '#' ? 'Apply Now' : 'Find Opportunity'}
@@ -171,3 +171,7 @@ export default function JobCard({
     </motion.div>
   );
 }
+
+
+
+

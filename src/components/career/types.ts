@@ -43,3 +43,5 @@ export interface OpportunitySource {
   jobCount: number;
   bookmarked?: boolean;
 }
+
+

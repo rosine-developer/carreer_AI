@@ -258,10 +258,6 @@ export default function CoverLetterWriterModal({
               style={{ borderBottom: '1px solid rgba(0,0,0,0.1)', background: '#F9FAFB' }}
             >
               <div className="flex items-center gap-3">
-                <div
-                  className="w-2 h-2 rounded-full"
-                  style={{ background: '#FF8A00', boxShadow: '0 0 8px #FF8A00' }}
-                />
                 <div>
                   <h2
                     className="text-base font-bold"
@@ -307,7 +303,7 @@ export default function CoverLetterWriterModal({
                   size="sm"
                   onClick={handleExportPDF}
                   disabled={exportStatus === 'exporting'}
-                  className="text-xs bg-[#FF8A00]/10 border-[#FF8A00]/30 text-[#FF8A00] hover:bg-[#FF8A00]/20"
+                  className="text-xs bg-[#0095FF] border-[#0095FF] text-white hover:bg-[#0074CC] hover:border-[#0074CC]"
                 >
                   {exportStatus === 'exporting' ? (
                     <>
@@ -412,7 +408,7 @@ export default function CoverLetterWriterModal({
                     <Button
                       onClick={handleGenerateCoverLetter}
                       disabled={generateStatus === 'generating'}
-                      className="bg-[#FF8A00] hover:bg-[#FF8A00]/90 text-white"
+                      className="bg-[#0095FF] hover:bg-[#0095FF]/90 text-white"
                     >
                       {generateStatus === 'generating' ? (
                         <>
@@ -537,3 +533,6 @@ export default function CoverLetterWriterModal({
     </AnimatePresence>
   );
 }
+
+
+

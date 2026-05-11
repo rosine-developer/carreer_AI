@@ -39,7 +39,7 @@ type SortField = "date" | "company" | "status" | "jobTitle";
 type SortOrder = "asc" | "desc";
 
 const STATUS_COLORS = {
-  applied: { bg: "rgba(0,149,255,0.12)", border: "rgba(0,149,255,0.3)", text: "#0095FF" },
+  applied: { bg: "#0095FF", border: "#0095FF", text: "#FFFFFF" },
   interview: { bg: "rgba(234,179,8,0.12)", border: "rgba(234,179,8,0.3)", text: "#EAB308" },
   rejected: { bg: "rgba(239,68,68,0.12)", border: "rgba(239,68,68,0.3)", text: "#EF4444" },
   accepted: { bg: "rgba(34,197,94,0.12)", border: "rgba(34,197,94,0.3)", text: "#22C55E" },
@@ -278,7 +278,7 @@ export default function ApplicationTrackerView() {
       className="min-h-screen w-full overflow-auto"
       style={{
         background:
-          "linear-gradient(135deg, #0f1419 0%, #1a2332 25%, #0d1b2a 50%, #1b263b 75%, #0a1929 100%)",
+          "#FFFFFF",
         fontFamily: "Manrope, sans-serif",
       }}
     >
@@ -289,13 +289,13 @@ export default function ApplicationTrackerView() {
             <h1
               className="text-2xl font-bold"
               style={{
-                color: "rgba(255,255,255,0.95)",
+                color: "#111111",
                 fontFamily: "Syne, sans-serif",
               }}
             >
               Application Tracker
             </h1>
-            <p className="text-sm mt-1" style={{ color: "rgba(255,255,255,0.5)" }}>
+            <p className="text-sm mt-1" style={{ color: "#666666" }}>
               Manage and track your job applications
             </p>
           </div>
@@ -305,9 +305,9 @@ export default function ApplicationTrackerView() {
               onClick={() => setShowStats(!showStats)}
               className="px-3 py-2 rounded-lg text-xs font-medium"
               style={{
-                background: showStats ? "rgba(0,149,255,0.15)" : "rgba(255,255,255,0.05)",
-                border: showStats ? "1px solid rgba(0,149,255,0.35)" : "1px solid rgba(255,255,255,0.1)",
-                color: showStats ? "#0095FF" : "rgba(255,255,255,0.7)",
+                background: showStats ? "#0095FF" : "#F5F5F5",
+                border: showStats ? "1px solid #0095FF" : "1px solid #E5E5E5",
+                color: showStats ? "#FFFFFF" : "#333333",
               }}
             >
               {showStats ? "Hide Stats" : "Show Stats"}
@@ -316,9 +316,9 @@ export default function ApplicationTrackerView() {
               onClick={handleNewApplication}
               className="flex items-center gap-2"
               style={{
-                background: "rgba(255,138,0,0.15)",
-                border: "1px solid rgba(255,138,0,0.35)",
-                color: "#FF8A00",
+                background: "#0095FF",
+                border: "1px solid #0095FF",
+                color: "#FFFFFF",
               }}
             >
               <Plus size={16} />
@@ -340,14 +340,14 @@ export default function ApplicationTrackerView() {
               <div
                 className="p-4 rounded-xl"
                 style={{
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.08)",
+                  background: "#FAFAFA",
+                  border: "1px solid #F0F0F0",
                 }}
               >
-                <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.5)" }}>
+                <p className="text-xs mb-1" style={{ color: "#666666" }}>
                   Total Applications
                 </p>
-                <p className="text-3xl font-bold" style={{ color: "rgba(255,255,255,0.95)", fontFamily: "Syne, sans-serif" }}>
+                <p className="text-3xl font-bold" style={{ color: "#111111", fontFamily: "Syne, sans-serif" }}>
                   {stats.total}
                 </p>
               </div>
@@ -356,18 +356,18 @@ export default function ApplicationTrackerView() {
               <div
                 className="p-4 rounded-xl"
                 style={{
-                  background: "rgba(0,149,255,0.08)",
-                  border: "1px solid rgba(0,149,255,0.2)",
+                  background: "#0095FF",
+                  border: "1px solid #0095FF",
                 }}
               >
-                <p className="text-xs mb-1" style={{ color: "#0095FF" }}>
+                <p className="text-xs mb-1" style={{ color: "rgba(255,255,255,0.75)" }}>
                   Applied
                 </p>
                 <div className="flex items-baseline gap-2">
-                  <p className="text-3xl font-bold" style={{ color: "#0095FF", fontFamily: "Syne, sans-serif" }}>
+                  <p className="text-3xl font-bold" style={{ color: "#FFFFFF", fontFamily: "Syne, sans-serif" }}>
                     {statusCounts.applied}
                   </p>
-                  <p className="text-sm" style={{ color: "rgba(0,149,255,0.7)" }}>
+                  <p className="text-sm" style={{ color: "rgba(255,255,255,0.75)" }}>
                     ({stats.percentages.applied}%)
                   </p>
                 </div>
@@ -423,24 +423,24 @@ export default function ApplicationTrackerView() {
                 <div
                   className="p-4 rounded-xl"
                   style={{
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.08)",
+                    background: "#FAFAFA",
+                    border: "1px solid #F0F0F0",
                   }}
                 >
-                  <h3 className="text-sm font-semibold mb-3" style={{ color: "rgba(255,255,255,0.9)" }}>
+                  <h3 className="text-sm font-semibold mb-3" style={{ color: "#111111" }}>
                     Top Companies
                   </h3>
                   <div className="space-y-2">
                     {stats.topCompanies.map(({ company, count }) => (
                       <div key={company} className="flex items-center justify-between">
-                        <span className="text-sm" style={{ color: "rgba(255,255,255,0.7)" }}>
+                        <span className="text-sm" style={{ color: "#333333" }}>
                           {company}
                         </span>
                         <span
                           className="text-xs px-2 py-1 rounded-full"
                           style={{
-                            background: "rgba(255,138,0,0.12)",
-                            color: "#FF8A00",
+                            background: "#0095FF",
+                            color: "#FFFFFF",
                           }}
                         >
                           {count} {count === 1 ? "app" : "apps"}
@@ -456,17 +456,17 @@ export default function ApplicationTrackerView() {
                 <div
                   className="p-4 rounded-xl"
                   style={{
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.08)",
+                    background: "#FAFAFA",
+                    border: "1px solid #F0F0F0",
                   }}
                 >
-                  <h3 className="text-sm font-semibold mb-3" style={{ color: "rgba(255,255,255,0.9)" }}>
+                  <h3 className="text-sm font-semibold mb-3" style={{ color: "#111111" }}>
                     Top Roles
                   </h3>
                   <div className="space-y-2">
                     {stats.topRoles.map(({ role, count }) => (
                       <div key={role} className="flex items-center justify-between">
-                        <span className="text-sm truncate" style={{ color: "rgba(255,255,255,0.7)" }}>
+                        <span className="text-sm truncate" style={{ color: "#333333" }}>
                           {role}
                         </span>
                         <span
@@ -498,14 +498,14 @@ export default function ApplicationTrackerView() {
             <div
               className="p-4 rounded-xl"
               style={{
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                background: "#FAFAFA",
+                border: "1px solid #F0F0F0",
               }}
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Bell size={16} style={{ color: "#EAB308" }} />
-                  <h3 className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.9)" }}>
+                  <h3 className="text-sm font-semibold" style={{ color: "#111111" }}>
                     Follow-up Reminders
                   </h3>
                   <span
@@ -523,8 +523,8 @@ export default function ApplicationTrackerView() {
                   onClick={() => setShowReminders(false)}
                   className="p-1 rounded-lg"
                   style={{
-                    background: "rgba(255,255,255,0.05)",
-                    color: "rgba(255,255,255,0.5)",
+                    background: "#F5F5F5",
+                    color: "#666666",
                   }}
                 >
                   <X size={14} />
@@ -644,21 +644,21 @@ export default function ApplicationTrackerView() {
                 background:
                   filter === status
                     ? status === "all"
-                      ? "rgba(255,138,0,0.15)"
+                      ? "#0095FF"
                       : STATUS_COLORS[status].bg
-                    : "rgba(255,255,255,0.03)",
+                    : "#FAFAFA",
                 border:
                   filter === status
                     ? status === "all"
-                      ? "1px solid rgba(255,138,0,0.35)"
+                      ? "1px solid #0095FF"
                       : `1px solid ${STATUS_COLORS[status].border}`
-                    : "1px solid rgba(255,255,255,0.08)",
+                    : "1px solid #F0F0F0",
                 color:
                   filter === status
                     ? status === "all"
-                      ? "#FF8A00"
+                      ? "#FFFFFF"
                       : STATUS_COLORS[status].text
-                    : "rgba(255,255,255,0.5)",
+                    : "#666666",
               }}
             >
               {status === "all" ? "All" : STATUS_LABELS[status]} ({statusCounts[status]})
@@ -672,18 +672,18 @@ export default function ApplicationTrackerView() {
             className="rounded-xl overflow-hidden"
             style={{
               background: "rgba(255,255,255,0.02)",
-              border: "1px solid rgba(255,255,255,0.08)",
+              border: "1px solid #F0F0F0",
             }}
           >
             {/* Table header */}
             <div
               className="grid grid-cols-12 gap-4 px-4 py-3"
-              style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}
+              style={{ borderBottom: "1px solid #F0F0F0" }}
             >
               <button
                 onClick={() => handleSort("jobTitle")}
                 className="col-span-3 flex items-center gap-2 text-left text-xs font-semibold"
-                style={{ color: "rgba(255,255,255,0.7)" }}
+                style={{ color: "#333333" }}
               >
                 Job Title
                 {sortBy === "jobTitle" &&
@@ -692,7 +692,7 @@ export default function ApplicationTrackerView() {
               <button
                 onClick={() => handleSort("company")}
                 className="col-span-2 flex items-center gap-2 text-left text-xs font-semibold"
-                style={{ color: "rgba(255,255,255,0.7)" }}
+                style={{ color: "#333333" }}
               >
                 Company
                 {sortBy === "company" &&
@@ -701,7 +701,7 @@ export default function ApplicationTrackerView() {
               <button
                 onClick={() => handleSort("date")}
                 className="col-span-2 flex items-center gap-2 text-left text-xs font-semibold"
-                style={{ color: "rgba(255,255,255,0.7)" }}
+                style={{ color: "#333333" }}
               >
                 Date Applied
                 {sortBy === "date" &&
@@ -710,22 +710,22 @@ export default function ApplicationTrackerView() {
               <button
                 onClick={() => handleSort("status")}
                 className="col-span-2 flex items-center gap-2 text-left text-xs font-semibold"
-                style={{ color: "rgba(255,255,255,0.7)" }}
+                style={{ color: "#333333" }}
               >
                 Status
                 {sortBy === "status" &&
                   (sortOrder === "asc" ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
               </button>
-              <div className="col-span-3 text-xs font-semibold text-right" style={{ color: "rgba(255,255,255,0.7)" }}>
+              <div className="col-span-3 text-xs font-semibold text-right" style={{ color: "#333333" }}>
                 Actions
               </div>
             </div>
 
             {/* Table body */}
-            <div className="divide-y" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
+            <div className="divide-y" style={{ borderColor: "#F5F5F5" }}>
               {filteredApplications.length === 0 ? (
                 <div className="px-4 py-12 text-center">
-                  <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>
+                  <p className="text-sm" style={{ color: "#888888" }}>
                     No applications found. Click "New Application" to get started.
                   </p>
                 </div>
@@ -736,22 +736,22 @@ export default function ApplicationTrackerView() {
                     className="grid grid-cols-12 gap-4 px-4 py-4 hover:bg-white/5 transition-colors"
                   >
                     <div className="col-span-3">
-                      <p className="text-sm font-medium" style={{ color: "rgba(255,255,255,0.9)" }}>
+                      <p className="text-sm font-medium" style={{ color: "#111111" }}>
                         {app.jobTitle}
                       </p>
                       {app.notes && (
-                        <p className="text-xs mt-1 line-clamp-1" style={{ color: "rgba(255,255,255,0.4)" }}>
+                        <p className="text-xs mt-1 line-clamp-1" style={{ color: "#888888" }}>
                           {app.notes}
                         </p>
                       )}
                     </div>
                     <div className="col-span-2 flex items-center">
-                      <p className="text-sm" style={{ color: "rgba(255,255,255,0.7)" }}>
+                      <p className="text-sm" style={{ color: "#333333" }}>
                         {app.companyName}
                       </p>
                     </div>
                     <div className="col-span-2 flex items-center">
-                      <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>
+                      <p className="text-sm" style={{ color: "#444444" }}>
                         {app.applicationDate.toLocaleDateString()}
                       </p>
                     </div>
@@ -778,9 +778,9 @@ export default function ApplicationTrackerView() {
                         onClick={() => handleEdit(app)}
                         className="p-2 rounded-lg transition-colors"
                         style={{
-                          background: "rgba(0,149,255,0.12)",
-                          border: "1px solid rgba(0,149,255,0.3)",
-                          color: "#0095FF",
+                          background: "#0095FF",
+                          border: "1px solid #0095FF",
+                          color: "#FFFFFF",
                         }}
                       >
                         <Edit size={14} />
@@ -812,10 +812,10 @@ export default function ApplicationTrackerView() {
               className="rounded-xl p-8 text-center"
               style={{
                 background: "rgba(255,255,255,0.02)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                border: "1px solid #F0F0F0",
               }}
             >
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>
+              <p className="text-sm" style={{ color: "#888888" }}>
                 No applications found. Click "New Application" to get started.
               </p>
             </div>
@@ -828,16 +828,16 @@ export default function ApplicationTrackerView() {
                 className="rounded-xl overflow-hidden"
                 style={{
                   background: "rgba(255,255,255,0.02)",
-                  border: "1px solid rgba(255,255,255,0.08)",
+                  border: "1px solid #F0F0F0",
                 }}
               >
                 <div className="p-4">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.9)" }}>
+                      <h3 className="text-sm font-semibold" style={{ color: "#111111" }}>
                         {app.jobTitle}
                       </h3>
-                      <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.6)" }}>
+                      <p className="text-xs mt-1" style={{ color: "#444444" }}>
                         {app.companyName}
                       </p>
                     </div>
@@ -860,8 +860,8 @@ export default function ApplicationTrackerView() {
 
                   <div className="flex items-center gap-4 mb-3">
                     <div className="flex items-center gap-1.5">
-                      <Calendar size={12} style={{ color: "rgba(255,255,255,0.4)" }} />
-                      <span className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>
+                      <Calendar size={12} style={{ color: "#888888" }} />
+                      <span className="text-xs" style={{ color: "#666666" }}>
                         {app.applicationDate.toLocaleDateString()}
                       </span>
                     </div>
@@ -876,7 +876,7 @@ export default function ApplicationTrackerView() {
                   </div>
 
                   {app.notes && expandedMobile === app.id && (
-                    <p className="text-xs mb-3 p-3 rounded-lg" style={{ color: "rgba(255,255,255,0.6)", background: "rgba(255,255,255,0.03)" }}>
+                    <p className="text-xs mb-3 p-3 rounded-lg" style={{ color: "#444444", background: "#FAFAFA" }}>
                       {app.notes}
                     </p>
                   )}
@@ -887,9 +887,9 @@ export default function ApplicationTrackerView() {
                         onClick={() => setExpandedMobile(expandedMobile === app.id ? null : app.id)}
                         className="flex-1 px-3 py-2 rounded-lg text-xs font-medium"
                         style={{
-                          background: "rgba(255,255,255,0.03)",
-                          border: "1px solid rgba(255,255,255,0.08)",
-                          color: "rgba(255,255,255,0.6)",
+                          background: "#FAFAFA",
+                          border: "1px solid #F0F0F0",
+                          color: "#444444",
                         }}
                       >
                         {expandedMobile === app.id ? "Hide Notes" : "Show Notes"}
@@ -900,9 +900,9 @@ export default function ApplicationTrackerView() {
                       onClick={() => handleEdit(app)}
                       className="flex-1 px-3 py-2 rounded-lg text-xs font-medium"
                       style={{
-                        background: "rgba(0,149,255,0.12)",
-                        border: "1px solid rgba(0,149,255,0.3)",
-                        color: "#0095FF",
+                        background: "#0095FF",
+                        border: "1px solid #0095FF",
+                        color: "#FFFFFF",
                       }}
                     >
                       Edit
@@ -1077,8 +1077,8 @@ export default function ApplicationTrackerView() {
                 onClick={handleSave}
                 className="flex-1"
                 style={{
-                  background: "#FF8A00",
-                  border: "1px solid #FF8A00",
+                  background: "#0095FF",
+                  border: "1px solid #0095FF",
                   color: "#FFFFFF",
                 }}
               >
@@ -1091,3 +1091,7 @@ export default function ApplicationTrackerView() {
     </div>
   );
 }
+
+
+
+

@@ -9,7 +9,7 @@ export const INITIAL_MESSAGE: Message = {
   id: "welcome",
   role: "ai",
   content:
-    "Welcome to **CareerMind AI** — your intelligent career coach. I'm here to help you discover your ideal career path, find real opportunities, and craft compelling applications.\n\nLet's start by learning about your background. Please fill in the form below:",
+    "Welcome to CareerMind AI, your intelligent career coach. I'm here to help you discover your ideal career path, find real opportunities, and craft compelling applications.\n\nLet's start by learning about your background. Please fill in the form below:",
   timestamp: new Date(),
   isOnboarding: true,
 };
@@ -545,3 +545,5 @@ I welcome the opportunity to discuss how my background, skills, and enthusiasm c
 Warm regards,
 ${name}`;
 }
+
+

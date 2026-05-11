@@ -40,6 +40,7 @@ export default function CareerMindApp() {
   // Logged-in users get their own storage key; guests share a temporary one
   const storageKey = user ? `careerMind_conversations_${user.id}` : 'careerMind_conversations_guest';
 
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
   const [showSaveBanner, setShowSaveBanner] = useState(true);
@@ -373,55 +374,23 @@ export default function CareerMindApp() {
   // If tracker view is open, show it instead of chat
   if (trackerViewOpen) {
     return (
-      <div className="h-screen w-screen overflow-hidden flex flex-col">
+      <div className="h-screen w-screen overflow-hidden flex flex-col" style={{ background: "#FFFFFF" }}>
         {/* Simple header for tracker */}
         <header
           className="flex items-center justify-between px-6 py-4 shrink-0"
-          style={{
-            background: "#0a0a0a",
-            borderBottom: "1px solid rgba(255,255,255,0.05)",
-          }}
+          style={{ background: "#FFFFFF", borderBottom: "1px solid #F0F0F0" }}
         >
-          <div className="flex items-center gap-3">
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center"
-              style={{
-                background: "linear-gradient(135deg, rgba(255,138,0,0.2), rgba(255,87,34,0.15))",
-                border: "1px solid rgba(255,138,0,0.35)",
-                boxShadow: "0 0 16px rgba(255,138,0,0.2)",
-              }}
-            >
-              <span
-                className="text-xs font-black"
-                style={{ color: "#FF8A00", fontFamily: "Syne, sans-serif" }}
-              >
-                CM
-              </span>
-            </div>
-            <div>
-              <span
-                className="text-base font-extrabold tracking-tight"
-                style={{ color: "rgba(255,255,255,0.95)", fontFamily: "Syne, sans-serif" }}
-              >
-                CareerMind
-              </span>
-              <span
-                className="text-base font-extrabold tracking-tight ml-1"
-                style={{ color: "#FF8A00", fontFamily: "Syne, sans-serif" }}
-              >
-                AI
-              </span>
-            </div>
+          <div className="flex items-center gap-0">
+            <img src="/cm_logo.png" alt="CareerMind AI" style={{ width: "60px", height: "60px", objectFit: "contain", marginRight: "-8px" }} />
+            <span className="text-sm font-bold" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
+              CareerMind <span style={{ color: "#0095FF" }}>AI</span>
+            </span>
           </div>
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => setTrackerViewOpen(false)}
-            className="px-4 py-2 rounded-lg text-sm"
-            style={{
-              background: "rgba(255,255,255,0.05)",
-              border: "1px solid rgba(255,255,255,0.1)",
-              color: "rgba(255,255,255,0.7)",
-            }}
+            className="px-4 py-2 rounded-lg text-sm font-medium"
+            style={{ background: "#F5F5F5", border: "1px solid #E5E5E5", color: "#333" }}
           >
             Back to Chat
           </motion.button>
@@ -436,353 +405,330 @@ export default function CareerMindApp() {
       className="h-screen w-screen overflow-hidden flex"
       style={{ background: "#FFFFFF", fontFamily: "Manrope, sans-serif" }}
     >
-      {/* ── LEFT SIDEBAR ── */}
-      <aside
-        className="flex flex-col shrink-0 h-full"
-        style={{ width: "220px", borderRight: "1px solid #F0F0F0", background: "#FAFAFA" }}
-      >
-        {/* Logo */}
-        <div className="flex items-center gap-2 px-4 py-4" style={{ borderBottom: "1px solid #F0F0F0" }}>
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "#FF8A00" }}>
-            <span className="text-xs font-black text-white" style={{ fontFamily: "Syne, sans-serif" }}>CM</span>
-          </div>
-          <span className="text-sm font-bold" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
-            CareerMind <span style={{ color: "#FF8A00" }}>AI</span>
-          </span>
-        </div>
-
-        {/* New Chat */}
-        <div className="px-3 pt-3 pb-2">
-          <motion.button
-            whileTap={{ scale: 0.97 }}
-            onClick={handleNewConversation}
-            className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium"
-            style={{ background: "#FF8A00", color: "#FFFFFF" }}
-            onMouseEnter={e => { e.currentTarget.style.background = "#E67A00"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = "#FF8A00"; }}
+      {/* ── LEFT SIDEBAR (collapsible) ── */}
+      <AnimatePresence initial={false}>
+        {sidebarOpen && (
+          <motion.aside
+            initial={{ width: 0, opacity: 0 }}
+            animate={{ width: 220, opacity: 1 }}
+            exit={{ width: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="flex flex-col shrink-0 h-full overflow-hidden"
+            style={{ background: "#FFFFFF", minWidth: 0 }}
           >
-            <Plus size={15} />
-            New Chat
-          </motion.button>
-        </div>
-
-        {/* Nav items */}
-        <nav className="flex-1 px-3 space-y-1 overflow-y-auto py-2">
-          {[
-            { label: "Track Applications", action: () => setTrackerViewOpen(true), icon: "📋" },
-            { label: "Manage Profile", action: () => setProfileModalOpen(true), icon: "👤" },
-            { label: "Build Resume", action: () => setResumeModalOpen(true), icon: "📄" },
-            { label: "Cover Letter", action: () => setCoverLetterModalOpen(true), icon: "✉️" },
-            { label: "Form Helper", action: () => setFormHelperModalOpen(true), icon: "📝" },
-          ].map((item) => (
-            <motion.button
-              key={item.label}
-              whileTap={{ scale: 0.97 }}
-              onClick={item.action}
-              className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-left transition-all"
-              style={{ color: "#444", background: "transparent" }}
-              onMouseEnter={e => { e.currentTarget.style.background = "#F0F0F0"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
-            >
-              <span className="text-base">{item.icon}</span>
-              {item.label}
-            </motion.button>
-          ))}
-
-          {/* Conversation history for logged-in users */}
-          {user && conversations.length > 0 && (
-            <div className="pt-3">
-              <p className="text-xs font-semibold px-3 pb-2" style={{ color: "#BBB", letterSpacing: "0.05em" }}>RECENT</p>
-              {conversations.slice(0, 8).map(c => (
-                <motion.button
-                  key={c.id}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => handleSelectConversation(c.id)}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-left transition-all"
-                  style={{
-                    color: c.id === currentConversationId ? "#FF8A00" : "#666",
-                    background: c.id === currentConversationId ? "#FFF3E0" : "transparent",
-                  }}
-                  onMouseEnter={e => { if (c.id !== currentConversationId) e.currentTarget.style.background = "#F0F0F0"; }}
-                  onMouseLeave={e => { if (c.id !== currentConversationId) e.currentTarget.style.background = "transparent"; }}
-                >
-                  <span className="truncate">{c.title}</span>
-                </motion.button>
-              ))}
+            {/* Logo + sidebar toggle */}
+            <div className="flex items-center gap-1 px-4 py-4">
+              <img src="/cm_logo.png" alt="CareerMind AI" style={{ width: "60px", height: "60px", objectFit: "contain", marginRight: "-8px" }} />
+              <span className="text-sm font-bold whitespace-nowrap flex-1" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
+                CareerMind <span style={{ color: "#0095FF" }}>AI</span>
+              </span>
+              {/* Sidebar hide button — moved here */}
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setSidebarOpen(v => !v)}
+                className="p-1.5 rounded-lg transition-all"
+                style={{ background: "#F5F5F5", border: "1px solid #E5E5E5", color: "#555" }}
+                title="Hide sidebar"
+              >
+                <Menu size={15} />
+              </motion.button>
             </div>
-          )}
-        </nav>
 
-        {/* Bottom: Auth */}
-        <div className="px-3 py-3" style={{ borderTop: "1px solid #F0F0F0" }}>
-          {!authLoading && (
-            user ? (
-              <div className="flex items-center gap-2">
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-                  style={{ background: "#0095FF", color: "#FFFFFF" }}
-                  title={user.email ?? ''}
-                >
-                  {(user.user_metadata?.full_name?.[0] ?? user.email?.[0] ?? '?').toUpperCase()}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium truncate" style={{ color: "#333" }}>
-                    {user.user_metadata?.full_name || user.email?.split('@')[0]}
-                  </p>
-                  <p className="text-xs truncate" style={{ color: "#AAA" }}>{user.email}</p>
-                </div>
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={signOut}
-                  className="p-1.5 rounded-lg shrink-0"
-                  title="Log out"
-                  style={{ color: "#BBB" }}
-                  onMouseEnter={e => { e.currentTarget.style.color = "#EF4444"; }}
-                  onMouseLeave={e => { e.currentTarget.style.color = "#BBB"; }}
-                >
-                  <LogOut size={14} />
-                </motion.button>
-              </div>
-            ) : (
+            {/* New Chat */}
+            <div className="px-3 pt-3 pb-2">
               <motion.button
                 whileTap={{ scale: 0.97 }}
-                onClick={openLogin}
-                className="w-full px-3 py-2.5 rounded-xl text-sm font-medium"
+                onClick={handleNewConversation}
+                className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium"
                 style={{ background: "#0095FF", color: "#FFFFFF" }}
                 onMouseEnter={e => { e.currentTarget.style.background = "#007ACC"; }}
                 onMouseLeave={e => { e.currentTarget.style.background = "#0095FF"; }}
               >
-                Log in to save chats
+                <Plus size={15} />
+                New Chat
               </motion.button>
-            )
-          )}
-        </div>
-      </aside>
+            </div>
 
-      {/* ── MAIN CONTENT ── */}
+            {/* Nav items */}
+            <nav className="flex-1 px-3 space-y-1 overflow-y-auto py-2">
+              {[
+                { label: "Track Applications", action: () => setTrackerViewOpen(true) },
+                { label: "Manage Profile", action: () => setProfileModalOpen(true) },
+                { label: "Build Resume", action: () => setResumeModalOpen(true) },
+                { label: "Cover Letter", action: () => setCoverLetterModalOpen(true) },
+                { label: "Form Helper", action: () => setFormHelperModalOpen(true) },
+              ].map((item) => (
+                <motion.button
+                  key={item.label}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={item.action}
+                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-left transition-all whitespace-nowrap"
+                  style={{ color: "#444", background: "transparent" }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "#F0F0F0"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
+                >
+                  {item.label}
+                </motion.button>
+              ))}
+
+              {user && conversations.length > 0 && (
+                <div className="pt-3">
+                  <p className="text-xs font-bold px-3 pb-2" style={{ color: "#111", letterSpacing: "0.05em" }}>RECENT</p>
+                  {conversations.slice(0, 8).map(c => (
+                    <motion.button
+                      key={c.id}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => handleSelectConversation(c.id)}
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-left transition-all"
+                      style={{
+                        color: c.id === currentConversationId ? "#0095FF" : "#666",
+                        background: c.id === currentConversationId ? "#EBF5FF" : "transparent",
+                      }}
+                      onMouseEnter={e => { if (c.id !== currentConversationId) e.currentTarget.style.background = "#F0F0F0"; }}
+                      onMouseLeave={e => { if (c.id !== currentConversationId) e.currentTarget.style.background = "transparent"; }}
+                    >
+                      <span className="truncate">{c.title}</span>
+                    </motion.button>
+                  ))}
+                </div>
+              )}
+            </nav>
+
+            {/* Bottom: Auth */}
+            <div className="px-3 py-3">
+              {!authLoading && (
+                user ? (
+                  <div className="flex items-center gap-0">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0" style={{ background: "#0095FF", color: "#FFFFFF" }} title={user.email ?? ''}>
+                      {(user.user_metadata?.full_name?.[0] ?? user.email?.[0] ?? '?').toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium truncate" style={{ color: "#333" }}>{user.user_metadata?.full_name || user.email?.split('@')[0]}</p>
+                      <p className="text-xs truncate" style={{ color: "#AAA" }}>{user.email}</p>
+                    </div>
+                    <motion.button whileTap={{ scale: 0.95 }} onClick={signOut} className="p-1.5 rounded-lg shrink-0" title="Log out" style={{ color: "#BBB" }} onMouseEnter={e => { e.currentTarget.style.color = "#EF4444"; }} onMouseLeave={e => { e.currentTarget.style.color = "#BBB"; }}>
+                      <LogOut size={14} />
+                    </motion.button>
+                  </div>
+                ) : (
+                  <motion.button whileTap={{ scale: 0.97 }} onClick={openLogin} className="w-full px-3 py-2.5 rounded-xl text-sm font-medium" style={{ background: "#0095FF", color: "#FFFFFF" }} onMouseEnter={e => { e.currentTarget.style.background = "#007ACC"; }} onMouseLeave={e => { e.currentTarget.style.background = "#0095FF"; }}>
+                    Log in to save chats
+                  </motion.button>
+                )
+              )}
+            </div>
+          </motion.aside>
+        )}
+      </AnimatePresence>
+
+      {/* ── MAIN AREA (career content LEFT + chat RIGHT) ── */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* "Sign in to save" banner */}
+
+        {/* Top bar — only shown when sidebar is hidden, to show the toggle + logo */}
+        {!sidebarOpen && (
+          <div className="flex items-center gap-3 px-4 py-3 shrink-0" style={{ background: "#FFFFFF" }}>
+            {/* Show sidebar button */}
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setSidebarOpen(v => !v)}
+              className="p-2 rounded-lg transition-all"
+              style={{ background: "#F5F5F5", border: "1px solid #E5E5E5", color: "#555" }}
+              title="Show sidebar"
+            >
+              <Menu size={16} />
+            </motion.button>
+
+            {/* Logo */}
+            <div className="flex items-center gap-0">
+              <img src="/cm_logo.png" alt="CareerMind AI" style={{ width: "60px", height: "60px", objectFit: "contain", marginRight: "-8px" }} />
+              <span className="text-sm font-bold" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
+                CareerMind <span style={{ color: "#0095FF" }}>AI</span>
+              </span>
+            </div>
+
+            {/* Auth */}
+            <div className="ml-auto flex items-center gap-2">
+              {!authLoading && !user && (
+                <motion.button whileTap={{ scale: 0.97 }} onClick={openLogin} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: "#0095FF", color: "#FFFFFF" }}>
+                  Log in
+                </motion.button>
+              )}
+              {!authLoading && user && (
+                <div className="flex items-center gap-0">
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: "#0095FF", color: "#FFFFFF" }} title={user.email ?? ''}>
+                    {(user.user_metadata?.full_name?.[0] ?? user.email?.[0] ?? '?').toUpperCase()}
+                  </div>
+                  <motion.button whileTap={{ scale: 0.95 }} onClick={signOut} className="p-1.5 rounded-lg" style={{ color: "#BBB" }} onMouseEnter={e => { e.currentTarget.style.color = "#EF4444"; }} onMouseLeave={e => { e.currentTarget.style.color = "#BBB"; }}>
+                    <LogOut size={13} />
+                  </motion.button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Sign in banner */}
         <AnimatePresence>
           {!user && !authLoading && showSaveBanner && messages.length > 1 && (
-            <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              className="shrink-0 flex items-center justify-between px-5 py-2"
-              style={{ background: '#FFF8F0', borderBottom: '1px solid #FFE0B2' }}
-            >
-              <p className="text-xs" style={{ color: '#888' }}>
-                Create a free account to save your conversations
-              </p>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={openRegister}
-                  className="px-3 py-1 rounded-lg text-xs font-medium"
-                  style={{ background: '#FF8A00', color: '#FFFFFF' }}
-                >
-                  Sign up free
-                </button>
+            <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="shrink-0 flex items-center justify-between px-5 py-2" style={{ background: '#EBF5FF', borderBottom: '1px solid #C5E0FF' }}>
+              <p className="text-xs" style={{ color: '#555' }}>Create a free account to save your conversations</p>
+              <div className="flex items-center gap-0">
+                <button onClick={openRegister} className="px-3 py-1 rounded-lg text-xs font-medium" style={{ background: '#0095FF', color: '#FFFFFF' }}>Sign up free</button>
                 <button onClick={() => setShowSaveBanner(false)} style={{ color: '#BBB', fontSize: '12px' }}>✕</button>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Chat area */}
-        <div
-          ref={chatContainerRef}
-          onScroll={handleScroll}
-          className="flex-1 overflow-y-auto"
-          style={{ scrollbarWidth: "thin", scrollbarColor: "#E5E5E5 transparent" }}
-        >
-          {messages.length === 1 && !onboardingDone ? (
-            <div className="h-full flex flex-col items-center justify-center px-6 max-w-2xl mx-auto w-full">
-              {/* Title */}
-              <div className="text-center mb-8">
-                <h1 className="text-3xl font-bold mb-2" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
-                  Welcome to <span style={{ color: "#FF8A00" }}>CareerMind</span> <span style={{ color: "#0095FF" }}>AI</span>
-                </h1>
-                <p className="text-sm" style={{ color: "#888" }}>
-                  Your intelligent career coach. Let's discover your ideal career path.
-                </p>
-              </div>
+        {/* ── SPLIT: career content LEFT | chat RIGHT ── */}
+        <div className="flex-1 flex overflow-hidden">
 
-              {/* Input bar — ABOVE cards */}
-              <div className="w-full mb-4">
-                <div
-                  className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all"
-                  style={{ background: "#FFFFFF", border: "2px solid #D0D0D0", boxShadow: "0 2px 12px rgba(0,0,0,0.08)" }}
-                  onFocusCapture={e => {
-                    e.currentTarget.style.border = "2px solid #FF8A00";
-                    e.currentTarget.style.boxShadow = "0 2px 16px rgba(255,138,0,0.12)";
-                  }}
-                  onBlurCapture={e => {
-                    if (!e.currentTarget.contains(e.relatedTarget)) {
-                      e.currentTarget.style.border = "2px solid #D0D0D0";
-                      e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.08)";
-                    }
-                  }}
-                >
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={input}
-                    onChange={e => setInput(e.target.value)}
-                    onKeyDown={e => e.key === "Enter" && !e.shiftKey && sendMessage()}
-                    placeholder="Message CareerMind AI..."
-                    className="flex-1 bg-transparent outline-none"
-                    style={{ color: "#111", fontFamily: "Manrope, sans-serif", fontSize: "0.9rem", fontWeight: 500 }}
-                  />
-                  <motion.button
-                    whileTap={{ scale: 0.92 }}
-                    onClick={sendMessage}
-                    disabled={!input.trim() || isTyping}
-                    className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all"
-                    style={{
-                      background: input.trim() ? "#FF8A00" : "#F0F0F0",
-                      color: input.trim() ? "#FFFFFF" : "#CCC",
-                    }}
-                  >
-                    <Send size={15} />
-                  </motion.button>
-                </div>
-              </div>
-
-              {/* Suggestion cards — BELOW input */}
-              <div className="grid grid-cols-2 gap-2 w-full">
-                {["Find job opportunities", "Get career advice", "Prepare applications", "Explore career paths"].map((text, i) => (
-                  <motion.button
-                    key={i}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.07 }}
-                    onClick={() => setInput(text)}
-                    className="p-3 rounded-xl text-left text-sm font-medium"
-                    style={{ background: "#F5F5F5", border: "1px solid #E0E0E0", color: "#111" }}
-                    whileHover={{ background: "#EFEFEF" }}
-                  >
-                    {text}
-                  </motion.button>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="max-w-2xl mx-auto px-5 py-6">
-              {messages.map((msg) => (
-                <ChatMessage
-                  key={msg.id}
-                  message={msg}
-                  onOnboardingSubmit={!onboardingDone ? handleOnboardingSubmit : undefined}
-                  onFindOpportunity={handleFindOpportunity}
-                  onApply={handleApply}
-                  onBuildResume={handleBuildResume}
-                  onWriteCoverLetter={handleWriteCoverLetter}
-                />
-              ))}
-              <AnimatePresence>
-                {isTyping && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 8 }}
-                    className="flex justify-start mb-4"
-                  >
-                    <div className="px-4 py-3 rounded-xl" style={{ background: "#F5F5F5", border: "1px solid #EBEBEB" }}>
-                      <div className="flex items-center gap-1">
-                        {[0, 1, 2].map((i) => (
-                          <motion.div
-                            key={i}
-                            className="w-1.5 h-1.5 rounded-full"
-                            style={{ background: "#FF8A00" }}
-                            animate={{ scale: [1, 1.4, 1], opacity: [0.4, 1, 0.4] }}
-                            transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.2 }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              <div ref={chatEndRef} />
-            </div>
-          )}
-        </div>
-
-        {/* Scroll button */}
-        <AnimatePresence>
-          {showScrollBtn && (
-            <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              onClick={scrollToBottom}
-              className="absolute bottom-24 right-6 p-2 rounded-full z-20"
-              style={{ background: "#FF8A00", color: "#FFFFFF", boxShadow: "0 2px 8px rgba(255,138,0,0.3)" }}
-            >
-              <ChevronDown size={16} />
-            </motion.button>
-          )}
-        </AnimatePresence>
-
-        {/* ── INPUT BAR — only shown when chatting ── */}
-        {(messages.length > 1 || onboardingDone) && (
-        <div className="shrink-0 px-5 py-3" style={{ borderTop: "1px solid #F0F0F0", background: "#FFFFFF" }}>
+          {/* LEFT: Career content (job cards, AI responses) */}
           <div
-            className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all"
-            style={{ background: "#FFFFFF", border: "2px solid #D0D0D0", boxShadow: "0 -2px 12px rgba(0,0,0,0.06)" }}
-            onFocusCapture={e => {
-              e.currentTarget.style.border = "2px solid #FF8A00";
-              e.currentTarget.style.boxShadow = "0 -2px 16px rgba(255,138,0,0.12)";
-            }}
-            onBlurCapture={e => {
-              if (!e.currentTarget.contains(e.relatedTarget)) {
-                e.currentTarget.style.border = "2px solid #D0D0D0";
-                e.currentTarget.style.boxShadow = "0 -2px 12px rgba(0,0,0,0.06)";
-              }
-            }}
+            ref={chatContainerRef}
+            onScroll={handleScroll}
+            className="flex-1 overflow-y-auto"
+            style={{ background: "#FFFFFF", scrollbarWidth: "thin", scrollbarColor: "#E5E5E5 transparent" }}
           >
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && !e.shiftKey && sendMessage()}
-              placeholder="Message CareerMind AI..."
-              className="flex-1 bg-transparent outline-none"
-              style={{ color: "#111", fontFamily: "Manrope, sans-serif", fontSize: "0.9rem", fontWeight: 500 }}
-            />
-            <motion.button
-              whileTap={{ scale: 0.92 }}
-              onClick={sendMessage}
-              disabled={!input.trim() || isTyping}
-              className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all"
-              style={{
-                background: input.trim() ? "#FF8A00" : "#F0F0F0",
-                color: input.trim() ? "#FFFFFF" : "#CCC",
-              }}
-            >
-              <Send size={15} />
-            </motion.button>
+            {(() => {
+              // New chat — always show welcome screen
+              if (messages.length === 1) {
+                return (
+                  <div className="h-full flex flex-col items-center justify-center px-6 max-w-xl mx-auto w-full">
+                    <div className="text-center mb-8">
+                      <h1 className="text-2xl font-bold mb-2" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
+                        Welcome to <span style={{ color: "#0095FF" }}>CareerMind AI</span>
+                      </h1>
+                      <p className="text-sm" style={{ color: "#888" }}>Your intelligent career coach.</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      {["Find job opportunities", "Get career advice", "Prepare applications", "Explore career paths"].map((text, i) => (
+                        <motion.button key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }} onClick={() => { setInput(text); inputRef.current?.focus(); }} className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-center" style={{ background: "#F5F5F5", border: "1px solid #E0E0E0", color: "#111" }} whileHover={{ background: "#EFEFEF" }}>
+                          {text}
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              }
+              // Active conversation — left shows only job cards & onboarding forms
+              const leftMessages = messages.filter(msg => msg.jobCards || msg.isOnboarding);
+              if (leftMessages.length > 0) {
+                return (
+                  <div className="px-5 py-6">
+                    {leftMessages.map((msg) => (
+                      <ChatMessage
+                        key={msg.id}
+                        message={msg}
+                        onOnboardingSubmit={!onboardingDone ? handleOnboardingSubmit : undefined}
+                        onFindOpportunity={handleFindOpportunity}
+                        onApply={handleApply}
+                        onBuildResume={handleBuildResume}
+                        onWriteCoverLetter={handleWriteCoverLetter}
+                      />
+                    ))}
+                    <AnimatePresence>
+                      {isTyping && (
+                        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} className="flex justify-start mb-4">
+                          <div className="px-4 py-2.5 rounded-xl" style={{ background: "#F5F5F5", border: "1px solid #EBEBEB" }}>
+                            <span className="text-xs font-medium" style={{ color: "#0095FF" }}>thinking...</span>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                    <div ref={chatEndRef} />
+                  </div>
+                );
+              }
+              // Has messages but no job cards yet — keep welcome screen visible
+              return (
+                <div className="h-full flex flex-col items-center justify-center px-6 max-w-xl mx-auto w-full">
+                  <div className="text-center mb-8">
+                    <h1 className="text-2xl font-bold mb-2" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
+                      Welcome to <span style={{ color: "#0095FF" }}>CareerMind AI</span>
+                    </h1>
+                    <p className="text-sm" style={{ color: "#888" }}>Your intelligent career coach.</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {["Find job opportunities", "Get career advice", "Prepare applications", "Explore career paths"].map((text, i) => (
+                      <motion.button key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }} onClick={() => { setInput(text); inputRef.current?.focus(); }} className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-center" style={{ background: "#F5F5F5", border: "1px solid #E0E0E0", color: "#111" }} whileHover={{ background: "#EFEFEF" }}>
+                        {text}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
-        </div>
-        )}
-      </div>
 
-      {/* Conversation History Sidebar (overlay for mobile) */}
-      <ConversationHistory
-        conversations={conversations.map(c => ({
-          id: c.id,
-          title: c.title,
-          timestamp: c.timestamp,
-          messageCount: c.messages.length,
-        }))}
-        currentConversationId={currentConversationId}
-        onSelectConversation={handleSelectConversation}
-        onNewConversation={handleNewConversation}
-        onDeleteConversation={handleDeleteConversation}
-        isOpen={historyOpen}
-        onClose={() => setHistoryOpen(false)}
-      />
+          {/* RIGHT: Chat input panel */}
+          <div className="flex flex-col shrink-0" style={{ width: "340px", background: "#F8F9FA" }}>
+            <div className="px-4 py-3 shrink-0">
+              <p className="text-xs font-bold tracking-widest" style={{ color: "#0095FF" }}>CHAT</p>
+            </div>
+
+            {/* Chat history — visible container */}
+            <div className="overflow-y-auto px-3 pt-3 pb-2" style={{ scrollbarWidth: "thin" }}>
+              <div className="rounded-xl p-3 space-y-3" style={{ background: "#FFFFFF", border: "1px solid #E8E8E8" }}>
+                {messages.filter(m => m.role === 'user' || (m.role === 'ai' && !m.jobCards)).map((msg) => (
+                  <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div
+                      className="max-w-[88%] px-3 py-2 rounded-xl text-sm"
+                      style={{
+                        background: msg.role === 'user' ? '#0095FF' : 'transparent',
+                        color: msg.role === 'user' ? '#FFFFFF' : '#111',
+                        border: 'none',
+                      }}
+                    >
+                      {msg.isOnboarding ? (
+                        <span style={{ color: msg.role === 'user' ? '#FFFFFF' : '#000000', fontWeight: 500 }}>
+                          {msg.content.split('\n')[0]}
+                        </span>
+                      ) : msg.content}
+                    </div>
+                  </div>
+                ))}
+                {isTyping && (
+                  <div className="flex justify-start">
+                    <div className="px-3 py-2 rounded-xl text-xs" style={{ background: "#F0F0F0", color: "#0095FF" }}>thinking...</div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Input box */}
+            <div className="px-3 py-3 shrink-0">
+              <div
+                className="flex items-center gap-2 px-3 py-2.5 transition-all"
+                style={{ background: "#FFFFFF", border: "2px solid #C0C0C0", borderRadius: "30px", boxShadow: "0 4px 16px rgba(0,0,0,0.12)" }}
+                onFocusCapture={e => { e.currentTarget.style.border = "2px solid #0095FF"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(0,149,255,0.18)"; }}
+                onBlurCapture={e => { if (!e.currentTarget.contains(e.relatedTarget)) { e.currentTarget.style.border = "2px solid #C0C0C0"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.12)"; } }}
+              >
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && !e.shiftKey && sendMessage()}
+                  placeholder="Message CareerMind AI..."
+                  className="flex-1 bg-transparent outline-none text-sm"
+                  style={{ color: "#000000", fontFamily: "Manrope, sans-serif", fontWeight: 500 }}
+                />
+                <motion.button
+                  whileTap={{ scale: 0.92 }}
+                  onClick={sendMessage}
+                  disabled={!input.trim() || isTyping}
+                  className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                  style={{ background: input.trim() ? "#0095FF" : "#F0F0F0", color: input.trim() ? "#FFFFFF" : "#CCC" }}
+                >
+                  <Send size={14} />
+                </motion.button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
 
       {/* Opportunity Drawer */}
       <OpportunityDrawer
@@ -833,3 +779,15 @@ export default function CareerMindApp() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+

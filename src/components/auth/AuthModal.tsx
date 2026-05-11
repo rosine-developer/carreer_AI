@@ -115,14 +115,14 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                     <div
                       className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
                       style={{
-                        background: 'linear-gradient(135deg, rgba(255,138,0,0.2), rgba(255,87,34,0.15))',
-                        border: '1px solid rgba(255,138,0,0.35)',
+                        background: 'linear-gradient(135deg, #0095FF, rgba(0,149,255,1))',
+                        border: '1px solid #0095FF',
                       }}
                     >
-                      <span className="text-xs font-black" style={{ color: '#FF8A00', fontFamily: 'Syne, sans-serif' }}>CM</span>
+                      <span className="text-xs font-black" style={{ color: '#0095FF', fontFamily: 'Syne, sans-serif' }}>CM</span>
                     </div>
                     <span className="font-extrabold text-sm" style={{ color: 'rgba(255,255,255,0.95)', fontFamily: 'Syne, sans-serif' }}>
-                      CareerMind <span style={{ color: '#FF8A00' }}>AI</span>
+                      CareerMind <span style={{ color: '#0095FF' }}>AI</span>
                     </span>
                   </div>
 
@@ -137,9 +137,9 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                         onClick={() => switchMode(m)}
                         className="flex-1 py-1.5 rounded-lg text-xs font-medium transition-all"
                         style={{
-                          background: mode === m ? 'rgba(255,138,0,0.15)' : 'transparent',
-                          border: mode === m ? '1px solid rgba(255,138,0,0.3)' : '1px solid transparent',
-                          color: mode === m ? '#FF8A00' : 'rgba(255,255,255,0.45)',
+                          background: mode === m ? '#0095FF' : 'transparent',
+                          border: mode === m ? '1px solid #0095FF' : '1px solid transparent',
+                          color: mode === m ? '#0095FF' : 'rgba(255,255,255,0.45)',
                         }}
                       >
                         {m === 'login' ? 'Log In' : 'Register'}
@@ -166,7 +166,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                               placeholder="Full name"
                               className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm outline-none"
                               style={inputStyle}
-                              onFocus={e => (e.target.style.borderColor = 'rgba(255,138,0,0.5)')}
+                              onFocus={e => (e.target.style.borderColor = '#0095FF')}
                               onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
                             />
                           </div>
@@ -184,7 +184,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                         required
                         className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm outline-none"
                         style={inputStyle}
-                        onFocus={e => (e.target.style.borderColor = 'rgba(255,138,0,0.5)')}
+                        onFocus={e => (e.target.style.borderColor = '#0095FF')}
                         onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
                       />
                     </div>
@@ -199,7 +199,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                         required
                         className="w-full pl-9 pr-9 py-2.5 rounded-xl text-sm outline-none"
                         style={inputStyle}
-                        onFocus={e => (e.target.style.borderColor = 'rgba(255,138,0,0.5)')}
+                        onFocus={e => (e.target.style.borderColor = '#0095FF')}
                         onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
                       />
                       <button
@@ -241,9 +241,9 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                       disabled={loading}
                       className="w-full py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
                       style={{
-                        background: 'linear-gradient(135deg, #FF8A00, #FF5722)',
+                        background: 'linear-gradient(135deg, #0095FF, #0095FF)',
                         color: '#FFFFFF',
-                        boxShadow: '0 4px 16px rgba(255,138,0,0.25)',
+                        boxShadow: '0 4px 16px #0095FF',
                       }}
                     >
                       {loading ? <Loader2 size={15} className="animate-spin" /> : mode === 'login' ? 'Log In' : 'Create Account'}
@@ -255,7 +255,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                     <button
                       onClick={() => switchMode(mode === 'login' ? 'register' : 'login')}
                       className="underline"
-                      style={{ color: 'rgba(255,138,0,0.7)' }}
+                      style={{ color: '#0095FF' }}
                     >
                       {mode === 'login' ? 'Register' : 'Log in'}
                     </button>
@@ -269,3 +269,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
     </AnimatePresence>
   );
 }
+
+
+
+

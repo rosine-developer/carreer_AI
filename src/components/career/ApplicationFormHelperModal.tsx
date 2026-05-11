@@ -294,10 +294,6 @@ export default function ApplicationFormHelperModal({
               style={{ borderBottom: '1px solid rgba(0,0,0,0.1)', background: '#F9FAFB' }}
             >
               <div className="flex items-center gap-3">
-                <div
-                  className="w-2 h-2 rounded-full"
-                  style={{ background: '#FF8A00', boxShadow: '0 0 8px #FF8A00' }}
-                />
                 <div>
                   <h2
                     className="text-base font-bold"
@@ -355,9 +351,9 @@ export default function ApplicationFormHelperModal({
                         onClick={() => setFilterCategory(cat.id)}
                         style={{
                           background:
-                            filterCategory === cat.id ? '#FF8A00' : '#FFFFFF',
+                            filterCategory === cat.id ? '#0095FF' : '#FFFFFF',
                           borderColor:
-                            filterCategory === cat.id ? '#FF8A00' : 'rgba(0,0,0,0.1)',
+                            filterCategory === cat.id ? '#0095FF' : 'rgba(0,0,0,0.1)',
                           color: filterCategory === cat.id ? '#FFFFFF' : '#374151',
                         }}
                       >
@@ -400,7 +396,7 @@ export default function ApplicationFormHelperModal({
                       style={{
                         background:
                           selectedQuestion?.id === q.id
-                            ? 'rgba(255,138,0,0.1)'
+                            ? 'rgba(0,149,255,1)'
                             : 'transparent',
                         borderBottom: '1px solid rgba(0,0,0,0.05)',
                       }}
@@ -461,7 +457,7 @@ export default function ApplicationFormHelperModal({
                               size="sm"
                               onClick={handleAISuggest}
                               disabled={aiLoading}
-                              className="h-7 text-xs text-[#FF8A00] hover:text-[#FF8A00]/80"
+                              className="h-7 text-xs text-[#0095FF] hover:text-[#0095FF]/80"
                             >
                               {aiLoading ? (
                                 <>
@@ -541,3 +537,6 @@ export default function ApplicationFormHelperModal({
     </AnimatePresence>
   );
 }
+
+
+

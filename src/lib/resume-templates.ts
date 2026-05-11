@@ -19,7 +19,7 @@ export const colorSchemes: ColorScheme[] = [
   {
     id: 'orange',
     name: 'Energetic Orange',
-    primary: '#FF8A00',
+    primary: '#0095FF',
     secondary: '#E67700',
     text: '#1F2937',
     background: '#FFFFFF',
@@ -226,3 +226,5 @@ export default {
   createInitialResumeState,
   defaultResumeSections,
 };
+
+
