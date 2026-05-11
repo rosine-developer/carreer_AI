@@ -21,6 +21,9 @@ import ApplicationFormHelperModal from "./ApplicationFormHelperModal";
 import ApplicationTrackerView from "./ApplicationTrackerView";
 import AuthModal from "../auth/AuthModal";
 import { useAuth } from "../../contexts/AuthContext";
+import DiscoveryAnimation from "./DiscoveryAnimation";
+import UpgradeModal from "./UpgradeModal";
+import { useSubscription } from "../../contexts/SubscriptionContext";
 
 let messageIdCounter = 1;
 const newId = () => `msg-${++messageIdCounter}`;
@@ -37,10 +40,26 @@ interface SavedConversation {
 
 export default function CareerMindApp() {
   const { user, signOut, loading: authLoading } = useAuth();
+  const { isPro, openCustomerPortal } = useSubscription();
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [upgradeFeature, setUpgradeFeature] = useState('');
+
+  const requirePro = (featureName: string, action: () => void) => {
+    if (isPro) {
+      action();
+    } else {
+      setUpgradeFeature(featureName);
+      setUpgradeModalOpen(true);
+    }
+  };
   // Logged-in users get their own storage key; guests share a temporary one
   const storageKey = user ? `careerMind_conversations_${user.id}` : 'careerMind_conversations_guest';
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [showDiscovery, setShowDiscovery] = useState(() => {
+    // Show only once per session
+    return !sessionStorage.getItem('discovery_shown');
+  });
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
   const [showSaveBanner, setShowSaveBanner] = useState(true);
@@ -355,8 +374,10 @@ export default function CareerMindApp() {
   };
 
   const handleApply = (job: JobCard) => {
-    setApplyJob(job);
-    setModalOpen(true);
+    requirePro('Help Me Apply', () => {
+      setApplyJob(job);
+      setModalOpen(true);
+    });
   };
 
   const handleBuildResume = (job: JobCard) => {
@@ -439,6 +460,7 @@ export default function CareerMindApp() {
               <motion.button
                 whileTap={{ scale: 0.97 }}
                 onClick={handleNewConversation}
+                data-tour="new-chat"
                 className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium"
                 style={{ background: "#0095FF", color: "#FFFFFF" }}
                 onMouseEnter={e => { e.currentTarget.style.background = "#007ACC"; }}
@@ -452,22 +474,26 @@ export default function CareerMindApp() {
             {/* Nav items */}
             <nav className="flex-1 px-3 space-y-1 overflow-y-auto py-2">
               {[
-                { label: "Track Applications", action: () => setTrackerViewOpen(true) },
-                { label: "Manage Profile", action: () => setProfileModalOpen(true) },
-                { label: "Build Resume", action: () => setResumeModalOpen(true) },
-                { label: "Cover Letter", action: () => setCoverLetterModalOpen(true) },
-                { label: "Form Helper", action: () => setFormHelperModalOpen(true) },
+                { label: "Track Applications", action: () => requirePro('Track Applications', () => setTrackerViewOpen(true)), tour: "track-apps" },
+                { label: "Manage Profile", action: () => setProfileModalOpen(true), tour: "manage-profile" },
+                { label: "Build Resume", action: () => requirePro('Resume Builder', () => setResumeModalOpen(true)), tour: "build-resume" },
+                { label: "Cover Letter", action: () => requirePro('Cover Letter Writer', () => setCoverLetterModalOpen(true)), tour: "cover-letter" },
+                { label: "Form Helper", action: () => requirePro('Form Helper', () => setFormHelperModalOpen(true)), tour: "form-helper" },
               ].map((item) => (
                 <motion.button
                   key={item.label}
                   whileTap={{ scale: 0.97 }}
                   onClick={item.action}
-                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-left transition-all whitespace-nowrap"
+                  data-tour={item.tour}
+                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm text-left transition-all whitespace-nowrap"
                   style={{ color: "#444", background: "transparent" }}
                   onMouseEnter={e => { e.currentTarget.style.background = "#F0F0F0"; }}
                   onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
                 >
-                  {item.label}
+                  <span>{item.label}</span>
+                  {['Track Applications', 'Build Resume', 'Cover Letter', 'Form Helper'].includes(item.label) && !isPro && (
+                    <span className="text-xs px-1.5 py-0.5 rounded-full font-semibold" style={{ background: '#EBF5FF', color: '#0095FF' }}>PRO</span>
+                  )}
                 </motion.button>
               ))}
 
@@ -494,8 +520,30 @@ export default function CareerMindApp() {
               )}
             </nav>
 
-            {/* Bottom: Auth */}
-            <div className="px-3 py-3">
+            {/* Bottom: Subscription + Auth */}
+            <div className="px-3 py-3 space-y-2" style={{ borderTop: "1px solid #F0F0F0" }}>
+              {/* Subscription status */}
+              {isPro ? (
+                <button
+                  onClick={openCustomerPortal}
+                  className="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between"
+                  style={{ background: '#EBF5FF', color: '#0095FF' }}
+                >
+                  <span>Pro Plan Active</span>
+                  <span style={{ fontSize: '10px' }}>Manage →</span>
+                </button>
+              ) : (
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => setUpgradeModalOpen(true)}
+                  className="w-full px-3 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5"
+                  style={{ background: '#0095FF', color: '#FFFFFF' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#007ACC'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = '#0095FF'; }}
+                >
+                  Upgrade to Pro
+                </motion.button>
+              )}
               {!authLoading && (
                 user ? (
                   <div className="flex items-center gap-0">
@@ -706,6 +754,7 @@ export default function CareerMindApp() {
               >
                 <input
                   ref={inputRef}
+                  data-tour="chat-input"
                   type="text"
                   value={input}
                   onChange={e => setInput(e.target.value)}
@@ -769,12 +818,29 @@ export default function CareerMindApp() {
         onClose={() => setFormHelperModalOpen(false)}
       />
 
+      {/* Upgrade Modal */}
+      <UpgradeModal
+        isOpen={upgradeModalOpen}
+        onClose={() => setUpgradeModalOpen(false)}
+        featureName={upgradeFeature}
+      />
+
       {/* Auth Modal */}
       <AuthModal
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
         defaultMode={authModalMode}
       />
+
+      {/* Discovery Animation — shown once on welcome screen */}
+      {showDiscovery && (
+        <DiscoveryAnimation
+          onDismiss={() => {
+            setShowDiscovery(false);
+            sessionStorage.setItem('discovery_shown', 'true');
+          }}
+        />
+      )}
 
     </div>
   );
