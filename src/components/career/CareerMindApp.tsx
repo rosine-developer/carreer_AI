@@ -40,7 +40,7 @@ interface SavedConversation {
 
 export default function CareerMindApp() {
   const { user, signOut, loading: authLoading } = useAuth();
-  const { isPro, openCustomerPortal } = useSubscription();
+  const { isPro, isAdmin, openCustomerPortal } = useSubscription();
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const [upgradeFeature, setUpgradeFeature] = useState('');
 
@@ -523,7 +523,11 @@ export default function CareerMindApp() {
             {/* Bottom: Subscription + Auth */}
             <div className="px-3 py-3 space-y-2" style={{ borderTop: "1px solid #F0F0F0" }}>
               {/* Subscription status */}
-              {isPro ? (
+              {isAdmin ? (
+                <div className="w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5" style={{ background: '#F0FDF4', color: '#16A34A', border: '1px solid #BBF7D0' }}>
+                  Admin — Full Access
+                </div>
+              ) : isPro ? (
                 <button
                   onClick={openCustomerPortal}
                   className="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between"
@@ -626,7 +630,7 @@ export default function CareerMindApp() {
               </nav>
               {/* Bottom */}
               <div className="px-3 py-3 space-y-2" style={{ borderTop: "1px solid #F0F0F0" }}>
-                {!isPro && (
+                {!isPro && !isAdmin && (
                   <motion.button whileTap={{ scale: 0.97 }} onClick={() => { setUpgradeModalOpen(true); setSidebarOpen(false); }} className="w-full px-3 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center" style={{ background: '#0095FF', color: '#FFFFFF' }}>
                     Upgrade to Pro — $3/mo
                   </motion.button>
@@ -659,73 +663,42 @@ export default function CareerMindApp() {
       {/* ── MAIN AREA ── */}
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
 
-        {/* Top bar — always visible on mobile, shown when sidebar hidden on desktop */}
-        <div className="flex items-center gap-3 px-4 py-3 shrink-0 md:hidden" style={{ borderBottom: "1px solid #F0F0F0", background: "#FFFFFF" }}>
-          <motion.button whileTap={{ scale: 0.95 }} onClick={() => setSidebarOpen(v => !v)} className="p-2 rounded-lg" style={{ background: "#F5F5F5", border: "1px solid #E5E5E5", color: "#555" }}>
-            <Menu size={16} />
-          </motion.button>
+        {/* ── UNIFIED HEADER — hidden on desktop when sidebar is open ── */}
+        <div className={`flex items-center gap-2 px-3 py-2 shrink-0 ${sidebarOpen ? 'md:hidden' : ''}`} style={{ borderBottom: "1px solid #F0F0F0", background: "#FFFFFF" }}>
+          {/* Hamburger — only show when sidebar is hidden */}
+          {!sidebarOpen && (
+            <motion.button whileTap={{ scale: 0.95 }} onClick={() => setSidebarOpen(true)} className="p-2 rounded-lg shrink-0" style={{ background: "#F5F5F5", border: "1px solid #E5E5E5", color: "#555" }}>
+              <Menu size={16} />
+            </motion.button>
+          )}
+
+          {/* Logo — always show */}
           <div className="flex items-center gap-0">
-            <img src="/cm_logo.png" alt="CareerMind AI" style={{ width: "40px", height: "40px", objectFit: "contain", marginRight: "-4px" }} />
-            <span className="text-sm font-bold" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
+            <img src="/cm_logo.png" alt="CareerMind AI" style={{ width: "36px", height: "36px", objectFit: "contain", marginRight: "-2px" }} />
+            <span className="text-sm font-bold whitespace-nowrap" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
               CareerMind <span style={{ color: "#0095FF" }}>AI</span>
             </span>
           </div>
+
+          {/* Auth — right side */}
           <div className="ml-auto flex items-center gap-2">
             {!authLoading && !user && (
-              <motion.button whileTap={{ scale: 0.97 }} onClick={openLogin} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: "#0095FF", color: "#FFFFFF" }}>Log in</motion.button>
+              <motion.button whileTap={{ scale: 0.97 }} onClick={openLogin} className="px-3 py-1.5 text-xs font-medium" style={{ background: "#0095FF", color: "#FFFFFF", borderRadius: "20px" }}>
+                Log in
+              </motion.button>
             )}
             {!authLoading && user && (
-              <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: "#0095FF", color: "#FFFFFF" }}>
-                {(user.user_metadata?.full_name?.[0] ?? user.email?.[0] ?? '?').toUpperCase()}
+              <div className="flex items-center gap-1.5">
+                <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0" style={{ background: "#0095FF", color: "#FFFFFF" }} title={user.email ?? ''}>
+                  {(user.user_metadata?.full_name?.[0] ?? user.email?.[0] ?? '?').toUpperCase()}
+                </div>
+                <motion.button whileTap={{ scale: 0.95 }} onClick={signOut} className="p-1.5 rounded-lg" style={{ color: "#BBB" }} onMouseEnter={e => { e.currentTarget.style.color = "#EF4444"; }} onMouseLeave={e => { e.currentTarget.style.color = "#BBB"; }}>
+                  <LogOut size={13} />
+                </motion.button>
               </div>
             )}
           </div>
         </div>
-
-        {/* Desktop top bar — only when sidebar hidden */}
-        {!sidebarOpen && (
-          <div className="flex items-center gap-3 px-4 py-3 shrink-0" style={{ background: "#FFFFFF" }}>
-            {/* Show sidebar button */}
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setSidebarOpen(v => !v)}
-              className="p-2 rounded-lg transition-all"
-              style={{ background: "#F5F5F5", border: "1px solid #E5E5E5", color: "#555" }}
-              title="Show sidebar"
-            >
-              <Menu size={16} />
-            </motion.button>
-
-            {/* Logo */}
-            <div className="flex items-center gap-0">
-              <img src="/cm_logo.png" alt="CareerMind AI" style={{ width: "60px", height: "60px", objectFit: "contain", marginRight: "-8px" }} />
-              <span className="text-sm font-bold" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
-                CareerMind <span style={{ color: "#0095FF" }}>AI</span>
-              </span>
-            </div>
-
-            {/* Auth */}
-            <div className="ml-auto flex items-center gap-2">
-              {!authLoading && !user && (
-                <motion.button whileTap={{ scale: 0.97 }} onClick={openLogin} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: "#0095FF", color: "#FFFFFF" }}>
-                  Log in
-                </motion.button>
-              )}
-              {!authLoading && user && (
-                <div className="flex items-center gap-0">
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: "#0095FF", color: "#FFFFFF" }} title={user.email ?? ''}>
-                    {(user.user_metadata?.full_name?.[0] ?? user.email?.[0] ?? '?').toUpperCase()}
-                  </div>
-                  <motion.button whileTap={{ scale: 0.95 }} onClick={signOut} className="p-1.5 rounded-lg" style={{ color: "#BBB" }} onMouseEnter={e => { e.currentTarget.style.color = "#EF4444"; }} onMouseLeave={e => { e.currentTarget.style.color = "#BBB"; }}>
-                    <LogOut size={13} />
-                  </motion.button>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Sign in banner */}
         <AnimatePresence>
           {!user && !authLoading && showSaveBanner && messages.length > 1 && (
             <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="shrink-0 flex items-center justify-between px-5 py-2" style={{ background: '#EBF5FF', borderBottom: '1px solid #C5E0FF' }}>

@@ -106,7 +106,7 @@ export default function JobCard({
       </div>
 
       <div className="px-4 py-3 flex flex-col gap-2" style={{ borderTop: "1px solid #F0F0F0" }}>
-        <div className="flex gap-2">
+        <div className="grid grid-cols-2 gap-2">
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={() => {
@@ -116,7 +116,7 @@ export default function JobCard({
                 onFindOpportunity(job);
               }
             }}
-            className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-medium"
+            className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium"
             style={{ background: "#0095FF", color: "#FFFFFF" }}
             onMouseEnter={e => { e.currentTarget.style.background = "#007ACC"; }}
             onMouseLeave={e => { e.currentTarget.style.background = "#0095FF"; }}
@@ -127,7 +127,7 @@ export default function JobCard({
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={() => onApply(job)}
-            className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-medium"
+            className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium"
             style={{ background: "#EBF5FF", color: "#0095FF", border: "1px solid #C5E0FF" }}
             onMouseEnter={e => { e.currentTarget.style.background = "#D6ECFF"; }}
             onMouseLeave={e => { e.currentTarget.style.background = "#EBF5FF"; }}
@@ -138,12 +138,12 @@ export default function JobCard({
         </div>
 
         {(onBuildResume || onWriteCoverLetter) && (
-          <div className="flex gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {onBuildResume && (
               <motion.button
                 whileTap={{ scale: 0.97 }}
                 onClick={() => onBuildResume(job)}
-                className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-medium"
+                className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium"
                 style={{ background: "#F5F5F5", border: "1px solid #E5E5E5", color: "#555" }}
                 onMouseEnter={e => { e.currentTarget.style.background = "#EBEBEB"; }}
                 onMouseLeave={e => { e.currentTarget.style.background = "#F5F5F5"; }}
@@ -156,7 +156,7 @@ export default function JobCard({
               <motion.button
                 whileTap={{ scale: 0.97 }}
                 onClick={() => onWriteCoverLetter(job)}
-                className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-medium"
+                className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium"
                 style={{ background: "#F5F5F5", border: "1px solid #E5E5E5", color: "#555" }}
                 onMouseEnter={e => { e.currentTarget.style.background = "#EBEBEB"; }}
                 onMouseLeave={e => { e.currentTarget.style.background = "#F5F5F5"; }}
@@ -171,6 +171,9 @@ export default function JobCard({
     </motion.div>
   );
 }
+
+
+
 
 
 

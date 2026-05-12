@@ -1,11 +1,13 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { useAuth } from './AuthContext';
+import { isAdminEmail } from '../lib/admin';
 
 type Plan = 'free' | 'pro';
 
 interface SubscriptionContextType {
   plan: Plan;
   isPro: boolean;
+  isAdmin: boolean;
   loading: boolean;
   openCheckout: () => void;
   openCustomerPortal: () => void;
@@ -74,6 +76,11 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (user) {
+      // Admins always get Pro for free
+      if (isAdminEmail(user.email)) {
+        setPlan('pro');
+        return;
+      }
       // Check cached plan first for instant UI
       const cached = localStorage.getItem(`careermind:plan:${user.id}`);
       if (cached === 'pro') setPlan('pro');
@@ -96,15 +103,31 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const openCheckout = () => {
+  const openCheckout = async () => {
     if (!CHECKOUT_LINK || CHECKOUT_LINK === 'your_polar_checkout_link_here') {
       alert('Payment not configured yet. Please contact support.');
       return;
     }
-    // Add success redirect back to app
-    const successUrl = `${window.location.origin}?checkout=success`;
-    const checkoutUrl = `${CHECKOUT_LINK}?success_url=${encodeURIComponent(successUrl)}`;
-    window.open(checkoutUrl, '_blank');
+    try {
+      // Use Polar's embedded checkout (opens as overlay on the page)
+      const { PolarEmbedCheckout } = await import('@polar-sh/checkout/embed');
+      const successUrl = `${window.location.origin}?checkout=success`;
+      const checkoutUrl = `${CHECKOUT_LINK}?success_url=${encodeURIComponent(successUrl)}`;
+      
+      const checkout = await PolarEmbedCheckout.create(checkoutUrl, {
+        theme: 'light',
+      });
+
+      // When payment confirmed, refresh subscription status
+      checkout.addEventListener('confirmed', () => {
+        setTimeout(checkSubscription, 2000);
+      });
+    } catch (err) {
+      console.error('Checkout failed:', err);
+      // Fallback: open in new tab
+      const successUrl = `${window.location.origin}?checkout=success`;
+      window.open(`${CHECKOUT_LINK}?success_url=${encodeURIComponent(successUrl)}`, '_blank');
+    }
   };
 
   const openCustomerPortal = () => {
@@ -117,6 +140,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       value={{
         plan,
         isPro: plan === 'pro',
+        isAdmin: isAdminEmail(user?.email),
         loading,
         openCheckout,
         openCustomerPortal,
