@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, Send, Sparkles, ChevronDown, RotateCcw, Menu, Plus, LogOut, UserCircle } from "lucide-react";
+import { Mic, Send, Sparkles, ChevronDown, RotateCcw, Menu, Plus, LogOut, UserCircle, X } from "lucide-react";
 import { Message, JobCard, OnboardingData, PreferenceTag } from "./types";
 import {
   INITIAL_MESSAGE,
@@ -426,7 +426,7 @@ export default function CareerMindApp() {
       className="h-screen w-screen overflow-hidden flex"
       style={{ background: "#FFFFFF", fontFamily: "Manrope, sans-serif" }}
     >
-      {/* ── LEFT SIDEBAR (collapsible) ── */}
+      {/* ── LEFT SIDEBAR — hidden on mobile, shown on md+ ── */}
       <AnimatePresence initial={false}>
         {sidebarOpen && (
           <motion.aside
@@ -434,8 +434,8 @@ export default function CareerMindApp() {
             animate={{ width: 220, opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="flex flex-col shrink-0 h-full overflow-hidden"
-            style={{ background: "#FFFFFF", minWidth: 0 }}
+            className="hidden md:flex flex-col shrink-0 h-full overflow-hidden"
+            style={{ background: "#FFFFFF", minWidth: 0, borderRight: "1px solid #F0F0F0" }}
           >
             {/* Logo + sidebar toggle */}
             <div className="flex items-center gap-1 px-4 py-4">
@@ -569,10 +569,120 @@ export default function CareerMindApp() {
         )}
       </AnimatePresence>
 
-      {/* ── MAIN AREA (career content LEFT + chat RIGHT) ── */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      {/* ── MOBILE SIDEBAR OVERLAY ── */}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-40 md:hidden"
+              style={{ background: "rgba(0,0,0,0.4)" }}
+              onClick={() => setSidebarOpen(false)}
+            />
+            <motion.aside
+              initial={{ x: -260 }}
+              animate={{ x: 0 }}
+              exit={{ x: -260 }}
+              transition={{ type: "spring", damping: 28, stiffness: 300 }}
+              className="fixed left-0 top-0 bottom-0 z-50 flex flex-col md:hidden overflow-hidden"
+              style={{ width: 260, background: "#FFFFFF", boxShadow: "4px 0 20px rgba(0,0,0,0.1)" }}
+            >
+              {/* Logo */}
+              <div className="flex items-center justify-between px-4 py-4" style={{ borderBottom: "1px solid #F0F0F0" }}>
+                <div className="flex items-center gap-0">
+                  <img src="/cm_logo.png" alt="CareerMind AI" style={{ width: "50px", height: "50px", objectFit: "contain", marginRight: "-6px" }} />
+                  <span className="text-sm font-bold" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
+                    CareerMind <span style={{ color: "#0095FF" }}>AI</span>
+                  </span>
+                </div>
+                <button onClick={() => setSidebarOpen(false)} className="p-1.5 rounded-lg" style={{ background: "#F5F5F5", color: "#888" }}>
+                  <X size={15} />
+                </button>
+              </div>
+              {/* New Chat */}
+              <div className="px-3 pt-3 pb-2">
+                <motion.button whileTap={{ scale: 0.97 }} onClick={() => { handleNewConversation(); setSidebarOpen(false); }} className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium" style={{ background: "#0095FF", color: "#FFFFFF" }}>
+                  <Plus size={15} />New Chat
+                </motion.button>
+              </div>
+              {/* Nav */}
+              <nav className="flex-1 px-3 space-y-1 overflow-y-auto py-2">
+                {[
+                  { label: "Track Applications", action: () => { requirePro('Track Applications', () => setTrackerViewOpen(true)); setSidebarOpen(false); } },
+                  { label: "Manage Profile", action: () => { setProfileModalOpen(true); setSidebarOpen(false); } },
+                  { label: "Build Resume", action: () => { requirePro('Resume Builder', () => setResumeModalOpen(true)); setSidebarOpen(false); } },
+                  { label: "Cover Letter", action: () => { requirePro('Cover Letter Writer', () => setCoverLetterModalOpen(true)); setSidebarOpen(false); } },
+                  { label: "Form Helper", action: () => { requirePro('Form Helper', () => setFormHelperModalOpen(true)); setSidebarOpen(false); } },
+                ].map((item) => (
+                  <motion.button key={item.label} whileTap={{ scale: 0.97 }} onClick={item.action} className="w-full flex items-center justify-between px-3 py-3 rounded-xl text-sm text-left" style={{ color: "#444" }} onMouseEnter={e => { e.currentTarget.style.background = "#F0F0F0"; }} onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}>
+                    <span>{item.label}</span>
+                    {['Track Applications', 'Build Resume', 'Cover Letter', 'Form Helper'].includes(item.label) && !isPro && (
+                      <span className="text-xs px-1.5 py-0.5 rounded-full font-semibold" style={{ background: '#EBF5FF', color: '#0095FF' }}>PRO</span>
+                    )}
+                  </motion.button>
+                ))}
+              </nav>
+              {/* Bottom */}
+              <div className="px-3 py-3 space-y-2" style={{ borderTop: "1px solid #F0F0F0" }}>
+                {!isPro && (
+                  <motion.button whileTap={{ scale: 0.97 }} onClick={() => { setUpgradeModalOpen(true); setSidebarOpen(false); }} className="w-full px-3 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center" style={{ background: '#0095FF', color: '#FFFFFF' }}>
+                    Upgrade to Pro — $3/mo
+                  </motion.button>
+                )}
+                {!authLoading && !user && (
+                  <motion.button whileTap={{ scale: 0.97 }} onClick={() => { openLogin(); setSidebarOpen(false); }} className="w-full px-3 py-2.5 rounded-xl text-sm font-medium" style={{ background: "#0095FF", color: "#FFFFFF" }}>
+                    Log in to save chats
+                  </motion.button>
+                )}
+                {!authLoading && user && (
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0" style={{ background: "#0095FF", color: "#FFFFFF" }}>
+                      {(user.user_metadata?.full_name?.[0] ?? user.email?.[0] ?? '?').toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium truncate" style={{ color: "#333" }}>{user.user_metadata?.full_name || user.email?.split('@')[0]}</p>
+                      <p className="text-xs truncate" style={{ color: "#AAA" }}>{user.email}</p>
+                    </div>
+                    <motion.button whileTap={{ scale: 0.95 }} onClick={signOut} className="p-1.5 rounded-lg" style={{ color: "#BBB" }}>
+                      <LogOut size={14} />
+                    </motion.button>
+                  </div>
+                )}
+              </div>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
 
-        {/* Top bar — only shown when sidebar is hidden, to show the toggle + logo */}
+      {/* ── MAIN AREA ── */}
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+
+        {/* Top bar — always visible on mobile, shown when sidebar hidden on desktop */}
+        <div className="flex items-center gap-3 px-4 py-3 shrink-0 md:hidden" style={{ borderBottom: "1px solid #F0F0F0", background: "#FFFFFF" }}>
+          <motion.button whileTap={{ scale: 0.95 }} onClick={() => setSidebarOpen(v => !v)} className="p-2 rounded-lg" style={{ background: "#F5F5F5", border: "1px solid #E5E5E5", color: "#555" }}>
+            <Menu size={16} />
+          </motion.button>
+          <div className="flex items-center gap-0">
+            <img src="/cm_logo.png" alt="CareerMind AI" style={{ width: "40px", height: "40px", objectFit: "contain", marginRight: "-4px" }} />
+            <span className="text-sm font-bold" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
+              CareerMind <span style={{ color: "#0095FF" }}>AI</span>
+            </span>
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            {!authLoading && !user && (
+              <motion.button whileTap={{ scale: 0.97 }} onClick={openLogin} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: "#0095FF", color: "#FFFFFF" }}>Log in</motion.button>
+            )}
+            {!authLoading && user && (
+              <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: "#0095FF", color: "#FFFFFF" }}>
+                {(user.user_metadata?.full_name?.[0] ?? user.email?.[0] ?? '?').toUpperCase()}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Desktop top bar — only when sidebar hidden */}
         {!sidebarOpen && (
           <div className="flex items-center gap-3 px-4 py-3 shrink-0" style={{ background: "#FFFFFF" }}>
             {/* Show sidebar button */}
@@ -628,8 +738,8 @@ export default function CareerMindApp() {
           )}
         </AnimatePresence>
 
-        {/* ── SPLIT: career content LEFT | chat RIGHT ── */}
-        <div className="flex-1 flex overflow-hidden">
+        {/* ── SPLIT: career content LEFT | chat RIGHT (stacked on mobile) ── */}
+        <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
 
           {/* LEFT: Career content (job cards, AI responses) */}
           <div
@@ -709,8 +819,8 @@ export default function CareerMindApp() {
             })()}
           </div>
 
-          {/* RIGHT: Chat input panel */}
-          <div className="flex flex-col shrink-0" style={{ width: "340px", background: "#F8F9FA" }}>
+          {/* RIGHT: Chat input panel — full width on mobile, 340px on desktop */}
+          <div className="flex flex-col shrink-0 w-full md:w-[340px]" style={{ background: "#F8F9FA", borderTop: "1px solid #F0F0F0" }}>
             <div className="px-4 py-3 shrink-0">
               <p className="text-xs font-bold tracking-widest" style={{ color: "#0095FF" }}>CHAT</p>
             </div>
