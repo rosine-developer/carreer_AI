@@ -738,15 +738,16 @@ export default function CareerMindApp() {
           )}
         </AnimatePresence>
 
-        {/* ── SPLIT: career content LEFT | chat RIGHT (stacked on mobile) ── */}
-        <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
+        {/* ── SPLIT: career content LEFT | chat RIGHT ── */}
+        {/* On mobile: only show chat (full screen). On desktop: split view */}
+        <div className="flex-1 flex overflow-hidden">
 
-          {/* LEFT: Career content (job cards, AI responses) */}
+          {/* LEFT: Career content — hidden on mobile */}
           <div
             ref={chatContainerRef}
             onScroll={handleScroll}
-            className="flex-1 overflow-y-auto"
-            style={{ background: "#FFFFFF", scrollbarWidth: "thin", scrollbarColor: "#E5E5E5 transparent" }}
+            className="hidden md:block flex-1 overflow-y-auto"
+            style={{ background: "#FFFFFF", scrollbarWidth: "thin", scrollbarColor: "#E5E5E5 transparent", borderRight: "1px solid #F0F0F0" }}
           >
             {(() => {
               // New chat — always show welcome screen
@@ -819,15 +820,29 @@ export default function CareerMindApp() {
             })()}
           </div>
 
-          {/* RIGHT: Chat input panel — full width on mobile, 340px on desktop */}
-          <div className="flex flex-col shrink-0 w-full md:w-[340px]" style={{ background: "#F8F9FA", borderTop: "1px solid #F0F0F0" }}>
-            <div className="px-4 py-3 shrink-0">
+          {/* RIGHT: Chat panel — full screen on mobile, 340px on desktop */}
+          <div className="flex flex-col w-full md:w-[340px] overflow-hidden" style={{ background: "#FFFFFF" }}>
+            <div className="hidden md:block px-4 py-3 shrink-0" style={{ borderBottom: "1px solid #F0F0F0" }}>
               <p className="text-xs font-bold tracking-widest" style={{ color: "#0095FF" }}>CHAT</p>
             </div>
 
-            {/* Chat history — visible container */}
-            <div className="overflow-y-auto px-3 pt-3 pb-2" style={{ scrollbarWidth: "thin" }}>
-              <div className="rounded-xl p-3 space-y-3" style={{ background: "#FFFFFF", border: "1px solid #E8E8E8" }}>
+            {/* Chat history */}
+            <div className="flex-1 overflow-y-auto px-3 py-3" style={{ scrollbarWidth: "thin" }}>
+              {/* Mobile: show job cards inline in chat */}
+              <div className="md:hidden mb-3">
+                {messages.filter(m => m.jobCards || m.isOnboarding).map((msg) => (
+                  <ChatMessage
+                    key={`mobile-${msg.id}`}
+                    message={msg}
+                    onOnboardingSubmit={!onboardingDone ? handleOnboardingSubmit : undefined}
+                    onFindOpportunity={handleFindOpportunity}
+                    onApply={handleApply}
+                    onBuildResume={handleBuildResume}
+                    onWriteCoverLetter={handleWriteCoverLetter}
+                  />
+                ))}
+              </div>
+              <div className="space-y-3">
                 {messages.filter(m => m.role === 'user' || (m.role === 'ai' && !m.jobCards)).map((msg) => (
                   <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                     <div
@@ -855,7 +870,7 @@ export default function CareerMindApp() {
             </div>
 
             {/* Input box */}
-            <div className="px-3 py-3 shrink-0">
+            <div className="px-3 py-3 shrink-0" style={{ borderTop: "1px solid #F0F0F0", background: "#FFFFFF" }}>
               <div
                 className="flex items-center gap-2 px-3 py-2.5 transition-all"
                 style={{ background: "#FFFFFF", border: "2px solid #C0C0C0", borderRadius: "30px", boxShadow: "0 4px 16px rgba(0,0,0,0.12)" }}
