@@ -7,6 +7,7 @@ import {
   DEFAULT_PREFERENCE_TAGS,
   generateAIResponse,
   generateOnboardingResponse,
+  fetchJobsAfterOnboarding,
 } from "./data";
 import BrainPulse from "./BrainPulse";
 import ChatMessage from "./ChatMessage";
@@ -296,8 +297,25 @@ export default function CareerMindApp() {
       },
     ]);
 
-    const { content, jobCards } = generateOnboardingResponse(data);
-    await addAIMessage(content, jobCards);
+    // Show "searching" message first
+    const { content } = generateOnboardingResponse(data);
+    setIsTyping(true);
+
+    // Fetch real jobs
+    const jobCards = await fetchJobsAfterOnboarding(data);
+
+    await new Promise((r) => setTimeout(r, 600));
+    setIsTyping(false);
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: newId(),
+        role: "ai",
+        content,
+        timestamp: new Date(),
+        jobCards: jobCards.length > 0 ? jobCards : undefined,
+      },
+    ]);
   };
 
   const sendMessage = async () => {
@@ -411,7 +429,7 @@ export default function CareerMindApp() {
             whileTap={{ scale: 0.95 }}
             onClick={() => setTrackerViewOpen(false)}
             className="px-4 py-2 rounded-lg text-sm font-medium"
-            style={{ background: "#F5F5F5", border: "1px solid #E5E5E5", color: "#333" }}
+            style={{ background: "#FFFFFF", border: "1px solid #E5E5E5", color: "#333" }}
           >
             Back to Chat
           </motion.button>
@@ -448,7 +466,7 @@ export default function CareerMindApp() {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setSidebarOpen(v => !v)}
                 className="p-1.5 rounded-lg transition-all"
-                style={{ background: "#F5F5F5", border: "1px solid #E5E5E5", color: "#555" }}
+                style={{ background: "#FFFFFF", border: "1px solid #E5E5E5", color: "#555" }}
                 title="Hide sidebar"
               >
                 <Menu size={15} />
@@ -492,7 +510,7 @@ export default function CareerMindApp() {
                 >
                   <span>{item.label}</span>
                   {['Track Applications', 'Build Resume', 'Cover Letter', 'Form Helper'].includes(item.label) && !isPro && (
-                    <span className="text-xs px-1.5 py-0.5 rounded-full font-semibold" style={{ background: '#EBF5FF', color: '#0095FF' }}>PRO</span>
+                    <span className="text-xs px-1.5 py-0.5 rounded-full font-semibold" style={{ background: '#FFFFFF', color: '#0095FF' }}>PRO</span>
                   )}
                 </motion.button>
               ))}
@@ -508,7 +526,7 @@ export default function CareerMindApp() {
                       className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-left transition-all"
                       style={{
                         color: c.id === currentConversationId ? "#0095FF" : "#666",
-                        background: c.id === currentConversationId ? "#EBF5FF" : "transparent",
+                        background: c.id === currentConversationId ? "#FFFFFF" : "transparent",
                       }}
                       onMouseEnter={e => { if (c.id !== currentConversationId) e.currentTarget.style.background = "#F0F0F0"; }}
                       onMouseLeave={e => { if (c.id !== currentConversationId) e.currentTarget.style.background = "transparent"; }}
@@ -531,7 +549,7 @@ export default function CareerMindApp() {
                 <button
                   onClick={openCustomerPortal}
                   className="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between"
-                  style={{ background: '#EBF5FF', color: '#0095FF' }}
+                  style={{ background: '#FFFFFF', color: '#0095FF' }}
                 >
                   <span>Pro Plan Active</span>
                   <span style={{ fontSize: '10px' }}>Manage →</span>
@@ -601,7 +619,7 @@ export default function CareerMindApp() {
                     CareerMind <span style={{ color: "#0095FF" }}>AI</span>
                   </span>
                 </div>
-                <button onClick={() => setSidebarOpen(false)} className="p-1.5 rounded-lg" style={{ background: "#F5F5F5", color: "#888" }}>
+                <button onClick={() => setSidebarOpen(false)} className="p-1.5 rounded-lg" style={{ background: "#FFFFFF", color: "#888" }}>
                   <X size={15} />
                 </button>
               </div>
@@ -623,7 +641,7 @@ export default function CareerMindApp() {
                   <motion.button key={item.label} whileTap={{ scale: 0.97 }} onClick={item.action} className="w-full flex items-center justify-between px-3 py-3 rounded-xl text-sm text-left" style={{ color: "#444" }} onMouseEnter={e => { e.currentTarget.style.background = "#F0F0F0"; }} onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}>
                     <span>{item.label}</span>
                     {['Track Applications', 'Build Resume', 'Cover Letter', 'Form Helper'].includes(item.label) && !isPro && (
-                      <span className="text-xs px-1.5 py-0.5 rounded-full font-semibold" style={{ background: '#EBF5FF', color: '#0095FF' }}>PRO</span>
+                      <span className="text-xs px-1.5 py-0.5 rounded-full font-semibold" style={{ background: '#FFFFFF', color: '#0095FF' }}>PRO</span>
                     )}
                   </motion.button>
                 ))}
@@ -667,7 +685,7 @@ export default function CareerMindApp() {
         <div className={`flex items-center gap-2 px-3 py-2 shrink-0 ${sidebarOpen ? 'md:hidden' : ''}`} style={{ borderBottom: "1px solid #F0F0F0", background: "#FFFFFF" }}>
           {/* Hamburger — only show when sidebar is hidden */}
           {!sidebarOpen && (
-            <motion.button whileTap={{ scale: 0.95 }} onClick={() => setSidebarOpen(true)} className="p-2 rounded-lg shrink-0" style={{ background: "#F5F5F5", border: "1px solid #E5E5E5", color: "#555" }}>
+            <motion.button whileTap={{ scale: 0.95 }} onClick={() => setSidebarOpen(true)} className="p-2 rounded-lg shrink-0" style={{ background: "#FFFFFF", border: "1px solid #E5E5E5", color: "#555" }}>
               <Menu size={16} />
             </motion.button>
           )}
@@ -701,7 +719,7 @@ export default function CareerMindApp() {
         </div>
         <AnimatePresence>
           {!user && !authLoading && showSaveBanner && messages.length > 1 && (
-            <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="shrink-0 flex items-center justify-between px-5 py-2" style={{ background: '#EBF5FF', borderBottom: '1px solid #C5E0FF' }}>
+            <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="shrink-0 flex items-center justify-between px-5 py-2" style={{ background: '#FFFFFF', borderBottom: '1px solid #E5E5E5' }}>
               <p className="text-xs" style={{ color: '#555' }}>Create a free account to save your conversations</p>
               <div className="flex items-center gap-0">
                 <button onClick={openRegister} className="px-3 py-1 rounded-lg text-xs font-medium" style={{ background: '#0095FF', color: '#FFFFFF' }}>Sign up free</button>
@@ -735,7 +753,7 @@ export default function CareerMindApp() {
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       {["Find job opportunities", "Get career advice", "Prepare applications", "Explore career paths"].map((text, i) => (
-                        <motion.button key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }} onClick={() => { setInput(text); inputRef.current?.focus(); }} className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-center" style={{ background: "#F5F5F5", border: "1px solid #E0E0E0", color: "#111" }} whileHover={{ background: "#EFEFEF" }}>
+                        <motion.button key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }} onClick={() => { setInput(text); inputRef.current?.focus(); }} className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-center" style={{ background: "#FFFFFF", border: "1px solid #E0E0E0", color: "#111" }} whileHover={{ background: "#FFFFFF" }}>
                           {text}
                         </motion.button>
                       ))}
@@ -762,7 +780,7 @@ export default function CareerMindApp() {
                     <AnimatePresence>
                       {isTyping && (
                         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} className="flex justify-start mb-4">
-                          <div className="px-4 py-2.5 rounded-xl" style={{ background: "#F5F5F5", border: "1px solid #EBEBEB" }}>
+                          <div className="px-4 py-2.5 rounded-xl" style={{ background: "#FFFFFF", border: "1px solid #FFFFFF" }}>
                             <span className="text-xs font-medium" style={{ color: "#0095FF" }}>thinking...</span>
                           </div>
                         </motion.div>
@@ -783,7 +801,7 @@ export default function CareerMindApp() {
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     {["Find job opportunities", "Get career advice", "Prepare applications", "Explore career paths"].map((text, i) => (
-                      <motion.button key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }} onClick={() => { setInput(text); inputRef.current?.focus(); }} className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-center" style={{ background: "#F5F5F5", border: "1px solid #E0E0E0", color: "#111" }} whileHover={{ background: "#EFEFEF" }}>
+                      <motion.button key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }} onClick={() => { setInput(text); inputRef.current?.focus(); }} className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-center" style={{ background: "#FFFFFF", border: "1px solid #E0E0E0", color: "#111" }} whileHover={{ background: "#FFFFFF" }}>
                         {text}
                       </motion.button>
                     ))}
@@ -943,6 +961,10 @@ export default function CareerMindApp() {
     </div>
   );
 }
+
+
+
+
 
 
 

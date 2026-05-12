@@ -305,7 +305,7 @@ export default function ApplicationTrackerView() {
               onClick={() => setShowStats(!showStats)}
               className="px-3 py-2 rounded-lg text-xs font-medium"
               style={{
-                background: showStats ? "#0095FF" : "#F5F5F5",
+                background: showStats ? "#0095FF" : "#FFFFFF",
                 border: showStats ? "1px solid #0095FF" : "1px solid #E5E5E5",
                 color: showStats ? "#FFFFFF" : "#333333",
               }}
@@ -340,7 +340,7 @@ export default function ApplicationTrackerView() {
               <div
                 className="p-4 rounded-xl"
                 style={{
-                  background: "#FAFAFA",
+                  background: "#FFFFFF",
                   border: "1px solid #F0F0F0",
                 }}
               >
@@ -423,7 +423,7 @@ export default function ApplicationTrackerView() {
                 <div
                   className="p-4 rounded-xl"
                   style={{
-                    background: "#FAFAFA",
+                    background: "#FFFFFF",
                     border: "1px solid #F0F0F0",
                   }}
                 >
@@ -456,7 +456,7 @@ export default function ApplicationTrackerView() {
                 <div
                   className="p-4 rounded-xl"
                   style={{
-                    background: "#FAFAFA",
+                    background: "#FFFFFF",
                     border: "1px solid #F0F0F0",
                   }}
                 >
@@ -498,7 +498,7 @@ export default function ApplicationTrackerView() {
             <div
               className="p-4 rounded-xl"
               style={{
-                background: "#FAFAFA",
+                background: "#FFFFFF",
                 border: "1px solid #F0F0F0",
               }}
             >
@@ -523,7 +523,7 @@ export default function ApplicationTrackerView() {
                   onClick={() => setShowReminders(false)}
                   className="p-1 rounded-lg"
                   style={{
-                    background: "#F5F5F5",
+                    background: "#FFFFFF",
                     color: "#666666",
                   }}
                 >
@@ -646,7 +646,7 @@ export default function ApplicationTrackerView() {
                     ? status === "all"
                       ? "#0095FF"
                       : STATUS_COLORS[status].bg
-                    : "#FAFAFA",
+                    : "#FFFFFF",
                 border:
                   filter === status
                     ? status === "all"
@@ -722,7 +722,7 @@ export default function ApplicationTrackerView() {
             </div>
 
             {/* Table body */}
-            <div className="divide-y" style={{ borderColor: "#F5F5F5" }}>
+            <div className="divide-y" style={{ borderColor: "#FFFFFF" }}>
               {filteredApplications.length === 0 ? (
                 <div className="px-4 py-12 text-center">
                   <p className="text-sm" style={{ color: "#888888" }}>
@@ -876,7 +876,7 @@ export default function ApplicationTrackerView() {
                   </div>
 
                   {app.notes && expandedMobile === app.id && (
-                    <p className="text-xs mb-3 p-3 rounded-lg" style={{ color: "#444444", background: "#FAFAFA" }}>
+                    <p className="text-xs mb-3 p-3 rounded-lg" style={{ color: "#444444", background: "#FFFFFF" }}>
                       {app.notes}
                     </p>
                   )}
@@ -887,7 +887,7 @@ export default function ApplicationTrackerView() {
                         onClick={() => setExpandedMobile(expandedMobile === app.id ? null : app.id)}
                         className="flex-1 px-3 py-2 rounded-lg text-xs font-medium"
                         style={{
-                          background: "#FAFAFA",
+                          background: "#FFFFFF",
                           border: "1px solid #F0F0F0",
                           color: "#444444",
                         }}
@@ -1066,7 +1066,7 @@ export default function ApplicationTrackerView() {
                 onClick={() => setIsFormOpen(false)}
                 className="flex-1"
                 style={{
-                  background: "#F3F4F6",
+                  background: "#FFFFFF",
                   border: "1px solid rgba(0,0,0,0.1)",
                   color: "#374151",
                 }}
@@ -1091,6 +1091,10 @@ export default function ApplicationTrackerView() {
     </div>
   );
 }
+
+
+
+
 
 
 

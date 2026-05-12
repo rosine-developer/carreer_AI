@@ -46,7 +46,7 @@ export default function ChatMessage({
         {isAI ? (
           <div
             className="rounded-xl px-4 py-3"
-            style={{ background: "#F8F8F8", border: "1px solid #EBEBEB" }}
+            style={{ background: "#FFFFFF", border: "1px solid #FFFFFF" }}
           >
             {/* AI label */}
             <div className="flex items-center gap-1.5 mb-2">
@@ -106,6 +106,10 @@ export default function ChatMessage({
     </motion.div>
   );
 }
+
+
+
+
 
 
 

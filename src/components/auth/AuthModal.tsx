@@ -92,7 +92,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                 <button
                   onClick={() => { reset(); onClose(); }}
                   className="absolute top-3 right-3 p-1.5 rounded-lg z-10"
-                  style={{ color: '#888', background: '#F5F5F5' }}
+                  style={{ color: '#888', background: '#FFFFFF' }}
                 >
                   <X size={15} />
                 </button>
@@ -107,7 +107,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                   </div>
 
                   {/* Tab switcher */}
-                  <div className="flex rounded-xl p-1 mb-4" style={{ background: '#F5F5F5', border: '1px solid #E5E5E5' }}>
+                  <div className="flex rounded-xl p-1 mb-4" style={{ background: '#FFFFFF', border: '1px solid #E5E5E5' }}>
                     {(['login', 'register'] as const).map((m) => (
                       <button
                         key={m}
@@ -133,7 +133,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                             <input
                               type="text" value={fullName} onChange={e => setFullName(e.target.value)}
                               placeholder="Full name" className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm outline-none"
-                              style={{ background: '#F8F8F8', border: '1px solid #E5E5E5', color: '#111' }}
+                              style={{ background: '#FFFFFF', border: '1px solid #E5E5E5', color: '#111' }}
                               onFocus={e => (e.target.style.borderColor = '#0095FF')}
                               onBlur={e => (e.target.style.borderColor = '#E5E5E5')}
                             />
@@ -147,7 +147,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                       <input
                         type="email" value={email} onChange={e => setEmail(e.target.value)}
                         placeholder="Email address" required className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm outline-none"
-                        style={{ background: '#F8F8F8', border: '1px solid #E5E5E5', color: '#111' }}
+                        style={{ background: '#FFFFFF', border: '1px solid #E5E5E5', color: '#111' }}
                         onFocus={e => (e.target.style.borderColor = '#0095FF')}
                         onBlur={e => (e.target.style.borderColor = '#E5E5E5')}
                       />
@@ -158,7 +158,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                       <input
                         type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
                         placeholder="Password" required className="w-full pl-9 pr-9 py-2.5 rounded-xl text-sm outline-none"
-                        style={{ background: '#F8F8F8', border: '1px solid #E5E5E5', color: '#111' }}
+                        style={{ background: '#FFFFFF', border: '1px solid #E5E5E5', color: '#111' }}
                         onFocus={e => (e.target.style.borderColor = '#0095FF')}
                         onBlur={e => (e.target.style.borderColor = '#E5E5E5')}
                       />
@@ -210,3 +210,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
     </AnimatePresence>
   );
 }
+
+
+
+

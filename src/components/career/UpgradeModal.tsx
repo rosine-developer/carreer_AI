@@ -83,7 +83,7 @@ export default function UpgradeModal({ isOpen, onClose, featureName }: UpgradeMo
                   <button
                     onClick={onClose}
                     className="p-1.5 rounded-full shrink-0"
-                    style={{ background: '#F5F5F5', color: '#888' }}
+                    style={{ background: '#FFFFFF', color: '#888' }}
                   >
                     <X size={15} />
                   </button>
@@ -93,7 +93,7 @@ export default function UpgradeModal({ isOpen, onClose, featureName }: UpgradeMo
                 <div className="px-6 pb-4 grid grid-cols-2 gap-4">
 
                   {/* Free Plan */}
-                  <div className="rounded-2xl p-4" style={{ background: '#F8F8F8', border: '1px solid #E5E5E5' }}>
+                  <div className="rounded-2xl p-4" style={{ background: '#FFFFFF', border: '1px solid #E5E5E5' }}>
                     <p className="text-xs font-semibold mb-1" style={{ color: '#888' }}>FREE</p>
                     <p className="text-2xl font-bold mb-3" style={{ color: '#111' }}>$0</p>
                     <div className="space-y-2">
@@ -156,3 +156,7 @@ export default function UpgradeModal({ isOpen, onClose, featureName }: UpgradeMo
     </AnimatePresence>
   );
 }
+
+
+
+

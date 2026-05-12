@@ -76,7 +76,7 @@ export default function OnboardingCard({ onSubmit }: OnboardingCardProps) {
       style={{ background: "#FFFFFF", border: "1px solid #E0E0E0", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}
     >
       {/* Header */}
-      <div className="px-4 py-3 flex items-center gap-2" style={{ borderBottom: "1px solid #F0F0F0", background: "#F8F8F8" }}>
+      <div className="px-4 py-3 flex items-center gap-2" style={{ borderBottom: "1px solid #F0F0F0", background: "#FFFFFF" }}>
         <span className="text-xs font-semibold" style={{ color: "#0095FF", letterSpacing: "0.05em" }}>
           PROFILE INTAKE — STEP 1 OF 1
         </span>
@@ -95,7 +95,7 @@ export default function OnboardingCard({ onSubmit }: OnboardingCardProps) {
                 onClick={() => { setDegree(d); setErrors((e) => ({ ...e, degree: "" })); }}
                 className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
                 style={{
-                  background: degree === d ? "#0095FF" : "#F5F5F5",
+                  background: degree === d ? "#0095FF" : "#FFFFFF",
                   border: degree === d ? "1px solid #0095FF" : "1px solid #E0E0E0",
                   color: degree === d ? "#FFFFFF" : "#333",
                 }}
@@ -147,7 +147,7 @@ export default function OnboardingCard({ onSubmit }: OnboardingCardProps) {
                   disabled={disabled}
                   className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
                   style={{
-                    background: selected ? "#0095FF" : "#F5F5F5",
+                    background: selected ? "#0095FF" : "#FFFFFF",
                     border: selected ? "1px solid #0095FF" : "1px solid #E0E0E0",
                     color: selected ? "#FFFFFF" : disabled ? "#BBB" : "#333",
                     cursor: disabled ? "not-allowed" : "pointer",
@@ -192,7 +192,7 @@ export default function OnboardingCard({ onSubmit }: OnboardingCardProps) {
                 <span
                   key={i}
                   className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium"
-                  style={{ background: "#EBF5FF", border: "1px solid #C5E0FF", color: "#0095FF" }}
+                  style={{ background: "#FFFFFF", border: "1px solid #E5E5E5", color: "#0095FF" }}
                 >
                   {i}
                   <button onClick={() => setInterests(interests.filter((x) => x !== i))}>
@@ -222,6 +222,10 @@ export default function OnboardingCard({ onSubmit }: OnboardingCardProps) {
     </motion.div>
   );
 }
+
+
+
+
 
 
 

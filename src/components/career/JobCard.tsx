@@ -34,7 +34,7 @@ export default function JobCard({
       className="rounded-xl overflow-hidden cursor-default"
       style={{
         background: "#FFFFFF",
-        border: "1px solid #EBEBEB",
+        border: "1px solid #FFFFFF",
         transition: "box-shadow 0.2s ease, transform 0.2s ease",
       }}
     >
@@ -55,7 +55,7 @@ export default function JobCard({
               {job.remote && (
                 <span
                   className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full"
-                  style={{ background: "#EBF5FF", color: "#0095FF", border: "1px solid #C5E0FF" }}
+                  style={{ background: "#FFFFFF", color: "#0095FF", border: "1px solid #E5E5E5" }}
                 >
                   <Wifi size={9} />
                   Remote
@@ -63,12 +63,7 @@ export default function JobCard({
               )}
             </div>
           </div>
-          <div className="flex flex-col items-end shrink-0">
-            <div className="text-xl font-bold" style={{ color: "#0095FF", fontFamily: "Syne, sans-serif", lineHeight: 1 }}>
-              {job.matchScore}%
-            </div>
-            <span className="text-xs mt-0.5" style={{ color: "#BBB" }}>match</span>
-          </div>
+          {/* match score hidden */}
         </div>
 
         <div className="flex items-center gap-4 mt-3">
@@ -98,7 +93,7 @@ export default function JobCard({
           <span
             key={tag}
             className="text-xs px-2 py-0.5 rounded-md"
-            style={{ background: "#F5F5F5", border: "1px solid #E5E5E5", color: "#888" }}
+            style={{ background: "#FFFFFF", border: "1px solid #E5E5E5", color: "#888" }}
           >
             {tag}
           </span>
@@ -128,9 +123,9 @@ export default function JobCard({
             whileTap={{ scale: 0.97 }}
             onClick={() => onApply(job)}
             className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium"
-            style={{ background: "#EBF5FF", color: "#0095FF", border: "1px solid #C5E0FF" }}
-            onMouseEnter={e => { e.currentTarget.style.background = "#D6ECFF"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = "#EBF5FF"; }}
+            style={{ background: "#FFFFFF", color: "#0095FF", border: "1px solid #E5E5E5" }}
+            onMouseEnter={e => { e.currentTarget.style.background = "#FFFFFF"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "#FFFFFF"; }}
           >
             <FileText size={12} />
             Help Me Apply
@@ -144,9 +139,9 @@ export default function JobCard({
                 whileTap={{ scale: 0.97 }}
                 onClick={() => onBuildResume(job)}
                 className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium"
-                style={{ background: "#F5F5F5", border: "1px solid #E5E5E5", color: "#555" }}
-                onMouseEnter={e => { e.currentTarget.style.background = "#EBEBEB"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = "#F5F5F5"; }}
+                style={{ background: "#FFFFFF", border: "1px solid #E5E5E5", color: "#555" }}
+                onMouseEnter={e => { e.currentTarget.style.background = "#FFFFFF"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "#FFFFFF"; }}
               >
                 <FileEdit size={11} />
                 Build Resume
@@ -157,9 +152,9 @@ export default function JobCard({
                 whileTap={{ scale: 0.97 }}
                 onClick={() => onWriteCoverLetter(job)}
                 className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium"
-                style={{ background: "#F5F5F5", border: "1px solid #E5E5E5", color: "#555" }}
-                onMouseEnter={e => { e.currentTarget.style.background = "#EBEBEB"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = "#F5F5F5"; }}
+                style={{ background: "#FFFFFF", border: "1px solid #E5E5E5", color: "#555" }}
+                onMouseEnter={e => { e.currentTarget.style.background = "#FFFFFF"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "#FFFFFF"; }}
               >
                 <Mail size={11} />
                 Cover Letter
@@ -171,6 +166,10 @@ export default function JobCard({
     </motion.div>
   );
 }
+
+
+
+
 
 
 

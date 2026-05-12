@@ -291,7 +291,7 @@ export default function ApplicationFormHelperModal({
             {/* Header */}
             <div
               className="flex items-center justify-between px-6 py-4 shrink-0"
-              style={{ borderBottom: '1px solid rgba(0,0,0,0.1)', background: '#F9FAFB' }}
+              style={{ borderBottom: '1px solid rgba(0,0,0,0.1)', background: '#FFFFFF' }}
             >
               <div className="flex items-center gap-3">
                 <div>
@@ -320,7 +320,7 @@ export default function ApplicationFormHelperModal({
               {/* Left: Question List */}
               <div
                 className="w-full md:w-96 flex flex-col overflow-hidden shrink-0"
-                style={{ borderRight: '1px solid rgba(0,0,0,0.1)', background: '#F9FAFB' }}
+                style={{ borderRight: '1px solid rgba(0,0,0,0.1)', background: '#FFFFFF' }}
               >
                 {/* Search and Filter */}
                 <div className="p-4 space-y-3 shrink-0">
@@ -537,6 +537,10 @@ export default function ApplicationFormHelperModal({
     </AnimatePresence>
   );
 }
+
+
+
+
 
 
 

@@ -238,6 +238,23 @@ export async function generateAIResponse(
     lower.includes("intern") ||
     lower.includes("search");
 
+  // Don't show jobs if user hasn't provided profile info yet
+  const profileKeywords = ['electrician', 'accountant', 'engineer', 'nurse', 'teacher', 
+    'student', 'degree', 'field', 'major', 'studied', 'i study', 'i am a', "i'm a", 
+    'i have a', 'pharmacy', 'medical', 'software', 'marketing', 'business', 'finance',
+    'law', 'design', 'architect', 'chef', 'mechanic', 'plumber', 'welder', 'doctor',
+    'dentist', 'psycholog', 'social work', 'journalism', 'computer science', 'biology',
+    'chemistry', 'physics', 'math', 'economics', 'management', 'hr', 'logistics'];
+
+  const allMessages = [...conversationHistory, { role: 'user', content: userMessage }];
+  
+  const hasProfile = (onboardingData !== null && onboardingData !== undefined) ||
+    allMessages.some(m => m.role === 'user' && 
+      profileKeywords.some(kw => m.content.toLowerCase().includes(kw))
+    );
+
+  const shouldShowJobs = includeJobs && hasProfile;
+
   try {
     const systemPrompt = buildSystemPrompt(onboardingData, tags);
     const conversationContext = conversationHistory
@@ -248,7 +265,7 @@ export async function generateAIResponse(
     // Run AI response and job search in parallel for speed
     const [response, jobCards] = await Promise.all([
       callAIAPI(systemPrompt, conversationContext, userMessage),
-      includeJobs
+      shouldShowJobs
         ? fetchRealJobs(userMessage, conversationContext, onboardingData)
         : Promise.resolve(undefined),
     ]);
@@ -301,31 +318,22 @@ async function fetchRealJobs(
 }
 
 function buildSystemPrompt(onboardingData?: OnboardingData | null, tags?: PreferenceTag[]): string {
-  let prompt = `You are CareerMind AI, a friendly career coach. Help users find jobs, internships, and career advice.
+  const hasProfile = onboardingData !== null && onboardingData !== undefined;
 
-Rules:
-- Always respond directly to what the user just said — never give a generic response
-- If they mention a specific field (electrician, accounting, nursing, etc.), focus ONLY on that field
-- If they ask for internships, give advice specific to internships in their field
-- Keep responses to 2-4 sentences max
-- Be warm and encouraging, especially for students
-- Use emojis occasionally but not too many
-- NEVER suggest unrelated fields or jobs
-- If they say "I'm an electrician student", respond about electrical work specifically
-- NEVER use emojis in your responses — keep text clean and professional
-- Do not use bullet point symbols like • or ★ — use plain numbered lists or plain text
+  let prompt = `You are CareerMind AI, a friendly career coach built into a job search app.
 
-`;
+CRITICAL RULES:
+- Keep ALL responses to 1-3 short sentences maximum
+- NEVER list job titles, companies, or job openings in your text — the app automatically shows real job cards below your message
+- NEVER write "Apply Now" links in text — the job cards have real Apply Now buttons
+- When jobs are being shown, just say something like: "Here are some matches for you. Click Apply Now on any card to apply directly."
+- NEVER say you cannot provide links — the app shows real job cards with direct links automatically
+- NEVER use emojis, bullet points, or numbered lists of jobs
+- If the user asks for jobs without mentioning their field, ask: "What field do you work or study in? That helps me find the right matches for you."
+- If they mention a field, confirm it and say you are finding matches
+${hasProfile ? `- User profile: ${onboardingData!.degree} in ${onboardingData!.fieldOfStudy}. Interests: ${onboardingData!.interests.join(', ')}.` : ''}
 
-  if (onboardingData) {
-    prompt += `User background: ${onboardingData.degree} in ${onboardingData.fieldOfStudy}. Interests: ${onboardingData.interests.join(', ')}.\n\n`;
-  }
-
-  if (tags && tags.length > 0) {
-    prompt += `Preferences: ${tags.map(t => `${t.label}`).join(', ')}.\n\n`;
-  }
-
-  prompt += `Always give specific, actionable advice relevant to what the user actually said.`;
+Always be brief. The job cards do the heavy lifting — your job is just to guide the conversation.`;
 
   return prompt;
 }
@@ -516,13 +524,33 @@ export function generateOnboardingResponse(data: OnboardingData): {
   content: string;
   jobCards?: JobCard[];
 } {
-  // Trigger a real job search in the background - for now show a loading message
-  // The actual jobs will be fetched when user asks for them
-  const fieldJobs = generateJobCards(data.fieldOfStudy, data.interests.join(" "), data);
   return {
-    content: `Excellent! I've processed your profile. Here's what I know about you:\n\n**Degree:** ${data.degree} in ${data.fieldOfStudy}\n**Top Interests:** ${data.interests.join(", ")}\n\nI'm now searching real job listings for **${data.fieldOfStudy}** roles that match your background. Ask me to "find jobs" or "show internships" and I'll pull live results from the job market for you! 🔍`,
-    jobCards: undefined,
+    content: `Profile saved. Here are job matches for **${data.fieldOfStudy}** based on your background:`,
+    jobCards: undefined, // will be populated by fetchRealJobs below
   };
+}
+
+// Called right after onboarding to fetch real jobs
+export async function fetchJobsAfterOnboarding(data: OnboardingData): Promise<JobCard[]> {
+  try {
+    const { query, isInternship } = extractJobQuery(data.fieldOfStudy, data.interests.join(' '));
+    const realJobs = await searchJobs(query, { internship: isInternship, context: data.fieldOfStudy });
+    return realJobs.map((job): JobCard => ({
+      id: job.id,
+      title: job.title,
+      company: job.company,
+      location: job.location,
+      salary: job.salary,
+      matchScore: job.matchScore,
+      remote: job.remote,
+      type: job.type,
+      description: job.description,
+      tags: job.tags,
+      applyUrl: job.applyUrl,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 export function generateCoverLetter(job: JobCard, onboardingData?: OnboardingData | null): string {
@@ -545,5 +573,9 @@ I welcome the opportunity to discuss how my background, skills, and enthusiasm c
 Warm regards,
 ${name}`;
 }
+
+
+
+
 
 

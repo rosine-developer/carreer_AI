@@ -293,7 +293,7 @@ export default function ResumeBuilderModal({
             {/* Header */}
             <div
               className="flex items-center justify-between px-6 py-4 shrink-0"
-              style={{ borderBottom: '1px solid rgba(0,0,0,0.1)', background: '#F9FAFB' }}
+              style={{ borderBottom: '1px solid rgba(0,0,0,0.1)', background: '#FFFFFF' }}
             >
               <div className="flex items-center gap-3">
                 <div>
@@ -388,7 +388,7 @@ export default function ResumeBuilderModal({
                   {/* Template Controls */}
                   <div
                     className="px-5 py-4 shrink-0 space-y-3"
-                    style={{ borderBottom: '1px solid rgba(0,0,0,0.1)', background: '#F9FAFB' }}
+                    style={{ borderBottom: '1px solid rgba(0,0,0,0.1)', background: '#FFFFFF' }}
                   >
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                       <div>
@@ -464,7 +464,7 @@ export default function ResumeBuilderModal({
                                       ...provided.draggableProps.style,
                                       opacity: section.visible ? 1 : 0.5,
                                       borderColor: 'rgba(0,0,0,0.1)',
-                                      background: '#F9FAFB',
+                                      background: '#FFFFFF',
                                     }}
                                   >
                                     {/* Section Header */}
@@ -546,14 +546,14 @@ export default function ResumeBuilderModal({
                 >
                   <div
                     className="px-5 py-3 flex items-center gap-2 shrink-0"
-                    style={{ borderBottom: '1px solid rgba(0,0,0,0.1)', background: '#F9FAFB' }}
+                    style={{ borderBottom: '1px solid rgba(0,0,0,0.1)', background: '#FFFFFF' }}
                   >
                     <Eye size={13} style={{ color: '#0095FF' }} />
                     <span className="text-xs font-mono" style={{ color: '#0095FF' }}>
                       LIVE PREVIEW
                     </span>
                   </div>
-                  <div className="flex-1 overflow-y-auto p-5" style={{ background: '#F3F4F6' }}>
+                  <div className="flex-1 overflow-y-auto p-5" style={{ background: '#FFFFFF' }}>
                     <ResumePreview resumeState={resumeState} />
                   </div>
                 </div>
@@ -1132,6 +1132,10 @@ function ResumePreview({ resumeState }: { resumeState: ResumeState }) {
     </div>
   );
 }
+
+
+
+
 
 
 
