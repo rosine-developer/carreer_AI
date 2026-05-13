@@ -122,6 +122,7 @@ export default function CareerMindApp() {
     if (!user) return; // guests: never save
     if (!currentConversationId || messages.length <= 1) return;
 
+    const key = `careerMind_conversations_${user.id}`;
     const conversation: SavedConversation = {
       id: currentConversationId,
       title: generateTitle(messages),
@@ -135,7 +136,7 @@ export default function CareerMindApp() {
     setConversations(prev => {
       const filtered = prev.filter(c => c.id !== currentConversationId);
       const updated = [conversation, ...filtered];
-      localStorage.setItem(storageKey, JSON.stringify(updated));
+      localStorage.setItem(key, JSON.stringify(updated));
       return updated;
     });
   };
@@ -182,7 +183,8 @@ export default function CareerMindApp() {
   useEffect(() => {
     if (user) {
       try {
-        const saved = localStorage.getItem(storageKey);
+        const key = `careerMind_conversations_${user.id}`;
+        const saved = localStorage.getItem(key);
         if (saved) {
           const parsed = JSON.parse(saved);
           const withDates = parsed.map((conv: any) => ({
@@ -195,6 +197,23 @@ export default function CareerMindApp() {
           }));
           setConversations(withDates);
         }
+        // Also save current chat to their account immediately
+        if (messages.length > 1 && currentConversationId) {
+          const key2 = `careerMind_conversations_${user.id}`;
+          const conversation: SavedConversation = {
+            id: currentConversationId,
+            title: generateTitle(messages),
+            timestamp: new Date(),
+            messages,
+            onboardingData,
+            onboardingDone,
+            tags,
+          };
+          const existing = localStorage.getItem(key2);
+          const existingParsed = existing ? JSON.parse(existing) : [];
+          const filtered = existingParsed.filter((c: any) => c.id !== currentConversationId);
+          localStorage.setItem(key2, JSON.stringify([conversation, ...filtered]));
+        }
       } catch (error) {
         console.error('Error loading conversations after login:', error);
       }
@@ -206,10 +225,34 @@ export default function CareerMindApp() {
 
   // Save conversation when messages change — only for logged-in users
   useEffect(() => {
-    if (user && currentConversationId && messages.length > 1) {
-      saveCurrentConversation();
+    if (!user || !currentConversationId || messages.length <= 1) return;
+
+    const key = `careerMind_conversations_${user.id}`;
+    const conversation: SavedConversation = {
+      id: currentConversationId,
+      title: generateTitle(messages),
+      timestamp: new Date(),
+      messages,
+      onboardingData,
+      onboardingDone,
+      tags,
+    };
+
+    try {
+      const existing = localStorage.getItem(key);
+      const existingParsed = existing ? JSON.parse(existing) : [];
+      const filtered = existingParsed.filter((c: any) => c.id !== currentConversationId);
+      const updated = [conversation, ...filtered];
+      localStorage.setItem(key, JSON.stringify(updated));
+      setConversations(updated.map((c: any) => ({
+        ...c,
+        timestamp: new Date(c.timestamp),
+        messages: c.messages.map((m: any) => ({ ...m, timestamp: new Date(m.timestamp) })),
+      })));
+    } catch (err) {
+      console.error('Failed to save conversation:', err);
     }
-  }, [messages, onboardingData, onboardingDone, tags]);
+  }, [messages, user, currentConversationId, onboardingData, onboardingDone, tags]);
 
   // Create new conversation
   const handleNewConversation = () => {
