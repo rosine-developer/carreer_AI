@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, Send, Sparkles, ChevronDown, RotateCcw, Menu, Plus, LogOut, UserCircle, X } from "lucide-react";
+import { Mic, Send, Sparkles, ChevronDown, RotateCcw, Menu, Plus, LogOut, UserCircle, X, Search, Pencil, Share2, Trash2, MoreHorizontal } from "lucide-react";
 import { Message, JobCard, OnboardingData, PreferenceTag } from "./types";
 import {
   INITIAL_MESSAGE,
@@ -24,6 +24,7 @@ import AuthModal from "../auth/AuthModal";
 import { useAuth } from "../../contexts/AuthContext";
 import DiscoveryAnimation from "./DiscoveryAnimation";
 import UpgradeModal from "./UpgradeModal";
+import ShareModal from "./ShareModal";
 import { useSubscription } from "../../contexts/SubscriptionContext";
 
 let messageIdCounter = 1;
@@ -42,6 +43,13 @@ interface SavedConversation {
 export default function CareerMindApp() {
   const { user, signOut, loading: authLoading } = useAuth();
   const { isPro, isAdmin, openCustomerPortal } = useSubscription();
+
+  // Close dropdown menu when clicking outside
+  useEffect(() => {
+    const handler = () => setOpenMenuId(null);
+    document.addEventListener('click', handler);
+    return () => document.removeEventListener('click', handler);
+  }, []);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const [upgradeFeature, setUpgradeFeature] = useState('');
 
@@ -61,6 +69,12 @@ export default function CareerMindApp() {
     // Show only once per session
     return !sessionStorage.getItem('discovery_shown');
   });
+  const [chatSearch, setChatSearch] = useState('');
+  const [renamingId, setRenamingId] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState('');
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [menuPosition, setMenuPosition] = useState<'bottom' | 'top'>('bottom');
+  const [shareChat, setShareChat] = useState<{ id: string; title: string } | null>(null);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
   const [showSaveBanner, setShowSaveBanner] = useState(true);
@@ -515,25 +529,143 @@ export default function CareerMindApp() {
                 </motion.button>
               ))}
 
+              {/* Search chats — between Form Helper and Recent */}
+              {user && (
+                <div className="pt-2 pb-1">
+                  <div className="relative">
+                    <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: '#AAA' }} />
+                    <input
+                      type="text"
+                      value={chatSearch}
+                      onChange={e => setChatSearch(e.target.value)}
+                      placeholder="Search chats..."
+                      className="w-full pl-8 pr-3 py-2 rounded-xl text-xs outline-none"
+                      style={{ background: '#FFFFFF', border: '1px solid #E5E5E5', color: '#111' }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Recent conversations with actions */}
               {user && conversations.length > 0 && (
-                <div className="pt-3">
-                  <p className="text-xs font-bold px-3 pb-2" style={{ color: "#111", letterSpacing: "0.05em" }}>RECENT</p>
-                  {conversations.slice(0, 8).map(c => (
-                    <motion.button
-                      key={c.id}
-                      whileTap={{ scale: 0.97 }}
-                      onClick={() => handleSelectConversation(c.id)}
-                      className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-left transition-all"
-                      style={{
-                        color: c.id === currentConversationId ? "#0095FF" : "#666",
-                        background: c.id === currentConversationId ? "#FFFFFF" : "transparent",
-                      }}
-                      onMouseEnter={e => { if (c.id !== currentConversationId) e.currentTarget.style.background = "#F0F0F0"; }}
-                      onMouseLeave={e => { if (c.id !== currentConversationId) e.currentTarget.style.background = "transparent"; }}
-                    >
-                      <span className="truncate">{c.title}</span>
-                    </motion.button>
-                  ))}
+                <div className="pt-1">
+                  <p className="text-xs font-bold px-3 pb-1" style={{ color: "#111", letterSpacing: "0.05em" }}>RECENT</p>
+                  {conversations
+                    .filter(c => !chatSearch || c.title.toLowerCase().includes(chatSearch.toLowerCase()))
+                    .slice(0, 10)
+                    .map(c => (
+                      <div
+                        key={c.id}
+                        className="group relative flex items-center rounded-xl mb-0.5"
+                        style={{ background: c.id === currentConversationId ? '#EBF5FF' : 'transparent' }}
+                        onMouseEnter={e => { if (c.id !== currentConversationId) e.currentTarget.style.background = '#F0F0F0'; }}
+                        onMouseLeave={e => { if (c.id !== currentConversationId) e.currentTarget.style.background = 'transparent'; }}
+                      >
+                        {/* Rename input or title button */}
+                        {renamingId === c.id ? (
+                          <input
+                            autoFocus
+                            value={renameValue}
+                            onChange={e => setRenameValue(e.target.value)}
+                            onBlur={() => {
+                              if (renameValue.trim()) {
+                                setConversations(prev => {
+                                  const updated = prev.map(conv => conv.id === c.id ? { ...conv, title: renameValue.trim() } : conv);
+                                  if (user) localStorage.setItem(storageKey, JSON.stringify(updated));
+                                  return updated;
+                                });
+                              }
+                              setRenamingId(null);
+                            }}
+                            onKeyDown={e => {
+                              if (e.key === 'Enter') e.currentTarget.blur();
+                              if (e.key === 'Escape') setRenamingId(null);
+                            }}
+                            className="flex-1 px-3 py-2 text-xs outline-none rounded-xl"
+                            style={{ border: '1px solid #0095FF', color: '#111' }}
+                          />
+                        ) : (
+                          <button
+                            onClick={() => handleSelectConversation(c.id)}
+                            className="flex-1 px-3 py-2 text-xs text-left truncate"
+                            style={{ color: c.id === currentConversationId ? '#0095FF' : '#555' }}
+                          >
+                            {c.title}
+                          </button>
+                        )}
+
+                        {/* 3-dots menu button — visible on hover */}
+                        {renamingId !== c.id && (
+                          <div className="hidden group-hover:flex items-center pr-1.5 shrink-0 relative">
+                            <button
+                              onClick={e => {
+                                e.stopPropagation();
+                                // Detect available space below the button
+                                const rect = e.currentTarget.getBoundingClientRect();
+                                const spaceBelow = window.innerHeight - rect.bottom;
+                                setMenuPosition(spaceBelow < 130 ? 'top' : 'bottom');
+                                setOpenMenuId(openMenuId === c.id ? null : c.id);
+                              }}
+                              className="p-1.5 rounded-lg"
+                              style={{ color: '#888' }}
+                              onMouseEnter={e => { e.currentTarget.style.color = '#0095FF'; }}
+                              onMouseLeave={e => { e.currentTarget.style.color = '#888'; }}
+                            >
+                              <MoreHorizontal size={14} />
+                            </button>
+
+                            {/* Dropdown — positioned up or down based on available space */}
+                            {openMenuId === c.id && (
+                              <div
+                                className="absolute right-0 z-50 rounded-xl overflow-hidden"
+                                style={{
+                                  background: '#FFFFFF',
+                                  border: '1px solid #E5E5E5',
+                                  boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
+                                  minWidth: '130px',
+                                  ...(menuPosition === 'top'
+                                    ? { bottom: '100%', marginBottom: '4px' }
+                                    : { top: '100%', marginTop: '4px' }),
+                                }}
+                                onClick={e => e.stopPropagation()}
+                              >
+                                <button
+                                  onClick={() => { setRenamingId(c.id); setRenameValue(c.title); setOpenMenuId(null); }}
+                                  className="w-full flex items-center gap-2 px-3 py-2 text-xs text-left"
+                                  style={{ color: '#333' }}
+                                  onMouseEnter={e => { e.currentTarget.style.background = '#F5F5F5'; }}
+                                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+                                >
+                                  <Pencil size={12} /> Rename
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setShareChat({ id: c.id, title: c.title });
+                                    setOpenMenuId(null);
+                                  }}
+                                  className="w-full flex items-center gap-2 px-3 py-2 text-xs text-left"
+                                  style={{ color: '#333' }}
+                                  onMouseEnter={e => { e.currentTarget.style.background = '#F5F5F5'; }}
+                                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+                                >
+                                  <Share2 size={12} /> Share
+                                </button>
+                                <div style={{ borderTop: '1px solid #F0F0F0' }} />
+                                <button
+                                  onClick={() => { handleDeleteConversation(c.id); setOpenMenuId(null); }}
+                                  className="w-full flex items-center gap-2 px-3 py-2 text-xs text-left"
+                                  style={{ color: '#EF4444' }}
+                                  onMouseEnter={e => { e.currentTarget.style.background = '#FEF2F2'; }}
+                                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+                                >
+                                  <Trash2 size={12} /> Delete
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))}
                 </div>
               )}
             </nav>
@@ -939,6 +1071,13 @@ export default function CareerMindApp() {
         isOpen={upgradeModalOpen}
         onClose={() => setUpgradeModalOpen(false)}
         featureName={upgradeFeature}
+      />
+
+      {/* Share Modal */}
+      <ShareModal
+        isOpen={shareChat !== null}
+        onClose={() => setShareChat(null)}
+        chatTitle={shareChat?.title || ''}
       />
 
       {/* Auth Modal */}
