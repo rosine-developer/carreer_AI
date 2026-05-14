@@ -78,7 +78,7 @@ export default function PreferenceTagTrainer({
           className="text-xs transition-colors"
           style={{
             color: showSuggestions ? "#00D4C8" : "rgba(255,255,255,0.3)",
-            fontFamily: "Manrope, sans-serif",
+            fontFamily: "Sora, sans-serif",
           }}
         >
           {showSuggestions ? "Hide suggestions" : "Browse tags"}
@@ -116,7 +116,7 @@ export default function PreferenceTagTrainer({
                       : tag.category === "negative"
                       ? "#EF4444"
                       : "rgba(255,255,255,0.6)",
-                  fontFamily: "Manrope, sans-serif",
+                  fontFamily: "Sora, sans-serif",
                 }}
               >
                 {/* Weight dots */}
@@ -170,7 +170,7 @@ export default function PreferenceTagTrainer({
                       background: "rgba(255,255,255,0.03)",
                       border: "1px dashed rgba(255,255,255,0.12)",
                       color: "rgba(255,255,255,0.4)",
-                      fontFamily: "Manrope, sans-serif",
+                      fontFamily: "Sora, sans-serif",
                     }}
                   >
                     <Plus size={9} />
@@ -196,7 +196,7 @@ export default function PreferenceTagTrainer({
             background: "rgba(255,255,255,0.03)",
             border: "1px solid rgba(255,255,255,0.07)",
             color: "rgba(255,255,255,0.65)",
-            fontFamily: "Manrope, sans-serif",
+            fontFamily: "Sora, sans-serif",
           }}
           onFocus={(e) => {
             e.currentTarget.style.border = "1px solid rgba(245, 166, 35, 0.3)";
@@ -221,6 +221,12 @@ export default function PreferenceTagTrainer({
     </div>
   );
 }
+
+
+
+
+
+
 
 
 

@@ -68,13 +68,13 @@ export default function OpportunityDrawer({ job, isOpen, onClose }: OpportunityD
               <div>
                 <h2
                   className="text-base font-bold"
-                  style={{ color: "rgba(255,255,255,0.9)", fontFamily: "Syne, sans-serif" }}
+                  style={{ color: "rgba(255,255,255,0.9)", fontFamily: "Sora, sans-serif" }}
                 >
                   Find Opportunity
                 </h2>
                 <p
                   className="text-xs mt-0.5"
-                  style={{ color: "rgba(255,255,255,0.35)", fontFamily: "Manrope, sans-serif" }}
+                  style={{ color: "rgba(255,255,255,0.35)", fontFamily: "Sora, sans-serif" }}
                 >
                   {job.title} at {job.company}
                 </p>
@@ -109,7 +109,7 @@ export default function OpportunityDrawer({ job, isOpen, onClose }: OpportunityD
                       background: "rgba(0, 212, 200, 0.1)",
                       border: "1px solid rgba(0, 212, 200, 0.2)",
                       color: "#00D4C8",
-                      fontFamily: "Syne, sans-serif",
+                      fontFamily: "Sora, sans-serif",
                     }}
                   >
                     {job.company.slice(0, 2).toUpperCase()}
@@ -117,13 +117,13 @@ export default function OpportunityDrawer({ job, isOpen, onClose }: OpportunityD
                   <div>
                     <div
                       className="font-semibold text-sm"
-                      style={{ color: "rgba(255,255,255,0.85)", fontFamily: "Manrope, sans-serif" }}
+                      style={{ color: "rgba(255,255,255,0.85)", fontFamily: "Sora, sans-serif" }}
                     >
                       {job.title}
                     </div>
                     <div
                       className="text-xs"
-                      style={{ color: "rgba(255,255,255,0.4)", fontFamily: "Manrope, sans-serif" }}
+                      style={{ color: "rgba(255,255,255,0.4)", fontFamily: "Sora, sans-serif" }}
                     >
                       {job.company} · {job.location}
                     </div>
@@ -134,7 +134,7 @@ export default function OpportunityDrawer({ job, isOpen, onClose }: OpportunityD
                   style={{
                     background: "rgba(0, 212, 200, 0.1)",
                     color: "#00D4C8",
-                    fontFamily: "Syne, sans-serif",
+                    fontFamily: "Sora, sans-serif",
                   }}
                 >
                   {job.matchScore}% MATCH
@@ -168,7 +168,7 @@ export default function OpportunityDrawer({ job, isOpen, onClose }: OpportunityD
                         background: `${platformColors[source.platform]}22`,
                         border: `1px solid ${platformColors[source.platform]}33`,
                         color: platformColors[source.platform] || "#fff",
-                        fontFamily: "Syne, sans-serif",
+                        fontFamily: "Sora, sans-serif",
                       }}
                     >
                       {source.logo}
@@ -179,14 +179,14 @@ export default function OpportunityDrawer({ job, isOpen, onClose }: OpportunityD
                         className="font-semibold text-sm"
                         style={{
                           color: "rgba(255,255,255,0.8)",
-                          fontFamily: "Manrope, sans-serif",
+                          fontFamily: "Sora, sans-serif",
                         }}
                       >
                         {source.platform}
                       </div>
                       <div
                         className="text-xs"
-                        style={{ color: "rgba(255,255,255,0.3)", fontFamily: "Manrope, sans-serif" }}
+                        style={{ color: "rgba(255,255,255,0.3)", fontFamily: "Sora, sans-serif" }}
                       >
                         {source.jobCount.toLocaleString()} listings
                       </div>
@@ -217,7 +217,7 @@ export default function OpportunityDrawer({ job, isOpen, onClose }: OpportunityD
                           background: "rgba(0, 212, 200, 0.1)",
                           border: "1px solid rgba(0, 212, 200, 0.2)",
                           color: "#00D4C8",
-                          fontFamily: "Manrope, sans-serif",
+                          fontFamily: "Sora, sans-serif",
                         }}
                       >
                         <ExternalLink size={11} />
@@ -262,14 +262,14 @@ export default function OpportunityDrawer({ job, isOpen, onClose }: OpportunityD
                       className="font-semibold text-sm"
                       style={{
                         color: "rgba(255,255,255,0.8)",
-                        fontFamily: "Manrope, sans-serif",
+                        fontFamily: "Sora, sans-serif",
                       }}
                     >
                       {job.company} Careers
                     </div>
                     <div
                       className="text-xs"
-                      style={{ color: "rgba(255,255,255,0.3)", fontFamily: "Manrope, sans-serif" }}
+                      style={{ color: "rgba(255,255,255,0.3)", fontFamily: "Sora, sans-serif" }}
                     >
                       Apply directly at source
                     </div>
@@ -284,6 +284,12 @@ export default function OpportunityDrawer({ job, isOpen, onClose }: OpportunityD
     </AnimatePresence>
   );
 }
+
+
+
+
+
+
 
 
 

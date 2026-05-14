@@ -44,12 +44,12 @@ export default function JobCard({
           <div className="flex-1 min-w-0">
             <h3
               className="text-base font-semibold truncate"
-              style={{ color: "#111", fontFamily: "Manrope, sans-serif" }}
+              style={{ color: "#111", fontFamily: "Sora, sans-serif" }}
             >
               {job.title}
             </h3>
             <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-sm" style={{ color: "#666", fontFamily: "Manrope, sans-serif" }}>
+              <span className="text-sm" style={{ color: "#666", fontFamily: "Sora, sans-serif" }}>
                 {job.company}
               </span>
               {job.remote && (
@@ -166,6 +166,12 @@ export default function JobCard({
     </motion.div>
   );
 }
+
+
+
+
+
+
 
 
 

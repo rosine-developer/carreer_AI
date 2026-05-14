@@ -279,7 +279,7 @@ export default function ApplicationTrackerView() {
       style={{
         background:
           "#FFFFFF",
-        fontFamily: "Manrope, sans-serif",
+        fontFamily: "Sora, sans-serif",
       }}
     >
       {/* Header */}
@@ -290,7 +290,7 @@ export default function ApplicationTrackerView() {
               className="text-2xl font-bold"
               style={{
                 color: "#111111",
-                fontFamily: "Syne, sans-serif",
+                fontFamily: "Sora, sans-serif",
               }}
             >
               Application Tracker
@@ -347,7 +347,7 @@ export default function ApplicationTrackerView() {
                 <p className="text-xs mb-1" style={{ color: "#666666" }}>
                   Total Applications
                 </p>
-                <p className="text-3xl font-bold" style={{ color: "#111111", fontFamily: "Syne, sans-serif" }}>
+                <p className="text-3xl font-bold" style={{ color: "#111111", fontFamily: "Sora, sans-serif" }}>
                   {stats.total}
                 </p>
               </div>
@@ -364,7 +364,7 @@ export default function ApplicationTrackerView() {
                   Applied
                 </p>
                 <div className="flex items-baseline gap-2">
-                  <p className="text-3xl font-bold" style={{ color: "#FFFFFF", fontFamily: "Syne, sans-serif" }}>
+                  <p className="text-3xl font-bold" style={{ color: "#FFFFFF", fontFamily: "Sora, sans-serif" }}>
                     {statusCounts.applied}
                   </p>
                   <p className="text-sm" style={{ color: "rgba(255,255,255,0.75)" }}>
@@ -385,7 +385,7 @@ export default function ApplicationTrackerView() {
                   Interview
                 </p>
                 <div className="flex items-baseline gap-2">
-                  <p className="text-3xl font-bold" style={{ color: "#EAB308", fontFamily: "Syne, sans-serif" }}>
+                  <p className="text-3xl font-bold" style={{ color: "#EAB308", fontFamily: "Sora, sans-serif" }}>
                     {statusCounts.interview}
                   </p>
                   <p className="text-sm" style={{ color: "rgba(234,179,8,0.7)" }}>
@@ -406,7 +406,7 @@ export default function ApplicationTrackerView() {
                   Accepted
                 </p>
                 <div className="flex items-baseline gap-2">
-                  <p className="text-3xl font-bold" style={{ color: "#22C55E", fontFamily: "Syne, sans-serif" }}>
+                  <p className="text-3xl font-bold" style={{ color: "#22C55E", fontFamily: "Sora, sans-serif" }}>
                     {statusCounts.accepted}
                   </p>
                   <p className="text-sm" style={{ color: "rgba(34,197,94,0.7)" }}>
@@ -938,7 +938,7 @@ export default function ApplicationTrackerView() {
           }}
         >
           <DialogHeader>
-            <DialogTitle style={{ color: "#1F2937", fontFamily: "Syne, sans-serif" }}>
+            <DialogTitle style={{ color: "#1F2937", fontFamily: "Sora, sans-serif" }}>
               {editingApp ? "Edit Application" : "New Application"}
             </DialogTitle>
           </DialogHeader>
@@ -1091,6 +1091,12 @@ export default function ApplicationTrackerView() {
     </div>
   );
 }
+
+
+
+
+
+
 
 
 

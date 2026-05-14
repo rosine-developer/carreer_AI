@@ -299,13 +299,13 @@ export default function ResumeBuilderModal({
                 <div>
                   <h2
                     className="text-base font-bold"
-                    style={{ color: '#1F2937', fontFamily: 'Syne, sans-serif' }}
+                    style={{ color: '#1F2937', fontFamily: 'Sora, sans-serif' }}
                   >
                     Resume Builder
                   </h2>
                   <p
                     className="text-xs"
-                    style={{ color: '#6B7280', fontFamily: 'Manrope, sans-serif' }}
+                    style={{ color: '#6B7280', fontFamily: 'Sora, sans-serif' }}
                   >
                     {resumeState.metadata.name}
                     {saveStatus === 'saved' && ' • Saved'}
@@ -1132,6 +1132,12 @@ function ResumePreview({ resumeState }: { resumeState: ResumeState }) {
     </div>
   );
 }
+
+
+
+
+
+
 
 
 

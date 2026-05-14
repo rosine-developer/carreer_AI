@@ -100,8 +100,8 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                 <div className="p-6">
                   {/* Logo */}
                   <div className="flex items-center gap-1 mb-5">
-                    <img src="/cm_logo.png" alt="CM" style={{ width: '40px', height: '40px', objectFit: 'contain', marginRight: '-4px' }} />
-                    <span className="font-bold text-sm" style={{ color: '#111', fontFamily: 'Syne, sans-serif' }}>
+                    <img src="/cm1.png" alt="CM" style={{ width: '40px', height: '40px', objectFit: 'contain', marginRight: '-4px' }} />
+                    <span className="font-bold text-sm" style={{ color: '#111', fontFamily: 'Sora, sans-serif' }}>
                       CareerMind <span style={{ color: '#0095FF' }}>AI</span>
                     </span>
                   </div>
@@ -210,6 +210,12 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
     </AnimatePresence>
   );
 }
+
+
+
+
+
+
 
 
 

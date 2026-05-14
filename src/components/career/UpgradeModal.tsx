@@ -71,7 +71,7 @@ export default function UpgradeModal({ isOpen, onClose, featureName }: UpgradeMo
                         PRO FEATURE
                       </p>
                     )}
-                    <h2 className="text-xl font-bold" style={{ color: '#111', fontFamily: 'Syne, sans-serif' }}>
+                    <h2 className="text-xl font-bold" style={{ color: '#111', fontFamily: 'Sora, sans-serif' }}>
                       {featureName ? `Unlock ${featureName}` : 'Upgrade to Pro'}
                     </h2>
                     {featureName && (
@@ -156,6 +156,12 @@ export default function UpgradeModal({ isOpen, onClose, featureName }: UpgradeMo
     </AnimatePresence>
   );
 }
+
+
+
+
+
+
 
 
 

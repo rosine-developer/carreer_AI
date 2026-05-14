@@ -59,7 +59,7 @@ export default function ConversationHistory({
             >
               <h2
                 className="text-lg font-bold"
-                style={{ color: "rgba(255,255,255,0.9)", fontFamily: "Syne, sans-serif" }}
+                style={{ color: "rgba(255,255,255,0.9)", fontFamily: "Sora, sans-serif" }}
               >
                 Conversations
               </h2>
@@ -88,7 +88,7 @@ export default function ConversationHistory({
                   background: "linear-gradient(135deg, rgba(234,179,8,0.12), rgba(234,179,8,0.06))",
                   border: "1px solid rgba(234,179,8,0.25)",
                   color: "#EAB308",
-                  fontFamily: "Manrope, sans-serif",
+                  fontFamily: "Sora, sans-serif",
                 }}
               >
                 <Plus size={16} />
@@ -107,7 +107,7 @@ export default function ConversationHistory({
                   />
                   <p
                     className="text-sm"
-                    style={{ color: "rgba(255,255,255,0.4)", fontFamily: "Manrope, sans-serif" }}
+                    style={{ color: "rgba(255,255,255,0.4)", fontFamily: "Sora, sans-serif" }}
                   >
                     No conversations yet
                   </p>
@@ -147,7 +147,7 @@ export default function ConversationHistory({
                                   conv.id === currentConversationId
                                     ? "#EAB308"
                                     : "rgba(255,255,255,0.8)",
-                                fontFamily: "Manrope, sans-serif",
+                                fontFamily: "Sora, sans-serif",
                               }}
                             >
                               {conv.title}
@@ -157,7 +157,7 @@ export default function ConversationHistory({
                                 className="text-xs"
                                 style={{
                                   color: "rgba(255,255,255,0.4)",
-                                  fontFamily: "Manrope, sans-serif",
+                                  fontFamily: "Sora, sans-serif",
                                 }}
                               >
                                 {conv.messageCount} messages
@@ -166,7 +166,7 @@ export default function ConversationHistory({
                                 className="text-xs"
                                 style={{
                                   color: "rgba(255,255,255,0.3)",
-                                  fontFamily: "Manrope, sans-serif",
+                                  fontFamily: "Sora, sans-serif",
                                 }}
                               >
                                 {new Date(conv.timestamp).toLocaleDateString()}
@@ -205,6 +205,12 @@ export default function ConversationHistory({
     </AnimatePresence>
   );
 }
+
+
+
+
+
+
 
 
 

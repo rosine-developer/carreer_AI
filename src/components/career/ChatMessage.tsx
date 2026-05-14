@@ -50,14 +50,14 @@ export default function ChatMessage({
           >
             {/* AI label */}
             <div className="flex items-center gap-1.5 mb-2">
-              <span className="text-xs font-medium" style={{ color: "#0095FF", fontFamily: "Manrope, sans-serif" }}>
+              <span className="text-xs font-medium" style={{ color: "#0095FF", fontFamily: "Sora, sans-serif" }}>
                 CareerMind
               </span>
             </div>
 
             <div
               className="text-sm leading-relaxed"
-              style={{ color: "#111", fontFamily: "Manrope, sans-serif", fontSize: "0.875rem", fontWeight: 500, lineHeight: "1.7" }}
+              style={{ color: "#111", fontFamily: "Sora, sans-serif", fontSize: "0.875rem", fontWeight: 500, lineHeight: "1.7" }}
               dangerouslySetInnerHTML={{ __html: `<p>${renderMarkdown(message.content)}</p>` }}
             />
 
@@ -92,7 +92,7 @@ export default function ChatMessage({
             className="rounded-xl px-4 py-3"
             style={{ background: "#0095FF", border: "none" }}
           >
-            <p className="text-sm leading-relaxed" style={{ color: "#FFFFFF", fontFamily: "Manrope, sans-serif", fontWeight: 500 }}>
+            <p className="text-sm leading-relaxed" style={{ color: "#FFFFFF", fontFamily: "Sora, sans-serif", fontWeight: 500 }}>
               {message.content}
             </p>
             <div className="mt-2 flex justify-end">
@@ -106,6 +106,12 @@ export default function ChatMessage({
     </motion.div>
   );
 }
+
+
+
+
+
+
 
 
 

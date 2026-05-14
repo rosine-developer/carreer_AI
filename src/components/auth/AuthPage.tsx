@@ -74,7 +74,7 @@ export default function AuthPage() {
       className="min-h-screen w-screen flex items-center justify-center relative overflow-hidden"
       style={{
         background: 'linear-gradient(135deg, #0f1419 0%, #1a2332 25%, #0d1b2a 50%, #1b263b 75%, #0a1929 100%)',
-        fontFamily: 'Manrope, sans-serif',
+        fontFamily: 'Sora, sans-serif',
       }}
     >
       {/* Background glow */}
@@ -103,15 +103,15 @@ export default function AuthPage() {
                 boxShadow: '0 0 20px rgba(0,149,255,1)',
               }}
             >
-              <span className="text-sm font-black" style={{ color: '#0095FF', fontFamily: 'Syne, sans-serif' }}>
+              <span className="text-sm font-black" style={{ color: '#0095FF', fontFamily: 'Sora, sans-serif' }}>
                 CM
               </span>
             </div>
             <div>
-              <span className="text-xl font-extrabold" style={{ color: 'rgba(255,255,255,0.95)', fontFamily: 'Syne, sans-serif' }}>
+              <span className="text-xl font-extrabold" style={{ color: 'rgba(255,255,255,0.95)', fontFamily: 'Sora, sans-serif' }}>
                 CareerMind
               </span>
-              <span className="text-xl font-extrabold ml-1" style={{ color: '#0095FF', fontFamily: 'Syne, sans-serif' }}>
+              <span className="text-xl font-extrabold ml-1" style={{ color: '#0095FF', fontFamily: 'Sora, sans-serif' }}>
                 AI
               </span>
             </div>
@@ -328,6 +328,12 @@ export default function AuthPage() {
     </div>
   );
 }
+
+
+
+
+
+
 
 
 

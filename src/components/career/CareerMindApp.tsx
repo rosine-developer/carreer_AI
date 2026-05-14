@@ -490,8 +490,8 @@ export default function CareerMindApp() {
           style={{ background: "#FFFFFF", borderBottom: "1px solid #F0F0F0" }}
         >
           <div className="flex items-center gap-0">
-            <img src="/cm_logo.png" alt="CareerMind AI" style={{ width: "60px", height: "60px", objectFit: "contain", marginRight: "-8px" }} />
-            <span className="text-sm font-bold" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
+            <img src="/cm1.png" alt="CareerMind AI" style={{ width: "90px", height: "90px", objectFit: "cover", marginRight: "-20px" }} />
+            <span className="text-sm font-bold" style={{ color: "#111", fontFamily: "Sora, sans-serif" }}>
               CareerMind <span style={{ color: "#0095FF" }}>AI</span>
             </span>
           </div>
@@ -512,7 +512,7 @@ export default function CareerMindApp() {
   return (
     <div
       className="h-screen w-screen overflow-hidden flex"
-      style={{ background: "#FFFFFF", fontFamily: "Manrope, sans-serif" }}
+      style={{ background: "#FFFFFF", fontFamily: "Sora, sans-serif" }}
     >
       {/* ── LEFT SIDEBAR — hidden on mobile, shown on md+ ── */}
       <AnimatePresence initial={false}>
@@ -527,8 +527,8 @@ export default function CareerMindApp() {
           >
             {/* Logo + sidebar toggle */}
             <div className="flex items-center gap-1 px-4 py-4">
-              <img src="/cm_logo.png" alt="CareerMind AI" style={{ width: "60px", height: "60px", objectFit: "contain", marginRight: "-8px" }} />
-              <span className="text-sm font-bold whitespace-nowrap flex-1" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
+              <img src="/cm1.png" alt="CareerMind AI" style={{ width: "90px", height: "90px", objectFit: "cover", marginRight: "-20px" }} />
+              <span className="text-sm font-bold whitespace-nowrap flex-1" style={{ color: "#111", fontFamily: "Sora, sans-serif" }}>
                 CareerMind <span style={{ color: "#0095FF" }}>AI</span>
               </span>
               {/* Sidebar hide button — moved here */}
@@ -803,8 +803,8 @@ export default function CareerMindApp() {
               {/* Logo */}
               <div className="flex items-center justify-between px-4 py-4" style={{ borderBottom: "1px solid #F0F0F0" }}>
                 <div className="flex items-center gap-0">
-                  <img src="/cm_logo.png" alt="CareerMind AI" style={{ width: "50px", height: "50px", objectFit: "contain", marginRight: "-6px" }} />
-                  <span className="text-sm font-bold" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
+                  <img src="/cm1.png" alt="CareerMind AI" style={{ width: "80px", height: "80px", objectFit: "cover", marginRight: "-18px" }} />
+                  <span className="text-sm font-bold" style={{ color: "#111", fontFamily: "Sora, sans-serif" }}>
                     CareerMind <span style={{ color: "#0095FF" }}>AI</span>
                   </span>
                 </div>
@@ -882,8 +882,8 @@ export default function CareerMindApp() {
 
           {/* Logo — always show */}
           <div className="flex items-center gap-0">
-            <img src="/cm_logo.png" alt="CareerMind AI" style={{ width: "36px", height: "36px", objectFit: "contain", marginRight: "-2px" }} />
-            <span className="text-sm font-bold whitespace-nowrap" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
+            <img src="/cm1.png" alt="CareerMind AI" style={{ width: "60px", height: "60px", objectFit: "cover", marginRight: "-12px" }} />
+            <span className="text-sm font-bold whitespace-nowrap" style={{ color: "#111", fontFamily: "Sora, sans-serif" }}>
               CareerMind <span style={{ color: "#0095FF" }}>AI</span>
             </span>
           </div>
@@ -936,7 +936,7 @@ export default function CareerMindApp() {
                 return (
                   <div className="h-full flex flex-col items-center justify-center px-6 max-w-xl mx-auto w-full">
                     <div className="text-center mb-8">
-                      <h1 className="text-2xl font-bold mb-2" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
+                      <h1 className="text-2xl font-bold mb-2" style={{ color: "#111", fontFamily: "Sora, sans-serif" }}>
                         Welcome to <span style={{ color: "#0095FF" }}>CareerMind AI</span>
                       </h1>
                       <p className="text-sm" style={{ color: "#888" }}>Your intelligent career coach.</p>
@@ -984,7 +984,7 @@ export default function CareerMindApp() {
               return (
                 <div className="h-full flex flex-col items-center justify-center px-6 max-w-xl mx-auto w-full">
                   <div className="text-center mb-8">
-                    <h1 className="text-2xl font-bold mb-2" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
+                    <h1 className="text-2xl font-bold mb-2" style={{ color: "#111", fontFamily: "Sora, sans-serif" }}>
                       Welcome to <span style={{ color: "#0095FF" }}>CareerMind AI</span>
                     </h1>
                     <p className="text-sm" style={{ color: "#888" }}>Your intelligent career coach.</p>
@@ -1068,7 +1068,7 @@ export default function CareerMindApp() {
                   onKeyDown={e => e.key === "Enter" && !e.shiftKey && sendMessage()}
                   placeholder="Message CareerMind AI..."
                   className="flex-1 bg-transparent outline-none text-sm"
-                  style={{ color: "#000000", fontFamily: "Manrope, sans-serif", fontWeight: 500 }}
+                  style={{ color: "#000000", fontFamily: "Sora, sans-serif", fontWeight: 500 }}
                 />
                 <motion.button
                   whileTap={{ scale: 0.92 }}
@@ -1159,6 +1159,12 @@ export default function CareerMindApp() {
     </div>
   );
 }
+
+
+
+
+
+
 
 
 

@@ -122,7 +122,7 @@ export default function OnboardingCard({ onSubmit }: OnboardingCardProps) {
               background: "#FFFFFF",
               border: errors.fieldOfStudy ? "1px solid #EF4444" : "1px solid #D0D0D0",
               color: "#111",
-              fontFamily: "Manrope, sans-serif",
+              fontFamily: "Sora, sans-serif",
             }}
             onFocus={(e) => { e.currentTarget.style.border = "2px solid #0095FF"; }}
             onBlur={(e) => { e.currentTarget.style.border = errors.fieldOfStudy ? "1px solid #EF4444" : "1px solid #D0D0D0"; }}
@@ -172,7 +172,7 @@ export default function OnboardingCard({ onSubmit }: OnboardingCardProps) {
                 background: "#FFFFFF",
                 border: "1px solid #D0D0D0",
                 color: "#111",
-                fontFamily: "Manrope, sans-serif",
+                fontFamily: "Sora, sans-serif",
               }}
               disabled={interests.length >= 3}
             />
@@ -222,6 +222,12 @@ export default function OnboardingCard({ onSubmit }: OnboardingCardProps) {
     </motion.div>
   );
 }
+
+
+
+
+
+
 
 
 

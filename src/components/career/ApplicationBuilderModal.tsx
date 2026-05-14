@@ -95,7 +95,7 @@ export default function ApplicationBuilderModal({
               style={{ borderBottom: "1px solid #F0F0F0", background: "#FFFFFF" }}
             >
               <div>
-                <h2 className="text-base font-bold" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
+                <h2 className="text-base font-bold" style={{ color: "#111", fontFamily: "Sora, sans-serif" }}>
                   Application Builder
                 </h2>
                 <p className="text-xs" style={{ color: "#888" }}>
@@ -172,7 +172,7 @@ export default function ApplicationBuilderModal({
                     style={{
                       background: "transparent",
                       color: "#111",
-                      fontFamily: "Manrope, sans-serif",
+                      fontFamily: "Sora, sans-serif",
                       fontSize: "0.85rem",
                       lineHeight: "1.75",
                       border: "none",
@@ -189,7 +189,7 @@ export default function ApplicationBuilderModal({
                 <div className="flex-1 p-5 overflow-y-auto space-y-4">
                   {/* Job header */}
                   <div>
-                    <h3 className="text-base font-bold" style={{ color: "#111", fontFamily: "Syne, sans-serif" }}>
+                    <h3 className="text-base font-bold" style={{ color: "#111", fontFamily: "Sora, sans-serif" }}>
                       {job.title}
                     </h3>
                     <p className="text-sm mt-1" style={{ color: "#666" }}>
@@ -244,6 +244,12 @@ export default function ApplicationBuilderModal({
     </AnimatePresence>
   );
 }
+
+
+
+
+
+
 
 
 
