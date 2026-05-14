@@ -221,22 +221,37 @@ export async function generateAIResponse(
 ): Promise<{ content: string; jobCards?: JobCard[] }> {
   const lower = userMessage.toLowerCase();
 
-  // Check if user is asking for jobs
-  const includeJobs =
-    lower.includes("job") ||
-    lower.includes("opport") ||
-    lower.includes("role") ||
-    lower.includes("position") ||
-    lower.includes("show me") ||
-    lower.includes("find") ||
-    lower.includes("recommend") ||
+  // Check if user is asking for jobs — NOT for advice/tips/help
+  const isAskingForAdvice =
+    lower.includes("advice") ||
+    lower.includes("tip") ||
+    lower.includes("how to") ||
+    lower.includes("what should") ||
+    lower.includes("help me") ||
+    lower.includes("guide") ||
     lower.includes("suggest") ||
-    lower.includes("work") ||
-    lower.includes("career") ||
-    lower.includes("hire") ||
-    lower.includes("employ") ||
-    lower.includes("intern") ||
-    lower.includes("search");
+    lower.includes("prepare") ||
+    lower.includes("improve") ||
+    lower.includes("what is") ||
+    lower.includes("explain") ||
+    lower.includes("tell me");
+
+  const isAskingForJobs = (text: string) => {
+    const t = text.toLowerCase();
+    return t.includes("job") || t.includes("opport") || t.includes("role") || t.includes("position") ||
+      t.includes("show me") || t.includes("find") || t.includes("search") || t.includes("work") ||
+      t.includes("hire") || t.includes("employ") || t.includes("intern") || t.includes("vacancy") ||
+      t.includes("opening");
+  };
+
+  const lastUserMsg = conversationHistory.filter(m => m.role === 'user').pop();
+  const previousMessageText = lastUserMsg ? lastUserMsg.content : '';
+
+  const isProfileSubmission = lower.includes("i have a") && lower.includes("in") && lower.includes("my top interests are:");
+
+  const includeJobs =
+    (!isAskingForAdvice && isAskingForJobs(userMessage)) ||
+    (isProfileSubmission && !isAskingForAdvice && isAskingForJobs(previousMessageText));
 
   // Don't show jobs if user hasn't provided profile info yet
   const profileKeywords = ['electrician', 'accountant', 'engineer', 'nurse', 'teacher', 
@@ -253,22 +268,27 @@ export async function generateAIResponse(
       profileKeywords.some(kw => m.content.toLowerCase().includes(kw))
     );
 
-  const shouldShowJobs = includeJobs && hasProfile;
+  const shouldShowJobs = includeJobs && hasProfile && !isAskingForAdvice;
 
   try {
-    const systemPrompt = buildSystemPrompt(onboardingData, tags);
     const conversationContext = conversationHistory
       .slice(-10)
       .map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
       .join('\n');
 
-    // Run AI response and job search in parallel for speed
-    const [response, jobCards] = await Promise.all([
-      callAIAPI(systemPrompt, conversationContext, userMessage),
-      shouldShowJobs
-        ? fetchRealJobs(userMessage, conversationContext, onboardingData)
-        : Promise.resolve(undefined),
-    ]);
+    let jobCards: JobCard[] | undefined = undefined;
+    
+    // Fetch jobs first if needed (sequential to avoid Groq rate limits)
+    if (shouldShowJobs) {
+      jobCards = await fetchRealJobs(userMessage, conversationContext, onboardingData);
+    }
+
+    const actuallyShowingJobs = jobCards !== undefined && jobCards.length > 0;
+    const systemPrompt = buildSystemPrompt(onboardingData, tags, actuallyShowingJobs);
+
+    // Then get AI response
+    const response = await callAIAPI(systemPrompt, conversationContext, userMessage);
+    
     return { content: response, jobCards };
   } catch (error) {
     console.error('AI API Error:', error);
@@ -296,6 +316,7 @@ async function fetchRealJobs(
       internship: isInternship,
       context: fullContext,
     });
+    
     if (realJobs.length === 0) return undefined;
 
     return realJobs.map((job): JobCard => ({
@@ -317,23 +338,30 @@ async function fetchRealJobs(
   }
 }
 
-function buildSystemPrompt(onboardingData?: OnboardingData | null, tags?: PreferenceTag[]): string {
+function buildSystemPrompt(onboardingData?: OnboardingData | null, tags?: PreferenceTag[], shouldShowJobs: boolean = false): string {
   const hasProfile = onboardingData !== null && onboardingData !== undefined;
 
   let prompt = `You are CareerMind AI, a friendly career coach built into a job search app.
 
 CRITICAL RULES:
 - Keep ALL responses to 1-3 short sentences maximum
-- NEVER list job titles, companies, or job openings in your text — the app automatically shows real job cards below your message
-- NEVER write "Apply Now" links in text — the job cards have real Apply Now buttons
-- When jobs are being shown, just say something like: "Here are some matches for you. Click Apply Now on any card to apply directly."
-- NEVER say you cannot provide links — the app shows real job cards with direct links automatically
+${shouldShowJobs ? `
+- THE APP IS CURRENTLY DISPLAYING REAL JOB CARDS BELOW YOUR MESSAGE.
+- NEVER list job titles, companies, or job openings in your text.
+- NEVER write "Apply Now" links in text.
+- Since jobs are being shown, just say something like: "Here are some matches for you. Click Apply Now on any card to apply directly."
+` : `
+- THE APP IS NOT DISPLAYING ANY JOB CARDS.
+- DO NOT say "Here are some matches for you" or pretend to show jobs.
+- NEVER say you cannot provide links.
+`}
 - NEVER use emojis, bullet points, or numbered lists of jobs
-- If the user asks for jobs without mentioning their field, ask: "What field do you work or study in? That helps me find the right matches for you."
-- If they mention a field, confirm it and say you are finding matches
-${hasProfile ? `- User profile: ${onboardingData!.degree} in ${onboardingData!.fieldOfStudy}. Interests: ${onboardingData!.interests.join(', ')}.` : ''}
+- If the user asks for career advice, tips, or guidance — give them actual advice in text.
+${!hasProfile ? `- IMPORTANT: The user has NOT completed their profile yet. If they ask for jobs, advice, or guidance, respond ONLY with: "To give you the best advice and find the right jobs, I need to know your background first. Please fill in the profile form above." Do not give any advice or pretend to show jobs until they complete the profile.` : `- User has completed their profile: ${onboardingData!.degree} in ${onboardingData!.fieldOfStudy}. Interests: ${onboardingData!.interests.join(', ')}.
+- When they ask for career advice, first ask: "What kind of advice are you looking for? For example: interview tips, resume help, salary negotiation, career growth, or something else?"
+- Then give specific advice based on their field and what they asked for.`}
 
-Always be brief. The job cards do the heavy lifting — your job is just to guide the conversation.`;
+Always be brief.`;
 
   return prompt;
 }

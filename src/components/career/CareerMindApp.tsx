@@ -105,6 +105,7 @@ export default function CareerMindApp() {
   const [trackerViewOpen, setTrackerViewOpen] = useState(false);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const rightChatEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -311,6 +312,7 @@ export default function CareerMindApp() {
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    rightChatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
   const handleScroll = () => {
@@ -321,6 +323,7 @@ export default function CareerMindApp() {
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    rightChatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const addAIMessage = async (content: string, jobCards?: JobCard[]) => {
@@ -343,36 +346,46 @@ export default function CareerMindApp() {
     setOnboardingData(data);
     setOnboardingDone(true);
 
-    // Add user "submitted" message
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: newId(),
-        role: "user",
-        content: `I have a ${data.degree} in ${data.fieldOfStudy}. My top interests are: ${data.interests.join(", ")}.`,
-        timestamp: new Date(),
-      },
-    ]);
+    const text = `I have a ${data.degree} in ${data.fieldOfStudy}. My top interests are: ${data.interests.join(", ")}.`;
 
-    // Show "searching" message first
-    const { content } = generateOnboardingResponse(data);
+    // Add user "submitted" message
+    const userMessage: Message = {
+      id: newId(),
+      role: "user",
+      content: text,
+      timestamp: new Date(),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+
+    // Context for AI
+    const historyForAI = user ? [...messages, userMessage] : [userMessage];
+
     setIsTyping(true);
 
-    // Fetch real jobs
-    const jobCards = await fetchJobsAfterOnboarding(data);
+    try {
+      const { content, jobCards } = await generateAIResponse(
+        text,
+        historyForAI,
+        data,
+        tags
+      );
 
-    await new Promise((r) => setTimeout(r, 600));
-    setIsTyping(false);
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: newId(),
-        role: "ai",
-        content,
-        timestamp: new Date(),
-        jobCards: jobCards.length > 0 ? jobCards : undefined,
-      },
-    ]);
+      setIsTyping(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: newId(),
+          role: "ai",
+          content,
+          timestamp: new Date(),
+          jobCards: jobCards && jobCards.length > 0 ? jobCards : undefined,
+        },
+      ]);
+    } catch (error) {
+      console.error('Error getting AI response after onboarding:', error);
+      setIsTyping(false);
+    }
   };
 
   const sendMessage = async () => {
@@ -1032,6 +1045,7 @@ export default function CareerMindApp() {
                     <div className="px-3 py-2 rounded-xl text-xs" style={{ background: "#F0F0F0", color: "#0095FF" }}>thinking...</div>
                   </div>
                 )}
+                <div ref={rightChatEndRef} />
               </div>
             </div>
 

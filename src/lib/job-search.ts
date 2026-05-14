@@ -57,49 +57,69 @@ Rules:
 - Make salary realistic for this specific field
 - Description must be specific to ${query}, not generic`;
 
-  try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${GROQ_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: 'llama-3.1-8b-instant',
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.7,
-        max_tokens: 1500,
-      }),
-    });
+  let retries = 3;
+  let delay = 1000;
 
-    if (!response.ok) return [];
+  while (retries > 0) {
+    try {
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${GROQ_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'llama-3.1-8b-instant',
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.7,
+          max_tokens: 1500,
+        }),
+      });
 
-    const data = await response.json();
-    const text = data.choices[0]?.message?.content || '';
+      if (!response.ok) {
+        if (response.status === 429 && retries > 1) {
+          retries--;
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay *= 2; // exponential backoff
+          continue;
+        }
+        return [];
+      }
 
-    // Extract JSON array from response
-    const jsonMatch = text.match(/\[[\s\S]*\]/);
-    if (!jsonMatch) return [];
+      const data = await response.json();
+      const text = data.choices[0]?.message?.content || '';
 
-    const jobs = JSON.parse(jsonMatch[0]);
+      // Extract JSON array from response
+      const jsonMatch = text.match(/\[[\s\S]*\]/);
+      if (!jsonMatch) return [];
 
-    return jobs.map((job: any, index: number): RealJob => ({
-      id: `ai-job-${Date.now()}-${index}`,
-      title: job.title || 'Unknown Title',
-      company: job.company || 'Unknown Company',
-      location: job.location || 'Various Locations',
-      salary: job.salary || 'Competitive',
-      matchScore: Math.max(75, 95 - index * 5),
-      remote: job.remote || false,
-      type: job.type || (isInternship ? 'Internship' : 'Full-time'),
-      description: job.description || '',
-      tags: Array.isArray(job.tags) ? job.tags.slice(0, 4) : [],
-      applyUrl: job.applyUrl || applyUrl,
-    }));
-  } catch (err) {
-    console.warn('AI job generation failed:', err);
-    return [];
+      const jobs = JSON.parse(jsonMatch[0]);
+
+      return jobs.map((job: any, index: number): RealJob => ({
+        id: `ai-job-${Date.now()}-${index}`,
+        title: job.title || 'Unknown Title',
+        company: job.company || 'Unknown Company',
+        location: job.location || 'Various Locations',
+        salary: job.salary || 'Competitive',
+        matchScore: Math.max(75, 95 - index * 5),
+        remote: job.remote || false,
+        type: job.type || (isInternship ? 'Internship' : 'Full-time'),
+        description: job.description || '',
+        tags: Array.isArray(job.tags) ? job.tags.slice(0, 4) : [],
+        applyUrl: applyUrl, // Force use of real search URL, don't trust AI hallucinations
+      }));
+    } catch (err) {
+      console.warn('AI job generation failed:', err);
+      if (retries > 1) {
+        retries--;
+        await new Promise(resolve => setTimeout(resolve, delay));
+        delay *= 2;
+        continue;
+      }
+      return [];
+    }
   }
+  return [];
 }
 
 // ============================================================================
