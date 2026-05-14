@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, Send, Sparkles, ChevronDown, RotateCcw, Menu, Plus, LogOut, UserCircle, X, Search, Pencil, Share2, Trash2, MoreHorizontal } from "lucide-react";
+import { Mic, Send, Sparkles, ChevronDown, RotateCcw, Menu, Plus, LogOut, UserCircle, X, Search, Pencil, Share2, Trash2, MoreHorizontal, Zap } from "lucide-react";
 import { Message, JobCard, OnboardingData, PreferenceTag } from "./types";
 import {
   INITIAL_MESSAGE,
@@ -751,6 +751,7 @@ export default function CareerMindApp() {
                   onMouseEnter={e => { e.currentTarget.style.background = '#007ACC'; }}
                   onMouseLeave={e => { e.currentTarget.style.background = '#0095FF'; }}
                 >
+                  <Zap size={13} />
                   Upgrade to Pro
                 </motion.button>
               )}
@@ -837,7 +838,8 @@ export default function CareerMindApp() {
               {/* Bottom */}
               <div className="px-3 py-3 space-y-2" style={{ borderTop: "1px solid #F0F0F0" }}>
                 {!isPro && !isAdmin && (
-                  <motion.button whileTap={{ scale: 0.97 }} onClick={() => { setUpgradeModalOpen(true); setSidebarOpen(false); }} className="w-full px-3 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center" style={{ background: '#0095FF', color: '#FFFFFF' }}>
+                  <motion.button whileTap={{ scale: 0.97 }} onClick={() => { setUpgradeModalOpen(true); setSidebarOpen(false); }} className="w-full px-3 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5" style={{ background: '#0095FF', color: '#FFFFFF' }}>
+                    <Zap size={13} />
                     Upgrade to Pro — $3/mo
                   </motion.button>
                 )}

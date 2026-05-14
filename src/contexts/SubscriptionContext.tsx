@@ -103,31 +103,15 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const openCheckout = async () => {
+  const openCheckout = () => {
     if (!CHECKOUT_LINK || CHECKOUT_LINK === 'your_polar_checkout_link_here') {
       alert('Payment not configured yet. Please contact support.');
       return;
     }
-    try {
-      // Use Polar's embedded checkout (opens as overlay on the page)
-      const { PolarEmbedCheckout } = await import('@polar-sh/checkout/embed');
-      const successUrl = `${window.location.origin}?checkout=success`;
-      const checkoutUrl = `${CHECKOUT_LINK}?success_url=${encodeURIComponent(successUrl)}`;
-      
-      const checkout = await PolarEmbedCheckout.create(checkoutUrl, {
-        theme: 'light',
-      });
-
-      // When payment confirmed, refresh subscription status
-      checkout.addEventListener('confirmed', () => {
-        setTimeout(checkSubscription, 2000);
-      });
-    } catch (err) {
-      console.error('Checkout failed:', err);
-      // Fallback: open in new tab
-      const successUrl = `${window.location.origin}?checkout=success`;
-      window.open(`${CHECKOUT_LINK}?success_url=${encodeURIComponent(successUrl)}`, '_blank');
-    }
+    // Open Polar checkout in a new tab — most reliable approach
+    const successUrl = `${window.location.origin}?checkout=success`;
+    const checkoutUrl = `${CHECKOUT_LINK}?success_url=${encodeURIComponent(successUrl)}`;
+    window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
   };
 
   const openCustomerPortal = () => {

@@ -161,9 +161,12 @@ export default function DiscoveryAnimation({ onDismiss }: DiscoveryAnimationProp
             <motion.div
               animate={{ y: [0, -6, 0, -6, 0] }}
               transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
-              style={{ fontSize: '1.8rem', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}
+              style={{ filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}
             >
-              👆
+              {/* Arrow cursor icon instead of emoji */}
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="#0095FF" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 0L4 17L7.5 13.5L10.5 20L12.5 19L9.5 12.5L14 12.5L4 0Z"/>
+              </svg>
             </motion.div>
             {/* Ripple */}
             <motion.div
