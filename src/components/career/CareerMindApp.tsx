@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, Send, Sparkles, ChevronDown, RotateCcw, Menu, Plus, LogOut, UserCircle, X, Search, Pencil, Share2, Trash2, MoreHorizontal, Zap } from "lucide-react";
+import { Mic, Send, Sparkles, ChevronDown, RotateCcw, Menu, Plus, LogOut, UserCircle, X, Search, Pencil, Share2, Trash2, MoreHorizontal, Zap, PanelLeft } from "lucide-react";
 import { Message, JobCard, OnboardingData, PreferenceTag } from "./types";
 import {
   INITIAL_MESSAGE,
@@ -41,7 +41,7 @@ interface SavedConversation {
 }
 
 export default function CareerMindApp() {
-  const { user, signOut, loading: authLoading } = useAuth();
+  const { user, signOut, loading: authLoading, sessionTimeoutWarning, resetSessionTimer } = useAuth();
   const { isPro, isAdmin, openCustomerPortal } = useSubscription();
 
   // Close dropdown menu when clicking outside
@@ -523,33 +523,35 @@ export default function CareerMindApp() {
       style={{ background: "#FFFFFF", fontFamily: "Sora, sans-serif" }}
     >
       {/* ── LEFT SIDEBAR — hidden on mobile, shown on md+ ── */}
-      <AnimatePresence initial={false}>
-        {sidebarOpen && (
-          <motion.aside
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 220, opacity: 1 }}
-            exit={{ width: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="hidden md:flex flex-col shrink-0 h-full overflow-hidden"
-            style={{ background: "#FFFFFF", minWidth: 0, borderRight: "1px solid #F0F0F0" }}
-          >
-            {/* Logo + sidebar toggle */}
-            <div className="flex items-center gap-1 px-4 py-4">
-              <img src="/cm1.png" alt="CareerMind AI" style={{ width: "90px", height: "90px", objectFit: "cover", marginRight: "-20px" }} />
-              <span className="text-sm font-bold whitespace-nowrap flex-1" style={{ color: "#111", fontFamily: "Sora, sans-serif" }}>
-                CareerMind <span style={{ color: "#0095FF" }}>AI</span>
-              </span>
-              {/* Sidebar hide button — moved here */}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setSidebarOpen(v => !v)}
-                className="p-1.5 rounded-lg transition-all"
-                style={{ background: "#FFFFFF", border: "1px solid #E5E5E5", color: "#555" }}
-                title="Hide sidebar"
-              >
-                <Menu size={15} />
-              </motion.button>
-            </div>
+      <div className="hidden md:flex relative shrink-0 h-full">
+        <AnimatePresence initial={false}>
+          {sidebarOpen && (
+            <motion.aside
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: 220, opacity: 1 }}
+              exit={{ width: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex flex-col shrink-0 h-full overflow-hidden"
+              style={{ background: "#FFFFFF", minWidth: 0, borderRight: "1px solid #F0F0F0" }}
+            >
+              {/* Logo */}
+              <div className="flex items-center gap-0 px-4 py-3">
+                <img src="/cm1.png" alt="CareerMind AI" style={{ width: "52px", height: "52px", objectFit: "cover", marginRight: "-6px" }} />
+                <span className="text-[14px] font-bold whitespace-nowrap flex-1" style={{ color: "#111", fontFamily: "Sora, sans-serif" }}>
+                  CareerMind <span style={{ color: "#0095FF" }}>AI</span>
+                </span>
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setSidebarOpen(v => !v)}
+                  className="flex items-center justify-center shrink-0"
+                  style={{ background: "transparent", border: "none", color: "#999", cursor: "pointer", padding: "2px" }}
+                  title="Collapse sidebar"
+                  onMouseEnter={e => { e.currentTarget.style.color = '#0095FF'; }}
+                  onMouseLeave={e => { e.currentTarget.style.color = '#999'; }}
+                >
+                  <PanelLeft size={15} />
+                </motion.button>
+              </div>
 
             {/* New Chat */}
             <div className="px-3 pt-3 pb-2">
@@ -581,14 +583,14 @@ export default function CareerMindApp() {
                   whileTap={{ scale: 0.97 }}
                   onClick={item.action}
                   data-tour={item.tour}
-                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm text-left transition-all whitespace-nowrap"
+                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-[13px] text-left transition-all whitespace-nowrap"
                   style={{ color: "#444", background: "transparent" }}
                   onMouseEnter={e => { e.currentTarget.style.background = "#F0F0F0"; }}
                   onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
                 >
                   <span>{item.label}</span>
                   {['Track Applications', 'Build Resume', 'Cover Letter', 'Form Helper'].includes(item.label) && !isPro && (
-                    <span className="text-xs px-1.5 py-0.5 rounded-full font-semibold" style={{ background: '#FFFFFF', color: '#0095FF' }}>PRO</span>
+                    <span className="text-[11px] px-1.5 py-0.5 rounded-full font-semibold" style={{ background: '#FFFFFF', color: '#0095FF' }}>PRO</span>
                   )}
                 </motion.button>
               ))}
@@ -773,8 +775,16 @@ export default function CareerMindApp() {
                       <p className="text-xs font-medium truncate" style={{ color: "#333" }}>{user.user_metadata?.full_name || user.email?.split('@')[0]}</p>
                       <p className="text-xs truncate" style={{ color: "#AAA" }}>{user.email}</p>
                     </div>
-                    <motion.button whileTap={{ scale: 0.95 }} onClick={signOut} className="p-1.5 rounded-lg shrink-0" title="Log out" style={{ color: "#BBB" }} onMouseEnter={e => { e.currentTarget.style.color = "#EF4444"; }} onMouseLeave={e => { e.currentTarget.style.color = "#BBB"; }}>
-                      <LogOut size={14} />
+                    <motion.button
+                      whileTap={{ scale: 0.92 }}
+                      onClick={() => signOut()}
+                      className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                      title="Log out"
+                      style={{ background: '#FEF2F2', color: '#EF4444', border: '1px solid #FECACA' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = '#EF4444'; e.currentTarget.style.color = '#FFFFFF'; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = '#FEF2F2'; e.currentTarget.style.color = '#EF4444'; }}
+                    >
+                      <LogOut size={13} />
                     </motion.button>
                   </div>
                 ) : (
@@ -784,9 +794,11 @@ export default function CareerMindApp() {
                 )
               )}
             </div>
-          </motion.aside>
-        )}
-      </AnimatePresence>
+            </motion.aside>
+          )}
+        </AnimatePresence>
+
+      </div>
 
       {/* ── MOBILE SIDEBAR OVERLAY ── */}
       <AnimatePresence>
@@ -809,9 +821,9 @@ export default function CareerMindApp() {
               style={{ width: 260, background: "#FFFFFF", boxShadow: "4px 0 20px rgba(0,0,0,0.1)" }}
             >
               {/* Logo */}
-              <div className="flex items-center justify-between px-4 py-4" style={{ borderBottom: "1px solid #F0F0F0" }}>
-                <div className="flex items-center gap-0">
-                  <img src="/cm1.png" alt="CareerMind AI" style={{ width: "80px", height: "80px", objectFit: "cover", marginRight: "-18px" }} />
+              <div className="flex items-center justify-between px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <img src="/cm1.png" alt="CareerMind AI" style={{ width: "52px", height: "52px", objectFit: "cover" }} />
                   <span className="text-sm font-bold" style={{ color: "#111", fontFamily: "Sora, sans-serif" }}>
                     CareerMind <span style={{ color: "#0095FF" }}>AI</span>
                   </span>
@@ -838,7 +850,7 @@ export default function CareerMindApp() {
                   <motion.button key={item.label} whileTap={{ scale: 0.97 }} onClick={item.action} className="w-full flex items-center justify-between px-3 py-3 rounded-xl text-sm text-left" style={{ color: "#444" }} onMouseEnter={e => { e.currentTarget.style.background = "#F0F0F0"; }} onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}>
                     <span>{item.label}</span>
                     {['Track Applications', 'Build Resume', 'Cover Letter', 'Form Helper'].includes(item.label) && !isPro && (
-                      <span className="text-xs px-1.5 py-0.5 rounded-full font-semibold" style={{ background: '#FFFFFF', color: '#0095FF' }}>PRO</span>
+                      <span className="text-[11px] px-1.5 py-0.5 rounded-full font-semibold" style={{ background: '#FFFFFF', color: '#0095FF' }}>PRO</span>
                     )}
                   </motion.button>
                 ))}
@@ -865,8 +877,16 @@ export default function CareerMindApp() {
                       <p className="text-xs font-medium truncate" style={{ color: "#333" }}>{user.user_metadata?.full_name || user.email?.split('@')[0]}</p>
                       <p className="text-xs truncate" style={{ color: "#AAA" }}>{user.email}</p>
                     </div>
-                    <motion.button whileTap={{ scale: 0.95 }} onClick={signOut} className="p-1.5 rounded-lg" style={{ color: "#BBB" }}>
-                      <LogOut size={14} />
+                    <motion.button
+                      whileTap={{ scale: 0.92 }}
+                      onClick={() => { signOut(); setSidebarOpen(false); }}
+                      className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                      title="Log out"
+                      style={{ background: '#FEF2F2', color: '#EF4444', border: '1px solid #FECACA' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = '#EF4444'; e.currentTarget.style.color = '#FFFFFF'; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = '#FEF2F2'; e.currentTarget.style.color = '#EF4444'; }}
+                    >
+                      <LogOut size={13} />
                     </motion.button>
                   </div>
                 )}
@@ -879,12 +899,42 @@ export default function CareerMindApp() {
       {/* ── MAIN AREA ── */}
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
 
+        {/* ── SESSION TIMEOUT WARNING BANNER ── */}
+        <AnimatePresence>
+          {sessionTimeoutWarning && user && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="shrink-0 flex items-center justify-between px-4 py-2 z-50"
+              style={{ background: '#FFF7ED', borderBottom: '1px solid #FED7AA' }}
+            >
+              <p className="text-xs font-medium" style={{ color: '#C2410C' }}>⏱ You'll be signed out in 2 minutes due to inactivity.</p>
+              <button
+                onClick={() => { resetSessionTimer(); }}
+                className="px-3 py-1 rounded-lg text-xs font-semibold"
+                style={{ background: '#EA580C', color: '#FFFFFF' }}
+              >
+                Stay signed in
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* ── UNIFIED HEADER — hidden on desktop when sidebar is open ── */}
         <div className={`flex items-center gap-2 px-3 py-2 shrink-0 ${sidebarOpen ? 'md:hidden' : ''}`} style={{ borderBottom: "1px solid #F0F0F0", background: "#FFFFFF" }}>
-          {/* Hamburger — only show when sidebar is hidden */}
+          {/* Hamburger — Menu icon in a circle, only when sidebar is collapsed */}
           {!sidebarOpen && (
-            <motion.button whileTap={{ scale: 0.95 }} onClick={() => setSidebarOpen(true)} className="p-2 rounded-lg shrink-0" style={{ background: "#FFFFFF", border: "1px solid #E5E5E5", color: "#555" }}>
-              <Menu size={16} />
+            <motion.button
+              whileTap={{ scale: 0.92 }}
+              onClick={() => setSidebarOpen(true)}
+              className="flex items-center justify-center shrink-0"
+              style={{ background: 'transparent', border: 'none', color: '#444', padding: '4px' }}
+              title="Open menu"
+              onMouseEnter={e => { e.currentTarget.style.color = '#0095FF'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#444'; }}
+            >
+              <PanelLeft size={16} />
             </motion.button>
           )}
 
@@ -904,11 +954,19 @@ export default function CareerMindApp() {
               </motion.button>
             )}
             {!authLoading && user && (
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0" style={{ background: "#0095FF", color: "#FFFFFF" }} title={user.email ?? ''}>
                   {(user.user_metadata?.full_name?.[0] ?? user.email?.[0] ?? '?').toUpperCase()}
                 </div>
-                <motion.button whileTap={{ scale: 0.95 }} onClick={signOut} className="p-1.5 rounded-lg" style={{ color: "#BBB" }} onMouseEnter={e => { e.currentTarget.style.color = "#EF4444"; }} onMouseLeave={e => { e.currentTarget.style.color = "#BBB"; }}>
+                <motion.button
+                  whileTap={{ scale: 0.92 }}
+                  onClick={() => signOut()}
+                  className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                  title="Sign out"
+                  style={{ background: '#FEF2F2', color: '#EF4444', border: '1px solid #FECACA' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#EF4444'; e.currentTarget.style.color = '#FFFFFF'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = '#FEF2F2'; e.currentTarget.style.color = '#EF4444'; }}
+                >
                   <LogOut size={13} />
                 </motion.button>
               </div>
