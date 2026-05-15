@@ -219,8 +219,16 @@ export default function CareerMindApp() {
         console.error('Error loading conversations after login:', error);
       }
     } else {
-      // User logged out — clear conversation list but keep current chat
+      // User logged out — clear screen for privacy (data stays in their account)
+      // Also clear any guest localStorage data
+      localStorage.removeItem('careerMind_conversations_guest');
       setConversations([]);
+      setMessages([INITIAL_MESSAGE]);
+      setOnboardingData(null);
+      setOnboardingDone(false);
+      setTags(DEFAULT_PREFERENCE_TAGS);
+      const newConvId = `conv-${Date.now()}`;
+      setCurrentConversationId(newConvId);
     }
   }, [user]);
 
