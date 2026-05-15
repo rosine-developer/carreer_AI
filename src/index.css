@@ -6,7 +6,7 @@
 
 @layer base {
   html, body, * {
-    font-family: Georgia, serif !important;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   }
   :root {
     --background: 0 0% 100%;
@@ -37,6 +37,19 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* App-specific tokens */
+    --cm-bg: #FFFFFF;
+    --cm-sidebar-bg: #FFFFFF;
+    --cm-border: #F0F0F0;
+    --cm-text: #111111;
+    --cm-text-muted: #444444;
+    --cm-text-subtle: #999999;
+    --cm-hover-bg: #F0F0F0;
+    --cm-input-bg: #F5F5F5;
+    --cm-chat-bg: #FFFFFF;
+    --cm-message-bg: #F8F8F8;
+    --cm-pro-bg: #FFFFFF;
   }
 
   .dark {
@@ -67,20 +80,241 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* App-specific tokens */
+    --cm-bg: #0f1117;
+    --cm-sidebar-bg: #161b27;
+    --cm-border: #2a2f3e;
+    --cm-text: #f0f0f0;
+    --cm-text-muted: #c0c0c0;
+    --cm-text-subtle: #888888;
+    --cm-hover-bg: #1e2433;
+    --cm-input-bg: #1e2433;
+    --cm-chat-bg: #0f1117;
+    --cm-message-bg: #1a1f2e;
+    --cm-pro-bg: #1e2433;
   }
 
   body {
-    @apply bg-background text-foreground;
-    font-family: 'Sora', sans-serif !important;
-  }
-
-  * {
-    font-family: 'Sora', sans-serif !important;
-  }
-
-  button, input, textarea, select {
-    border-radius: 30px !important;
-    font-family: 'Sora', sans-serif !important;
+    background-color: var(--cm-bg);
+    color: var(--cm-text);
   }
 }
 
+/* Dark mode: ensure all modal/dialog text is visible */
+.dark label,
+.dark [data-radix-dialog-content] label,
+.dark .text-gray-900 {
+  color: #f0f0f0 !important;
+}
+
+.dark input,
+.dark textarea,
+.dark select {
+  color: #f0f0f0 !important;
+  background-color: #1e2433 !important;
+  border-color: #2a2f3e !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #666 !important;
+}
+
+.dark [data-radix-dialog-content] {
+  background-color: #161b27 !important;
+  border-color: #2a2f3e !important;
+  color: #f0f0f0 !important;
+}
+
+.dark [data-radix-dialog-overlay] {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+/* ── Dark mode: all modals, drawers, cards ── */
+
+/* Any fixed/absolute overlay panel with white bg */
+.dark .fixed > div[style*="background: '#FFFFFF'"],
+.dark .fixed > div[style*='background: "#FFFFFF"'] {
+  background-color: #161b27 !important;
+}
+
+/* All inline-styled white/light backgrounds inside dark mode */
+.dark [style*="background: '#FFFFFF'"],
+.dark [style*='background: "#FFFFFF"'],
+.dark [style*="background: '#F8F8F8'"],
+.dark [style*='background: "#F8F8F8"'],
+.dark [style*="background: '#F5F5F5'"],
+.dark [style*='background: "#F5F5F5"'],
+.dark [style*="background: '#F0F0F0'"],
+.dark [style*='background: "#F0F0F0"'],
+.dark [style*="background: '#FFFFFF'"],
+.dark [style*="background: white"],
+.dark [style*="background-color: white"],
+.dark [style*="background-color: #FFFFFF"] {
+  background-color: #1a1f2e !important;
+}
+
+/* All inline dark text colors — make them light */
+.dark [style*="color: '#111'"],
+.dark [style*='color: "#111"'],
+.dark [style*="color: '#111111'"],
+.dark [style*='color: "#111111"'],
+.dark [style*="color: '#1F2937'"],
+.dark [style*='color: "#1F2937"'],
+.dark [style*="color: '#333'"],
+.dark [style*='color: "#333"'],
+.dark [style*="color: '#333333'"],
+.dark [style*='color: "#333333"'],
+.dark [style*="color: '#374151'"],
+.dark [style*='color: "#374151"'] {
+  color: #f0f0f0 !important;
+}
+
+.dark [style*="color: '#444'"],
+.dark [style*='color: "#444"'],
+.dark [style*="color: '#444444'"],
+.dark [style*='color: "#444444"'],
+.dark [style*="color: '#555'"],
+.dark [style*='color: "#555"'],
+.dark [style*="color: '#666'"],
+.dark [style*='color: "#666"'],
+.dark [style*="color: '#666666'"],
+.dark [style*='color: "#666666"'],
+.dark [style*="color: '#6B7280'"],
+.dark [style*='color: "#6B7280"'] {
+  color: #b0b8cc !important;
+}
+
+.dark [style*="color: '#888'"],
+.dark [style*='color: "#888"'],
+.dark [style*="color: '#888888'"],
+.dark [style*='color: "#888888"'],
+.dark [style*="color: '#999'"],
+.dark [style*='color: "#999"'],
+.dark [style*="color: '#AAA'"],
+.dark [style*='color: "#AAA"'],
+.dark [style*="color: '#BBB'"],
+.dark [style*='color: "#BBB"'] {
+  color: #7a8499 !important;
+}
+
+/* Borders */
+.dark [style*="border: '1px solid #E5E5E5'"],
+.dark [style*='border: "1px solid #E5E5E5"'],
+.dark [style*="border: '1px solid #F0F0F0'"],
+.dark [style*='border: "1px solid #F0F0F0"'],
+.dark [style*="border: '1px solid #EFEFEF'"],
+.dark [style*='border: "1px solid #EFEFEF"'],
+.dark [style*="borderBottom: '1px solid #F0F0F0'"],
+.dark [style*='borderBottom: "1px solid #F0F0F0"'],
+.dark [style*="borderTop: '1px solid #F0F0F0'"],
+.dark [style*='borderTop: "1px solid #F0F0F0"'],
+.dark [style*="border-color: #E5E5E5"],
+.dark [style*="border-color: #F0F0F0"] {
+  border-color: #2a2f3e !important;
+}
+
+/* Modals with fixed positioning (ApplicationBuilderModal, CoverLetterWriterModal, etc.) */
+.dark .fixed.inset-4,
+.dark .fixed.inset-8,
+.dark .fixed[class*="inset"] {
+  background-color: #161b27 !important;
+  border-color: #2a2f3e !important;
+  color: #f0f0f0 !important;
+}
+
+/* Tracker view full page */
+.dark .min-h-screen[style*="background"] {
+  background-color: #0f1117 !important;
+}
+
+/* Upgrade modal, Share modal white containers */
+.dark .rounded-3xl[style*="background: '#FFFFFF'"],
+.dark .rounded-2xl[style*="background: '#FFFFFF'"],
+.dark .rounded-2xl[style*='background: "#FFFFFF"'],
+.dark .rounded-3xl[style*='background: "#FFFFFF"'] {
+  background-color: #161b27 !important;
+}
+
+/* Job cards */
+.dark .rounded-xl[style*="background: '#FFFFFF'"],
+.dark .rounded-xl[style*='background: "#FFFFFF"'] {
+  background-color: #1a1f2e !important;
+  border-color: #2a2f3e !important;
+}
+
+/* Auth modal white container */
+.dark div[style*="background: '#FFFFFF'"][style*="border: '1px solid #E5E5E5'"] {
+  background-color: #161b27 !important;
+  border-color: #2a2f3e !important;
+}
+
+/* Auth modal inputs */
+.dark input[style*="background: '#FFFFFF'"],
+.dark input[style*='background: "#FFFFFF"'] {
+  background-color: #1e2433 !important;
+  border-color: #2a2f3e !important;
+  color: #f0f0f0 !important;
+}
+
+/* ── Dark mode: catch computed white/light backgrounds on modals ── */
+/* These target the actual rendered DOM style values */
+.dark .fixed.rounded-2xl,
+.dark .fixed.rounded-3xl {
+  background-color: #161b27 !important;
+  border-color: #2a2f3e !important;
+  color: #f0f0f0 !important;
+}
+
+.dark .fixed.rounded-2xl *,
+.dark .fixed.rounded-3xl * {
+  border-color: #2a2f3e;
+}
+
+/* Tracker view */
+.dark .min-h-screen {
+  background-color: #0f1117 !important;
+  color: #f0f0f0 !important;
+}
+
+/* All p, h1-h6, span inside dark modals */
+.dark .fixed.rounded-2xl p,
+.dark .fixed.rounded-2xl h1,
+.dark .fixed.rounded-2xl h2,
+.dark .fixed.rounded-2xl h3,
+.dark .fixed.rounded-2xl h4,
+.dark .fixed.rounded-2xl span:not([style*="color: #0095FF"]):not([style*="color: rgb(0, 149, 255)"]):not([style*="color: #FFFFFF"]):not([style*="color: white"]):not([style*="color: rgba(255"]) {
+  color: #d0d8e8 !important;
+}
+
+/* Section dividers inside modals */
+.dark .fixed.rounded-2xl [style*="borderBottom"],
+.dark .fixed.rounded-2xl [style*="border-bottom"],
+.dark .fixed.rounded-2xl [style*="borderTop"],
+.dark .fixed.rounded-2xl [style*="border-top"] {
+  border-color: #2a2f3e !important;
+}
+
+/* Inner white panels inside modals */
+.dark .fixed.rounded-2xl div[style*="background"] {
+  background-color: #1a1f2e !important;
+}
+
+/* Upgrade modal white container */
+.dark div[style*="background: rgb(255, 255, 255)"][style*="box-shadow"] {
+  background-color: #161b27 !important;
+  color: #f0f0f0 !important;
+}
+
+/* Share modal */
+.dark div[style*="background: rgb(255, 255, 255)"][style*="border: 1px solid rgb(229, 229, 229)"] {
+  background-color: #161b27 !important;
+  border-color: #2a2f3e !important;
+}
+
+/* Auth modal */
+.dark div[style*="background: rgb(255, 255, 255)"][style*="border: 1px solid rgb(229, 229, 229)"] {
+  background-color: #161b27 !important;
+  border-color: #2a2f3e !important;
+}

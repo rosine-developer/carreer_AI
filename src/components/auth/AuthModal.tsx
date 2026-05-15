@@ -20,6 +20,13 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  const isDark = document.documentElement.classList.contains('dark');
+  const bg = isDark ? '#161b27' : '#FFFFFF';
+  const border = isDark ? '#2a2f3e' : '#E5E5E5';
+  const textPrimary = isDark ? '#f0f0f0' : '#111';
+  const textMuted = isDark ? '#888' : '#666';
+  const inputBg = isDark ? '#1e2433' : '#FFFFFF';
+
   const reset = () => {
     setFullName(''); setEmail(''); setPassword('');
     setError(''); setSuccess(''); setLoading(false);
@@ -86,13 +93,13 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
               className="relative w-full max-w-sm"
               onClick={e => e.stopPropagation()}
             >
-              <div className="rounded-2xl relative" style={{ background: '#FFFFFF', border: '1px solid #E5E5E5' }}>
+              <div className="rounded-2xl relative" style={{ background: bg, border: `1px solid ${border}` }}>
 
                 {/* Close */}
                 <button
                   onClick={() => { reset(); onClose(); }}
                   className="absolute top-3 right-3 p-1.5 rounded-lg z-10"
-                  style={{ color: '#888', background: '#FFFFFF' }}
+                  style={{ color: textMuted, background: bg }}
                 >
                   <X size={15} />
                 </button>
@@ -101,13 +108,13 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                   {/* Logo */}
                   <div className="flex items-center gap-1 mb-5">
                     <img src="/cm1.png" alt="CM" style={{ width: '40px', height: '40px', objectFit: 'contain', marginRight: '-4px' }} />
-                    <span className="font-bold text-sm" style={{ color: '#111', fontFamily: 'Sora, sans-serif' }}>
+                    <span className="font-bold text-sm" style={{ color: textPrimary, fontFamily: 'Sora, sans-serif' }}>
                       CareerMind <span style={{ color: '#0095FF' }}>AI</span>
                     </span>
                   </div>
 
                   {/* Tab switcher */}
-                  <div className="flex rounded-xl p-1 mb-4" style={{ background: '#FFFFFF', border: '1px solid #E5E5E5' }}>
+                  <div className="flex rounded-xl p-1 mb-4" style={{ background: inputBg, border: `1px solid ${border}` }}>
                     {(['login', 'register'] as const).map((m) => (
                       <button
                         key={m}
@@ -115,7 +122,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                         className="flex-1 py-1.5 rounded-lg text-xs font-medium transition-all"
                         style={{
                           background: mode === m ? '#0095FF' : 'transparent',
-                          color: mode === m ? '#FFFFFF' : '#666',
+                          color: mode === m ? '#FFFFFF' : textMuted,
                         }}
                       >
                         {m === 'login' ? 'Log In' : 'Register'}
@@ -133,9 +140,9 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                             <input
                               type="text" value={fullName} onChange={e => setFullName(e.target.value)}
                               placeholder="Full name" className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm outline-none"
-                              style={{ background: '#FFFFFF', border: '1px solid #E5E5E5', color: '#111' }}
+                              style={{ background: inputBg, border: `1px solid ${border}`, color: textPrimary }}
                               onFocus={e => (e.target.style.borderColor = '#0095FF')}
-                              onBlur={e => (e.target.style.borderColor = '#E5E5E5')}
+                              onBlur={e => (e.target.style.borderColor = border)}
                             />
                           </div>
                         </motion.div>
@@ -147,9 +154,9 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                       <input
                         type="email" value={email} onChange={e => setEmail(e.target.value)}
                         placeholder="Email address" required className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm outline-none"
-                        style={{ background: '#FFFFFF', border: '1px solid #E5E5E5', color: '#111' }}
+                        style={{ background: inputBg, border: `1px solid ${border}`, color: textPrimary }}
                         onFocus={e => (e.target.style.borderColor = '#0095FF')}
-                        onBlur={e => (e.target.style.borderColor = '#E5E5E5')}
+                        onBlur={e => (e.target.style.borderColor = border)}
                       />
                     </div>
 
@@ -158,9 +165,9 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                       <input
                         type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
                         placeholder="Password" required className="w-full pl-9 pr-9 py-2.5 rounded-xl text-sm outline-none"
-                        style={{ background: '#FFFFFF', border: '1px solid #E5E5E5', color: '#111' }}
+                        style={{ background: inputBg, border: `1px solid ${border}`, color: textPrimary }}
                         onFocus={e => (e.target.style.borderColor = '#0095FF')}
-                        onBlur={e => (e.target.style.borderColor = '#E5E5E5')}
+                        onBlur={e => (e.target.style.borderColor = border)}
                       />
                       <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: '#AAA' }}>
                         {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
@@ -195,7 +202,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = 'login' }: Au
                     </motion.button>
                   </form>
 
-                  <p className="text-center text-xs mt-3" style={{ color: '#888' }}>
+                  <p className="text-center text-xs mt-3" style={{ color: textMuted }}>
                     {mode === 'login' ? "No account? " : 'Have an account? '}
                     <button onClick={() => switchMode(mode === 'login' ? 'register' : 'login')} className="underline font-medium" style={{ color: '#0095FF' }}>
                       {mode === 'login' ? 'Register' : 'Log in'}

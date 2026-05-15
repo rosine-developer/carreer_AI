@@ -20,6 +20,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
+import { useDarkMode } from "../../hooks/use-dark-mode";
 
 interface Application {
   id: string;
@@ -53,6 +54,23 @@ const STATUS_LABELS = {
 };
 
 export default function ApplicationTrackerView() {
+  const { isDark } = useDarkMode();
+
+  // Theme tokens — mirrors CareerMindApp
+  const t = {
+    bg:         isDark ? "#0f1117" : "#FFFFFF",
+    card:       isDark ? "#161b27" : "#FFFFFF",
+    cardAlt:    isDark ? "#1a1f2e" : "#F8F8F8",
+    border:     isDark ? "#2a2f3e" : "#F0F0F0",
+    borderSoft: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.1)",
+    text:       isDark ? "#f0f0f0" : "#111111",
+    textMuted:  isDark ? "#c0c0c0" : "#444444",
+    textSubtle: isDark ? "#888888" : "#666666",
+    inputBg:    isDark ? "#1e2433" : "#FFFFFF",
+    hoverBg:    isDark ? "#1e2433" : "#F5F5F5",
+    colorScheme: isDark ? "dark" : "light",
+  };
+
   const [applications, setApplications] = useState<Application[]>([]);
   const [filter, setFilter] = useState<"all" | Application["status"]>("all");
   const [sortBy, setSortBy] = useState<SortField>("date");
@@ -277,8 +295,7 @@ export default function ApplicationTrackerView() {
     <div
       className="min-h-screen w-full overflow-auto"
       style={{
-        background:
-          "#FFFFFF",
+        background: t.bg,
         fontFamily: "Sora, sans-serif",
       }}
     >
@@ -289,13 +306,13 @@ export default function ApplicationTrackerView() {
             <h1
               className="text-2xl font-bold"
               style={{
-                color: "#111111",
+                color: t.text,
                 fontFamily: "Sora, sans-serif",
               }}
             >
               Application Tracker
             </h1>
-            <p className="text-sm mt-1" style={{ color: "#666666" }}>
+            <p className="text-sm mt-1" style={{ color: t.textSubtle }}>
               Manage and track your job applications
             </p>
           </div>
@@ -305,9 +322,9 @@ export default function ApplicationTrackerView() {
               onClick={() => setShowStats(!showStats)}
               className="px-3 py-2 rounded-lg text-xs font-medium"
               style={{
-                background: showStats ? "#0095FF" : "#FFFFFF",
-                border: showStats ? "1px solid #0095FF" : "1px solid #E5E5E5",
-                color: showStats ? "#FFFFFF" : "#333333",
+                background: showStats ? "#0095FF" : t.card,
+                border: showStats ? "1px solid #0095FF" : `1px solid ${t.border}`,
+                color: showStats ? "#FFFFFF" : t.textMuted,
               }}
             >
               {showStats ? "Hide Stats" : "Show Stats"}
@@ -340,14 +357,14 @@ export default function ApplicationTrackerView() {
               <div
                 className="p-4 rounded-xl"
                 style={{
-                  background: "#FFFFFF",
-                  border: "1px solid #F0F0F0",
+                  background: t.card,
+                  border: `1px solid ${t.border}`,
                 }}
               >
-                <p className="text-xs mb-1" style={{ color: "#666666" }}>
+                <p className="text-xs mb-1" style={{ color: t.textSubtle }}>
                   Total Applications
                 </p>
-                <p className="text-3xl font-bold" style={{ color: "#111111", fontFamily: "Sora, sans-serif" }}>
+                <p className="text-3xl font-bold" style={{ color: t.text, fontFamily: "Sora, sans-serif" }}>
                   {stats.total}
                 </p>
               </div>
@@ -423,17 +440,17 @@ export default function ApplicationTrackerView() {
                 <div
                   className="p-4 rounded-xl"
                   style={{
-                    background: "#FFFFFF",
-                    border: "1px solid #F0F0F0",
+                    background: t.card,
+                    border: `1px solid ${t.border}`,
                   }}
                 >
-                  <h3 className="text-sm font-semibold mb-3" style={{ color: "#111111" }}>
+                  <h3 className="text-sm font-semibold mb-3" style={{ color: t.text }}>
                     Top Companies
                   </h3>
                   <div className="space-y-2">
                     {stats.topCompanies.map(({ company, count }) => (
                       <div key={company} className="flex items-center justify-between">
-                        <span className="text-sm" style={{ color: "#333333" }}>
+                        <span className="text-sm" style={{ color: t.textMuted }}>
                           {company}
                         </span>
                         <span
@@ -456,17 +473,17 @@ export default function ApplicationTrackerView() {
                 <div
                   className="p-4 rounded-xl"
                   style={{
-                    background: "#FFFFFF",
-                    border: "1px solid #F0F0F0",
+                    background: t.card,
+                    border: `1px solid ${t.border}`,
                   }}
                 >
-                  <h3 className="text-sm font-semibold mb-3" style={{ color: "#111111" }}>
+                  <h3 className="text-sm font-semibold mb-3" style={{ color: t.text }}>
                     Top Roles
                   </h3>
                   <div className="space-y-2">
                     {stats.topRoles.map(({ role, count }) => (
                       <div key={role} className="flex items-center justify-between">
-                        <span className="text-sm truncate" style={{ color: "#333333" }}>
+                        <span className="text-sm truncate" style={{ color: t.textMuted }}>
                           {role}
                         </span>
                         <span
@@ -498,14 +515,14 @@ export default function ApplicationTrackerView() {
             <div
               className="p-4 rounded-xl"
               style={{
-                background: "#FFFFFF",
-                border: "1px solid #F0F0F0",
+                background: t.card,
+                border: `1px solid ${t.border}`,
               }}
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Bell size={16} style={{ color: "#EAB308" }} />
-                  <h3 className="text-sm font-semibold" style={{ color: "#111111" }}>
+                  <h3 className="text-sm font-semibold" style={{ color: t.text }}>
                     Follow-up Reminders
                   </h3>
                   <span
@@ -523,8 +540,8 @@ export default function ApplicationTrackerView() {
                   onClick={() => setShowReminders(false)}
                   className="p-1 rounded-lg"
                   style={{
-                    background: "#FFFFFF",
-                    color: "#666666",
+                    background: t.card,
+                    color: t.textSubtle,
                   }}
                 >
                   <X size={14} />
@@ -646,19 +663,19 @@ export default function ApplicationTrackerView() {
                     ? status === "all"
                       ? "#0095FF"
                       : STATUS_COLORS[status].bg
-                    : "#FFFFFF",
+                    : t.card,
                 border:
                   filter === status
                     ? status === "all"
                       ? "1px solid #0095FF"
                       : `1px solid ${STATUS_COLORS[status].border}`
-                    : "1px solid #F0F0F0",
+                    : `1px solid ${t.border}`,
                 color:
                   filter === status
                     ? status === "all"
                       ? "#FFFFFF"
                       : STATUS_COLORS[status].text
-                    : "#666666",
+                    : t.textSubtle,
               }}
             >
               {status === "all" ? "All" : STATUS_LABELS[status]} ({statusCounts[status]})
@@ -671,19 +688,19 @@ export default function ApplicationTrackerView() {
           <div
             className="rounded-xl overflow-hidden"
             style={{
-              background: "rgba(255,255,255,0.02)",
-              border: "1px solid #F0F0F0",
+              background: t.cardAlt,
+              border: `1px solid ${t.border}`,
             }}
           >
             {/* Table header */}
             <div
               className="grid grid-cols-12 gap-4 px-4 py-3"
-              style={{ borderBottom: "1px solid #F0F0F0" }}
+              style={{ borderBottom: `1px solid ${t.border}` }}
             >
               <button
                 onClick={() => handleSort("jobTitle")}
                 className="col-span-3 flex items-center gap-2 text-left text-xs font-semibold"
-                style={{ color: "#333333" }}
+                style={{ color: t.textMuted }}
               >
                 Job Title
                 {sortBy === "jobTitle" &&
@@ -692,7 +709,7 @@ export default function ApplicationTrackerView() {
               <button
                 onClick={() => handleSort("company")}
                 className="col-span-2 flex items-center gap-2 text-left text-xs font-semibold"
-                style={{ color: "#333333" }}
+                style={{ color: t.textMuted }}
               >
                 Company
                 {sortBy === "company" &&
@@ -701,7 +718,7 @@ export default function ApplicationTrackerView() {
               <button
                 onClick={() => handleSort("date")}
                 className="col-span-2 flex items-center gap-2 text-left text-xs font-semibold"
-                style={{ color: "#333333" }}
+                style={{ color: t.textMuted }}
               >
                 Date Applied
                 {sortBy === "date" &&
@@ -710,22 +727,22 @@ export default function ApplicationTrackerView() {
               <button
                 onClick={() => handleSort("status")}
                 className="col-span-2 flex items-center gap-2 text-left text-xs font-semibold"
-                style={{ color: "#333333" }}
+                style={{ color: t.textMuted }}
               >
                 Status
                 {sortBy === "status" &&
                   (sortOrder === "asc" ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
               </button>
-              <div className="col-span-3 text-xs font-semibold text-right" style={{ color: "#333333" }}>
+              <div className="col-span-3 text-xs font-semibold text-right" style={{ color: t.textMuted }}>
                 Actions
               </div>
             </div>
 
             {/* Table body */}
-            <div className="divide-y" style={{ borderColor: "#FFFFFF" }}>
+            <div className="divide-y" style={{ borderColor: t.border }}>
               {filteredApplications.length === 0 ? (
                 <div className="px-4 py-12 text-center">
-                  <p className="text-sm" style={{ color: "#888888" }}>
+                  <p className="text-sm" style={{ color: t.textSubtle }}>
                     No applications found. Click "New Application" to get started.
                   </p>
                 </div>
@@ -733,25 +750,28 @@ export default function ApplicationTrackerView() {
                 filteredApplications.map((app) => (
                   <div
                     key={app.id}
-                    className="grid grid-cols-12 gap-4 px-4 py-4 hover:bg-white/5 transition-colors"
+                    className="grid grid-cols-12 gap-4 px-4 py-4 transition-colors"
+                    style={{ background: "transparent" }}
+                    onMouseEnter={e => { e.currentTarget.style.background = t.hoverBg; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
                   >
                     <div className="col-span-3">
-                      <p className="text-sm font-medium" style={{ color: "#111111" }}>
+                      <p className="text-sm font-medium" style={{ color: t.text }}>
                         {app.jobTitle}
                       </p>
                       {app.notes && (
-                        <p className="text-xs mt-1 line-clamp-1" style={{ color: "#888888" }}>
+                        <p className="text-xs mt-1 line-clamp-1" style={{ color: t.textSubtle }}>
                           {app.notes}
                         </p>
                       )}
                     </div>
                     <div className="col-span-2 flex items-center">
-                      <p className="text-sm" style={{ color: "#333333" }}>
+                      <p className="text-sm" style={{ color: t.textMuted }}>
                         {app.companyName}
                       </p>
                     </div>
                     <div className="col-span-2 flex items-center">
-                      <p className="text-sm" style={{ color: "#444444" }}>
+                      <p className="text-sm" style={{ color: t.textMuted }}>
                         {app.applicationDate.toLocaleDateString()}
                       </p>
                     </div>
@@ -811,11 +831,11 @@ export default function ApplicationTrackerView() {
             <div
               className="rounded-xl p-8 text-center"
               style={{
-                background: "rgba(255,255,255,0.02)",
-                border: "1px solid #F0F0F0",
+                background: t.cardAlt,
+                border: `1px solid ${t.border}`,
               }}
             >
-              <p className="text-sm" style={{ color: "#888888" }}>
+              <p className="text-sm" style={{ color: t.textSubtle }}>
                 No applications found. Click "New Application" to get started.
               </p>
             </div>
@@ -827,17 +847,17 @@ export default function ApplicationTrackerView() {
                 animate={{ opacity: 1, y: 0 }}
                 className="rounded-xl overflow-hidden"
                 style={{
-                  background: "rgba(255,255,255,0.02)",
-                  border: "1px solid #F0F0F0",
+                  background: t.card,
+                  border: `1px solid ${t.border}`,
                 }}
               >
                 <div className="p-4">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-semibold" style={{ color: "#111111" }}>
+                      <h3 className="text-sm font-semibold" style={{ color: t.text }}>
                         {app.jobTitle}
                       </h3>
-                      <p className="text-xs mt-1" style={{ color: "#444444" }}>
+                      <p className="text-xs mt-1" style={{ color: t.textMuted }}>
                         {app.companyName}
                       </p>
                     </div>
@@ -876,7 +896,7 @@ export default function ApplicationTrackerView() {
                   </div>
 
                   {app.notes && expandedMobile === app.id && (
-                    <p className="text-xs mb-3 p-3 rounded-lg" style={{ color: "#444444", background: "#FFFFFF" }}>
+                    <p className="text-xs mb-3 p-3 rounded-lg" style={{ color: t.textMuted, background: t.cardAlt }}>
                       {app.notes}
                     </p>
                   )}
@@ -887,9 +907,9 @@ export default function ApplicationTrackerView() {
                         onClick={() => setExpandedMobile(expandedMobile === app.id ? null : app.id)}
                         className="flex-1 px-3 py-2 rounded-lg text-xs font-medium"
                         style={{
-                          background: "#FFFFFF",
-                          border: "1px solid #F0F0F0",
-                          color: "#444444",
+                          background: t.card,
+                          border: `1px solid ${t.border}`,
+                          color: t.textMuted,
                         }}
                       >
                         {expandedMobile === app.id ? "Hide Notes" : "Show Notes"}
@@ -932,20 +952,20 @@ export default function ApplicationTrackerView() {
         <DialogContent
           className="max-w-lg"
           style={{
-            background: "#FFFFFF",
-            border: "1px solid rgba(0,0,0,0.1)",
-            color: "#1F2937",
+            background: t.card,
+            border: `1px solid ${t.border}`,
+            color: t.text,
           }}
         >
           <DialogHeader>
-            <DialogTitle style={{ color: "#1F2937", fontFamily: "Sora, sans-serif" }}>
+            <DialogTitle style={{ color: t.text, fontFamily: "Sora, sans-serif" }}>
               {editingApp ? "Edit Application" : "New Application"}
             </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4 mt-4">
             <div>
-              <Label htmlFor="jobTitle" className="text-sm" style={{ color: "#374151" }}>
+              <Label htmlFor="jobTitle" className="text-sm" style={{ color: t.textMuted }}>
                 Job Title *
               </Label>
               <Input
@@ -955,15 +975,15 @@ export default function ApplicationTrackerView() {
                 placeholder="e.g., Software Engineer Intern"
                 className="mt-1"
                 style={{
-                  background: "#FFFFFF",
-                  border: "1px solid rgba(0,0,0,0.1)",
-                  color: "#1F2937",
+                  background: t.inputBg,
+                  border: `1px solid ${t.border}`,
+                  color: t.text,
                 }}
               />
             </div>
 
             <div>
-              <Label htmlFor="companyName" className="text-sm" style={{ color: "#374151" }}>
+              <Label htmlFor="companyName" className="text-sm" style={{ color: t.textMuted }}>
                 Company Name *
               </Label>
               <Input
@@ -973,16 +993,16 @@ export default function ApplicationTrackerView() {
                 placeholder="e.g., Tech Corp"
                 className="mt-1"
                 style={{
-                  background: "#FFFFFF",
-                  border: "1px solid rgba(0,0,0,0.1)",
-                  color: "#1F2937",
+                  background: t.inputBg,
+                  border: `1px solid ${t.border}`,
+                  color: t.text,
                 }}
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="applicationDate" className="text-sm" style={{ color: "#374151" }}>
+                <Label htmlFor="applicationDate" className="text-sm" style={{ color: t.textMuted }}>
                   Application Date
                 </Label>
                 <Input
@@ -992,16 +1012,16 @@ export default function ApplicationTrackerView() {
                   onChange={(e) => setFormData({ ...formData, applicationDate: e.target.value })}
                   className="mt-1"
                   style={{
-                    background: "#FFFFFF",
-                    border: "1px solid rgba(0,0,0,0.1)",
-                    color: "#1F2937",
-                    colorScheme: "light",
+                    background: t.inputBg,
+                    border: `1px solid ${t.border}`,
+                    color: t.text,
+                    colorScheme: t.colorScheme,
                   }}
                 />
               </div>
 
               <div>
-                <Label htmlFor="status" className="text-sm" style={{ color: "#374151" }}>
+                <Label htmlFor="status" className="text-sm" style={{ color: t.textMuted }}>
                   Status
                 </Label>
                 <select
@@ -1010,21 +1030,21 @@ export default function ApplicationTrackerView() {
                   onChange={(e) => setFormData({ ...formData, status: e.target.value as Application["status"] })}
                   className="mt-1 w-full px-3 py-2 rounded-lg text-sm outline-none"
                   style={{
-                    background: "#FFFFFF",
-                    border: "1px solid rgba(0,0,0,0.1)",
-                    color: "#1F2937",
+                    background: t.inputBg,
+                    border: `1px solid ${t.border}`,
+                    color: t.text,
                   }}
                 >
-                  <option value="applied" style={{ background: "#FFFFFF", color: "#1F2937" }}>Applied</option>
-                  <option value="interview" style={{ background: "#FFFFFF", color: "#1F2937" }}>Interview</option>
-                  <option value="rejected" style={{ background: "#FFFFFF", color: "#1F2937" }}>Rejected</option>
-                  <option value="accepted" style={{ background: "#FFFFFF", color: "#1F2937" }}>Accepted</option>
+                  <option value="applied" style={{ background: t.card, color: t.text }}>Applied</option>
+                  <option value="interview" style={{ background: t.card, color: t.text }}>Interview</option>
+                  <option value="rejected" style={{ background: t.card, color: t.text }}>Rejected</option>
+                  <option value="accepted" style={{ background: t.card, color: t.text }}>Accepted</option>
                 </select>
               </div>
             </div>
 
             <div>
-              <Label htmlFor="followUpDate" className="text-sm" style={{ color: "#374151" }}>
+              <Label htmlFor="followUpDate" className="text-sm" style={{ color: t.textMuted }}>
                 Follow-up Date (Optional)
               </Label>
               <Input
@@ -1034,16 +1054,16 @@ export default function ApplicationTrackerView() {
                 onChange={(e) => setFormData({ ...formData, followUpDate: e.target.value })}
                 className="mt-1"
                 style={{
-                  background: "#FFFFFF",
-                  border: "1px solid rgba(0,0,0,0.1)",
-                  color: "#1F2937",
-                  colorScheme: "light",
+                  background: t.inputBg,
+                  border: `1px solid ${t.border}`,
+                  color: t.text,
+                  colorScheme: t.colorScheme,
                 }}
               />
             </div>
 
             <div>
-              <Label htmlFor="notes" className="text-sm" style={{ color: "#374151" }}>
+              <Label htmlFor="notes" className="text-sm" style={{ color: t.textMuted }}>
                 Notes (Optional)
               </Label>
               <Textarea
@@ -1054,9 +1074,9 @@ export default function ApplicationTrackerView() {
                 rows={4}
                 className="mt-1"
                 style={{
-                  background: "#FFFFFF",
-                  border: "1px solid rgba(0,0,0,0.1)",
-                  color: "#1F2937",
+                  background: t.inputBg,
+                  border: `1px solid ${t.border}`,
+                  color: t.text,
                 }}
               />
             </div>
@@ -1066,9 +1086,9 @@ export default function ApplicationTrackerView() {
                 onClick={() => setIsFormOpen(false)}
                 className="flex-1"
                 style={{
-                  background: "#FFFFFF",
-                  border: "1px solid rgba(0,0,0,0.1)",
-                  color: "#374151",
+                  background: t.card,
+                  border: `1px solid ${t.border}`,
+                  color: t.textMuted,
                 }}
               >
                 Cancel

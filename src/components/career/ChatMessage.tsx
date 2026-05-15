@@ -8,10 +8,11 @@ function stripEmojis(text: string): string {
   return text.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F000}-\u{1F02F}\u{1F0A0}-\u{1F0FF}\u{1F100}-\u{1F1FF}\u{1F200}-\u{1F2FF}]/gu, '').replace(/\s{2,}/g, ' ').trim();
 }
 
-function renderMarkdown(text: string): string {
+function renderMarkdown(text: string, isDark: boolean): string {
   const clean = stripEmojis(text);
+  const boldColor = isDark ? '#f0f0f0' : '#111';
   return clean
-    .replace(/\*\*(.+?)\*\*/g, '<strong style="color:#111">$1</strong>')
+    .replace(/\*\*(.+?)\*\*/g, `<strong style="color:${boldColor}">$1</strong>`)
     .replace(/\n\n/g, "</p><p>")
     .replace(/\n/g, "<br/>");
 }
@@ -34,6 +35,7 @@ export default function ChatMessage({
   onWriteCoverLetter,
 }: ChatMessageProps) {
   const isAI = message.role === "ai";
+  const isDark = document.documentElement.classList.contains('dark');
 
   return (
     <motion.div
@@ -46,7 +48,7 @@ export default function ChatMessage({
         {isAI ? (
           <div
             className="rounded-xl px-4 py-3"
-            style={{ background: "#FFFFFF", border: "1px solid #FFFFFF" }}
+            style={{ background: isDark ? "#1a1f2e" : "#FFFFFF", border: isDark ? "1px solid #2a2f3e" : "1px solid #FFFFFF" }}
           >
             {/* AI label */}
             <div className="flex items-center gap-1.5 mb-2">
@@ -57,8 +59,8 @@ export default function ChatMessage({
 
             <div
               className="text-sm leading-relaxed"
-              style={{ color: "#111", fontFamily: "Sora, sans-serif", fontSize: "0.875rem", fontWeight: 500, lineHeight: "1.7" }}
-              dangerouslySetInnerHTML={{ __html: `<p>${renderMarkdown(message.content)}</p>` }}
+              style={{ color: isDark ? "#e0e0e0" : "#111", fontFamily: "Sora, sans-serif", fontSize: "0.875rem", fontWeight: 500, lineHeight: "1.7" }}
+              dangerouslySetInnerHTML={{ __html: `<p>${renderMarkdown(message.content, isDark)}</p>` }}
             />
 
             {message.isOnboarding && onOnboardingSubmit && (
@@ -82,7 +84,7 @@ export default function ChatMessage({
             )}
 
             <div className="mt-2 flex justify-end">
-              <span className="text-xs" style={{ color: "#BBB" }}>
+              <span className="text-xs" style={{ color: isDark ? "#555" : "#BBB" }}>
                 {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
               </span>
             </div>

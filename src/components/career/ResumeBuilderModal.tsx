@@ -42,6 +42,7 @@ import type {
   ResumeSection,
   ProfileData,
 } from '../../types/application-helper';
+import { useDarkMode } from '../../hooks/use-dark-mode';
 
 export default function ResumeBuilderModal({
   isOpen,
@@ -50,6 +51,19 @@ export default function ResumeBuilderModal({
   draftId,
   profileData: initialProfileData,
 }: ResumeBuilderProps) {
+  const { isDark } = useDarkMode();
+
+  const t = {
+    bg:         isDark ? '#0f1117' : '#FFFFFF',
+    card:       isDark ? '#161b27' : '#FFFFFF',
+    cardAlt:    isDark ? '#1a1f2e' : '#F8F8F8',
+    border:     isDark ? '#2a2f3e' : 'rgba(0,0,0,0.1)',
+    text:       isDark ? '#f0f0f0' : '#1F2937',
+    textMuted:  isDark ? '#c0c0c0' : '#374151',
+    textSubtle: isDark ? '#888888' : '#6B7280',
+    inputBg:    isDark ? '#1e2433' : '#FFFFFF',
+  };
+
   const [resumeState, setResumeState] = useState<ResumeState | null>(null);
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
@@ -284,8 +298,8 @@ export default function ResumeBuilderModal({
             transition={{ type: 'spring', damping: 28, stiffness: 300 }}
             className="fixed inset-4 md:inset-8 z-50 rounded-2xl overflow-hidden flex flex-col"
             style={{
-              background: '#FFFFFF',
-              border: '1px solid rgba(0,0,0,0.1)',
+              background: t.bg,
+              border: `1px solid ${t.border}`,
               boxShadow: '0 24px 80px rgba(0,0,0,0.3)',
               maxHeight: 'calc(100vh - 64px)',
             }}
@@ -293,19 +307,19 @@ export default function ResumeBuilderModal({
             {/* Header */}
             <div
               className="flex items-center justify-between px-6 py-4 shrink-0"
-              style={{ borderBottom: '1px solid rgba(0,0,0,0.1)', background: '#FFFFFF' }}
+              style={{ borderBottom: `1px solid ${t.border}`, background: t.card }}
             >
               <div className="flex items-center gap-3">
                 <div>
                   <h2
                     className="text-base font-bold"
-                    style={{ color: '#1F2937', fontFamily: 'Sora, sans-serif' }}
+                    style={{ color: t.text, fontFamily: 'Sora, sans-serif' }}
                   >
                     Resume Builder
                   </h2>
                   <p
                     className="text-xs"
-                    style={{ color: '#6B7280', fontFamily: 'Sora, sans-serif' }}
+                    style={{ color: t.textSubtle, fontFamily: 'Sora, sans-serif' }}
                   >
                     {resumeState.metadata.name}
                     {saveStatus === 'saved' && ' • Saved'}
@@ -369,7 +383,7 @@ export default function ResumeBuilderModal({
             {/* Mobile: Tabs for Edit/Preview */}
             {isMobile && (
               <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'edit' | 'preview')}>
-                <TabsList className="w-full rounded-none border-b" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
+                <TabsList className="w-full rounded-none border-b" style={{ borderColor: t.border }}>
                   <TabsTrigger value="edit" className="flex-1">
                     Edit
                   </TabsTrigger>
@@ -388,11 +402,11 @@ export default function ResumeBuilderModal({
                   {/* Template Controls */}
                   <div
                     className="px-5 py-4 shrink-0 space-y-3"
-                    style={{ borderBottom: '1px solid rgba(0,0,0,0.1)', background: '#FFFFFF' }}
+                    style={{ borderBottom: `1px solid ${t.border}`, background: t.card }}
                   >
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                       <div>
-                        <Label className="text-xs mb-1" style={{ color: '#374151' }}>Template</Label>
+                        <Label className="text-xs mb-1" style={{ color: t.textMuted }}>Template</Label>
                         <Select value={resumeState.template} onValueChange={handleTemplateChange}>
                           <SelectTrigger className="h-8 text-xs">
                             <SelectValue />
@@ -408,7 +422,7 @@ export default function ResumeBuilderModal({
                       </div>
 
                       <div>
-                        <Label className="text-xs mb-1" style={{ color: '#374151' }}>Color Scheme</Label>
+                        <Label className="text-xs mb-1" style={{ color: t.textMuted }}>Color Scheme</Label>
                         <Select
                           value={resumeState.colorScheme}
                           onValueChange={handleColorSchemeChange}
@@ -427,7 +441,7 @@ export default function ResumeBuilderModal({
                       </div>
 
                       <div>
-                        <Label className="text-xs mb-1" style={{ color: '#374151' }}>Font Pairing</Label>
+                        <Label className="text-xs mb-1" style={{ color: t.textMuted }}>Font Pairing</Label>
                         <Select
                           value={resumeState.fontPairing}
                           onValueChange={handleFontPairingChange}
@@ -463,17 +477,17 @@ export default function ResumeBuilderModal({
                                     style={{
                                       ...provided.draggableProps.style,
                                       opacity: section.visible ? 1 : 0.5,
-                                      borderColor: 'rgba(0,0,0,0.1)',
-                                      background: '#FFFFFF',
+                                      borderColor: t.border,
+                                      background: t.card,
                                     }}
                                   >
                                     {/* Section Header */}
                                     <div className="flex items-center justify-between mb-3">
                                       <div className="flex items-center gap-2">
                                         <div {...provided.dragHandleProps} className="cursor-grab">
-                                          <FileText className="w-4 h-4" style={{ color: '#6B7280' }} />
+                                          <FileText className="w-4 h-4" style={{ color: t.textSubtle }} />
                                         </div>
-                                        <h3 className="text-sm font-semibold" style={{ color: '#1F2937' }}>
+                                        <h3 className="text-sm font-semibold" style={{ color: t.text }}>
                                           {section.title}
                                         </h3>
                                       </div>
@@ -520,6 +534,7 @@ export default function ResumeBuilderModal({
                                       <ResumeSectionEditor
                                         section={section}
                                         profileData={profileData}
+                                        isDark={isDark}
                                         onUpdate={(content) =>
                                           handleUpdateSectionContent(section.id, content)
                                         }
@@ -542,18 +557,18 @@ export default function ResumeBuilderModal({
               {(!isMobile || activeTab === 'preview') && (
                 <div
                   className="w-full md:w-96 lg:w-[500px] flex flex-col overflow-hidden shrink-0"
-                  style={{ borderLeft: '1px solid rgba(0,0,0,0.1)' }}
+                  style={{ borderLeft: `1px solid ${t.border}` }}
                 >
                   <div
                     className="px-5 py-3 flex items-center gap-2 shrink-0"
-                    style={{ borderBottom: '1px solid rgba(0,0,0,0.1)', background: '#FFFFFF' }}
+                    style={{ borderBottom: `1px solid ${t.border}`, background: t.card }}
                   >
                     <Eye size={13} style={{ color: '#0095FF' }} />
                     <span className="text-xs font-mono" style={{ color: '#0095FF' }}>
                       LIVE PREVIEW
                     </span>
                   </div>
-                  <div className="flex-1 overflow-y-auto p-5" style={{ background: '#FFFFFF' }}>
+                  <div className="flex-1 overflow-y-auto p-5" style={{ background: t.cardAlt }}>
                     <ResumePreview resumeState={resumeState} />
                   </div>
                 </div>
@@ -570,12 +585,21 @@ export default function ResumeBuilderModal({
 function ResumeSectionEditor({
   section,
   profileData,
+  isDark,
   onUpdate,
 }: {
   section: ResumeSection;
   profileData: ProfileData | null;
+  isDark: boolean;
   onUpdate: (content: any) => void;
 }) {
+  const t = {
+    card:      isDark ? '#161b27' : '#FFFFFF',
+    border:    isDark ? '#2a2f3e' : 'rgba(0,0,0,0.1)',
+    text:      isDark ? '#f0f0f0' : '#1F2937',
+    textMuted: isDark ? '#c0c0c0' : '#374151',
+    textSubtle:isDark ? '#888888' : '#6B7280',
+  };
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState('');
 
@@ -621,7 +645,7 @@ function ResumeSectionEditor({
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-xs" style={{ color: '#374151' }}>Full Name</Label>
+              <Label className="text-xs" style={{ color: t.textMuted }}>Full Name</Label>
               <Input
                 value={section.content.fullName || ''}
                 onChange={(e) => onUpdate({ ...section.content, fullName: e.target.value })}
@@ -630,7 +654,7 @@ function ResumeSectionEditor({
               />
             </div>
             <div>
-              <Label className="text-xs" style={{ color: '#374151' }}>Email</Label>
+              <Label className="text-xs" style={{ color: t.textMuted }}>Email</Label>
               <Input
                 value={section.content.email || ''}
                 onChange={(e) => onUpdate({ ...section.content, email: e.target.value })}
@@ -639,7 +663,7 @@ function ResumeSectionEditor({
               />
             </div>
             <div>
-              <Label className="text-xs" style={{ color: '#374151' }}>Phone</Label>
+              <Label className="text-xs" style={{ color: t.textMuted }}>Phone</Label>
               <Input
                 value={section.content.phone || ''}
                 onChange={(e) => onUpdate({ ...section.content, phone: e.target.value })}
@@ -648,7 +672,7 @@ function ResumeSectionEditor({
               />
             </div>
             <div>
-              <Label className="text-xs" style={{ color: '#374151' }}>Location</Label>
+              <Label className="text-xs" style={{ color: t.textMuted }}>Location</Label>
               <Input
                 value={section.content.location || ''}
                 onChange={(e) => onUpdate({ ...section.content, location: e.target.value })}
@@ -664,7 +688,7 @@ function ResumeSectionEditor({
       return (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label className="text-xs" style={{ color: '#374151' }}>Skills (comma-separated)</Label>
+            <Label className="text-xs" style={{ color: t.textMuted }}>Skills (comma-separated)</Label>
             <Button
               variant="ghost"
               size="sm"
@@ -702,7 +726,7 @@ function ResumeSectionEditor({
       return (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label className="text-xs" style={{ color: '#374151' }}>Achievements (one per line)</Label>
+            <Label className="text-xs" style={{ color: t.textMuted }}>Achievements (one per line)</Label>
             <Button
               variant="ghost"
               size="sm"
@@ -740,9 +764,9 @@ function ResumeSectionEditor({
       return (
         <div className="space-y-3">
           {Array.isArray(section.content) && section.content.map((edu: any, index: number) => (
-            <div key={edu.id || index} className="p-3 rounded-lg border" style={{ borderColor: 'rgba(0,0,0,0.1)', background: '#FFFFFF' }}>
+            <div key={edu.id || index} className="p-3 rounded-lg border" style={{ borderColor: t.border, background: t.card }}>
               <div className="flex items-start justify-between mb-2">
-                <Label className="text-xs font-semibold" style={{ color: '#1F2937' }}>Education Entry {index + 1}</Label>
+                <Label className="text-xs font-semibold" style={{ color: t.text }}>Education Entry {index + 1}</Label>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -757,7 +781,7 @@ function ResumeSectionEditor({
               </div>
               <div className="space-y-2">
                 <div>
-                  <Label className="text-xs" style={{ color: '#374151' }}>School Name</Label>
+                  <Label className="text-xs" style={{ color: t.textMuted }}>School Name</Label>
                   <Input
                     value={edu.schoolName || ''}
                     onChange={(e) => {
@@ -771,7 +795,7 @@ function ResumeSectionEditor({
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <Label className="text-xs" style={{ color: '#374151' }}>Degree</Label>
+                    <Label className="text-xs" style={{ color: t.textMuted }}>Degree</Label>
                     <Input
                       value={edu.degree || ''}
                       onChange={(e) => {
@@ -784,7 +808,7 @@ function ResumeSectionEditor({
                     />
                   </div>
                   <div>
-                    <Label className="text-xs" style={{ color: '#374151' }}>Field of Study</Label>
+                    <Label className="text-xs" style={{ color: t.textMuted }}>Field of Study</Label>
                     <Input
                       value={edu.fieldOfStudy || ''}
                       onChange={(e) => {
@@ -799,7 +823,7 @@ function ResumeSectionEditor({
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <Label className="text-xs" style={{ color: '#374151' }}>Start Date</Label>
+                    <Label className="text-xs" style={{ color: t.textMuted }}>Start Date</Label>
                     <Input
                       type="month"
                       value={edu.startDate || ''}
@@ -812,7 +836,7 @@ function ResumeSectionEditor({
                     />
                   </div>
                   <div>
-                    <Label className="text-xs" style={{ color: '#374151' }}>End Date</Label>
+                    <Label className="text-xs" style={{ color: t.textMuted }}>End Date</Label>
                     <Input
                       type="month"
                       value={edu.endDate || ''}
@@ -839,7 +863,7 @@ function ResumeSectionEditor({
                     }}
                     className="w-4 h-4"
                   />
-                  <Label htmlFor={`current-${index}`} className="text-xs" style={{ color: '#374151' }}>
+                  <Label htmlFor={`current-${index}`} className="text-xs" style={{ color: t.textMuted }}>
                     Currently studying here
                   </Label>
                 </div>
@@ -874,9 +898,9 @@ function ResumeSectionEditor({
       return (
         <div className="space-y-3">
           {Array.isArray(section.content) && section.content.map((exp: any, index: number) => (
-            <div key={exp.id || index} className="p-3 rounded-lg border" style={{ borderColor: 'rgba(0,0,0,0.1)', background: '#FFFFFF' }}>
+            <div key={exp.id || index} className="p-3 rounded-lg border" style={{ borderColor: t.border, background: t.card }}>
               <div className="flex items-start justify-between mb-2">
-                <Label className="text-xs font-semibold" style={{ color: '#1F2937' }}>Experience Entry {index + 1}</Label>
+                <Label className="text-xs font-semibold" style={{ color: t.text }}>Experience Entry {index + 1}</Label>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -891,7 +915,7 @@ function ResumeSectionEditor({
               </div>
               <div className="space-y-2">
                 <div>
-                  <Label className="text-xs" style={{ color: '#374151' }}>Organization Name</Label>
+                  <Label className="text-xs" style={{ color: t.textMuted }}>Organization Name</Label>
                   <Input
                     value={exp.organizationName || ''}
                     onChange={(e) => {
@@ -904,7 +928,7 @@ function ResumeSectionEditor({
                   />
                 </div>
                 <div>
-                  <Label className="text-xs" style={{ color: '#374151' }}>Role</Label>
+                  <Label className="text-xs" style={{ color: t.textMuted }}>Role</Label>
                   <Input
                     value={exp.role || ''}
                     onChange={(e) => {
@@ -918,7 +942,7 @@ function ResumeSectionEditor({
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <Label className="text-xs" style={{ color: '#374151' }}>Start Date</Label>
+                    <Label className="text-xs" style={{ color: t.textMuted }}>Start Date</Label>
                     <Input
                       type="month"
                       value={exp.startDate || ''}
@@ -931,7 +955,7 @@ function ResumeSectionEditor({
                     />
                   </div>
                   <div>
-                    <Label className="text-xs" style={{ color: '#374151' }}>End Date</Label>
+                    <Label className="text-xs" style={{ color: t.textMuted }}>End Date</Label>
                     <Input
                       type="month"
                       value={exp.endDate || ''}
@@ -958,12 +982,12 @@ function ResumeSectionEditor({
                     }}
                     className="w-4 h-4"
                   />
-                  <Label htmlFor={`exp-current-${index}`} className="text-xs" style={{ color: '#374151' }}>
+                  <Label htmlFor={`exp-current-${index}`} className="text-xs" style={{ color: t.textMuted }}>
                     Currently working here
                   </Label>
                 </div>
                 <div>
-                  <Label className="text-xs" style={{ color: '#374151' }}>Responsibilities (one per line)</Label>
+                  <Label className="text-xs" style={{ color: t.textMuted }}>Responsibilities (one per line)</Label>
                   <Textarea
                     value={Array.isArray(exp.responsibilities) ? exp.responsibilities.join('\n') : ''}
                     onChange={(e) => {
@@ -1004,7 +1028,7 @@ function ResumeSectionEditor({
 
     default:
       return (
-        <div className="text-xs" style={{ color: '#6B7280' }}>
+        <div className="text-xs" style={{ color: t.textSubtle }}>
           Section editor for {section.type} coming soon...
         </div>
       );
@@ -1132,6 +1156,9 @@ function ResumePreview({ resumeState }: { resumeState: ResumeState }) {
     </div>
   );
 }
+
+
+
 
 
 
