@@ -119,8 +119,8 @@ export default function DiscoveryAnimation({ onDismiss }: DiscoveryAnimationProp
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute top-4 right-4 pointer-events-auto px-4 py-2 rounded-full text-xs font-semibold"
-            style={{ background: '#0095FF', color: '#FFFFFF', zIndex: 60 }}
+            className="absolute top-3 right-3 pointer-events-auto px-3 py-1 rounded-full text-xs font-medium"
+            style={{ background: '#8B7FE8', color: '#FFFFFF', zIndex: 60 }}
             onClick={dismiss}
           >
             Skip tour
@@ -139,8 +139,8 @@ export default function DiscoveryAnimation({ onDismiss }: DiscoveryAnimationProp
               top: coords.y - coords.height / 2 - 6,
               width: coords.width + 12,
               height: coords.height + 12,
-              border: '2px solid #0095FF',
-              boxShadow: '0 0 0 4px rgba(0,149,255,0.2), 0 0 20px rgba(0,149,255,0.3)',
+              border: '2px solid #8B7FE8',
+              boxShadow: '0 0 0 4px rgba(139,127,232,0.2), 0 0 20px rgba(139,127,232,0.3)',
               pointerEvents: 'none',
             }}
           />
@@ -164,7 +164,7 @@ export default function DiscoveryAnimation({ onDismiss }: DiscoveryAnimationProp
               style={{ filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}
             >
               {/* Arrow cursor icon instead of emoji */}
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="#0095FF" xmlns="http://www.w3.org/2000/svg">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#8B7FE8" xmlns="http://www.w3.org/2000/svg">
                 <path d="M4 0L4 17L7.5 13.5L10.5 20L12.5 19L9.5 12.5L14 12.5L4 0Z"/>
               </svg>
             </motion.div>
@@ -174,9 +174,9 @@ export default function DiscoveryAnimation({ onDismiss }: DiscoveryAnimationProp
               transition={{ duration: 1.2, repeat: Infinity }}
               className="absolute rounded-full"
               style={{
-                width: '16px',
-                height: '16px',
-                background: 'rgba(0,149,255,0.4)',
+                width: '10px',
+                height: '10px',
+                background: 'rgba(139,127,232,0.4)',
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
@@ -191,13 +191,13 @@ export default function DiscoveryAnimation({ onDismiss }: DiscoveryAnimationProp
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ delay: 0.15, duration: 0.25 }}
-            className="absolute px-4 py-2.5 rounded-2xl text-sm font-medium"
+            className="absolute px-3 py-1.5 rounded-xl text-xs font-medium"
             style={{
               ...getTooltipStyle(),
-              background: '#0095FF',
+              background: '#8B7FE8',
               color: '#FFFFFF',
-              maxWidth: '200px',
-              boxShadow: '0 4px 20px rgba(0,149,255,0.35)',
+              maxWidth: '160px',
+              boxShadow: '0 3px 12px rgba(139,127,232,0.35)',
               lineHeight: '1.4',
             }}
           >
@@ -218,7 +218,7 @@ export default function DiscoveryAnimation({ onDismiss }: DiscoveryAnimationProp
                 style={{
                   width: i === step ? '20px' : '8px',
                   height: '8px',
-                  background: i === step ? '#0095FF' : 'rgba(0,149,255,0.3)',
+                  background: i === step ? '#8B7FE8' : 'rgba(139,127,232,0.3)',
                 }}
               />
             ))}
