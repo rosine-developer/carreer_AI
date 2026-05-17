@@ -83,7 +83,6 @@ export default function CareerMindApp() {
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showDiscovery, setShowDiscovery] = useState(() => {
-    // Show only once per session
     return !sessionStorage.getItem('discovery_shown');
   });
   const [chatSearch, setChatSearch] = useState('');
@@ -991,15 +990,7 @@ export default function CareerMindApp() {
           </div>
         </div>
         <AnimatePresence>
-          {!user && !authLoading && showSaveBanner && messages.length > 1 && (
-            <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="shrink-0 flex items-center justify-between px-5 py-2" style={{ background: '#FFFFFF', borderBottom: '1px solid #E5E5E5' }}>
-              <p className="text-xs" style={{ color: '#555' }}>Create a free account to save your conversations</p>
-              <div className="flex items-center gap-0">
-                <button onClick={openRegister} className="px-3 py-1 rounded-lg text-xs font-medium" style={{ background: '#0095FF', color: '#FFFFFF' }}>Sign up free</button>
-                <button onClick={() => setShowSaveBanner(false)} style={{ color: '#BBB', fontSize: '12px' }}>✕</button>
-              </div>
-            </motion.div>
-          )}
+          {/* save banner removed */}
         </AnimatePresence>
 
         {/* ── SPLIT: career content LEFT | chat RIGHT ── */}
@@ -1244,6 +1235,7 @@ export default function CareerMindApp() {
       {/* Discovery Animation — shown once on welcome screen */}
       {showDiscovery && (
         <DiscoveryAnimation
+          onEnsureSidebarOpen={() => setSidebarOpen(true)}
           onDismiss={() => {
             setShowDiscovery(false);
             sessionStorage.setItem('discovery_shown', 'true');

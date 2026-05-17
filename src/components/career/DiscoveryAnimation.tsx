@@ -1,241 +1,234 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface TourStep {
-  selector: string;  // CSS selector to find the element
+  selector: string;
+  buttonLabel: string;
   label: string;
   duration: number;
-  position?: 'top' | 'bottom' | 'right' | 'left'; // where to show tooltip
+  position?: 'top' | 'bottom' | 'right' | 'left';
 }
 
 const TOUR_STEPS: TourStep[] = [
   {
     selector: '[data-tour="new-chat"]',
-    label: 'Click here to start a new conversation',
+    buttonLabel: '+ New Chat',
+    label: 'Start a new conversation anytime',
     duration: 2800,
     position: 'right',
   },
   {
     selector: '[data-tour="track-apps"]',
+    buttonLabel: 'Track Applications',
     label: 'Track all your job applications here',
     duration: 2800,
     position: 'right',
   },
   {
     selector: '[data-tour="manage-profile"]',
+    buttonLabel: 'Manage Profile',
     label: 'Set up your profile so AI can personalize results',
     duration: 2800,
     position: 'right',
   },
   {
     selector: '[data-tour="build-resume"]',
+    buttonLabel: 'Build Resume',
     label: 'Build a professional resume with AI help',
     duration: 2800,
     position: 'right',
   },
   {
     selector: '[data-tour="cover-letter"]',
+    buttonLabel: 'Cover Letter',
     label: 'Generate a cover letter for any job',
     duration: 2800,
     position: 'right',
   },
   {
     selector: '[data-tour="chat-input"]',
-    label: 'Type your question here — ask for jobs, advice, anything!',
+    buttonLabel: 'Message CareerMind AI...',
+    label: 'Type your question — ask for jobs, advice, anything!',
     duration: 3200,
     position: 'top',
   },
 ];
 
-interface Coords {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
+interface Coords { x: number; y: number; width: number; height: number; }
 
 interface DiscoveryAnimationProps {
   onDismiss: () => void;
+  onEnsureSidebarOpen?: () => void;
 }
 
-export default function DiscoveryAnimation({ onDismiss }: DiscoveryAnimationProps) {
+export default function DiscoveryAnimation({ onDismiss, onEnsureSidebarOpen }: DiscoveryAnimationProps) {
   const [step, setStep] = useState(0);
-  const [visible, setVisible] = useState(true);
   const [coords, setCoords] = useState<Coords | null>(null);
+  const [ready, setReady] = useState(false);
+  const [gone, setGone] = useState(false);
 
-  // Get element position for current step
+  // Wait for page to fully paint, then open sidebar and start tour
   useEffect(() => {
-    const el = document.querySelector(TOUR_STEPS[step].selector) as HTMLElement;
-    if (el) {
-      const rect = el.getBoundingClientRect();
-      setCoords({
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2,
-        width: rect.width,
-        height: rect.height,
-      });
-    }
-  }, [step]);
+    const t = setTimeout(() => {
+      onEnsureSidebarOpen?.();
+      setTimeout(() => setReady(true), 400); // extra wait for sidebar animation
+    }, 2000);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Measure element position for current step
+  useEffect(() => {
+    if (!ready) return;
+    const t = setTimeout(() => {
+      const el = document.querySelector(TOUR_STEPS[step].selector) as HTMLElement;
+      if (el) {
+        const r = el.getBoundingClientRect();
+        setCoords({ x: r.left + r.width / 2, y: r.top + r.height / 2, width: r.width, height: r.height });
+      } else {
+        setCoords(null);
+      }
+    }, 200);
+    return () => clearTimeout(t);
+  }, [step, ready]);
 
   // Auto-advance
   useEffect(() => {
-    const timer = setTimeout(() => {
+    if (!ready) return;
+    const t = setTimeout(() => {
       if (step < TOUR_STEPS.length - 1) {
         setStep(s => s + 1);
       } else {
         dismiss();
       }
     }, TOUR_STEPS[step].duration);
-    return () => clearTimeout(timer);
-  }, [step]);
+    return () => clearTimeout(t);
+  }, [step, ready]);
 
   const dismiss = () => {
-    setVisible(false);
+    setGone(true);
     setTimeout(onDismiss, 300);
   };
 
-  const currentStep = TOUR_STEPS[step];
+  if (!ready || gone) return null;
 
-  // Calculate tooltip position
-  const getTooltipStyle = () => {
+  const cur = TOUR_STEPS[step];
+
+  const tooltipPos = (): React.CSSProperties => {
     if (!coords) return {};
-    const pos = currentStep.position || 'top';
-    switch (pos) {
-      case 'right': return { left: coords.x + 40, top: coords.y - 20 };
-      case 'top':   return { left: coords.x - 100, top: coords.y - 90 };
-      case 'bottom':return { left: coords.x - 100, top: coords.y + 40 };
-      case 'left':  return { left: coords.x - 240, top: coords.y - 20 };
-      default:      return { left: coords.x + 40, top: coords.y - 20 };
+    switch (cur.position) {
+      case 'right':  return { position: 'fixed', left: coords.x + coords.width / 2 + 14, top: coords.y - 18 };
+      case 'top':    return { position: 'fixed', left: coords.x - 110, top: coords.y - coords.height / 2 - 68 };
+      case 'bottom': return { position: 'fixed', left: coords.x - 110, top: coords.y + coords.height / 2 + 10 };
+      case 'left':   return { position: 'fixed', left: coords.x - coords.width / 2 - 190, top: coords.y - 18 };
+      default:       return { position: 'fixed', left: coords.x + coords.width / 2 + 14, top: coords.y - 18 };
     }
   };
 
   return (
-    <AnimatePresence>
-      {visible && coords && (
-        <div className="fixed inset-0 z-50 pointer-events-none">
+    <>
+      {/* Skip button — fixed top-right, no wrapper div */}
+      <motion.button
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={dismiss}
+        style={{
+          position: 'fixed', top: 12, right: 12, zIndex: 99999,
+          background: '#8B7FE8', color: '#fff',
+          border: 'none', borderRadius: 999,
+          padding: '6px 14px', fontSize: 12, fontWeight: 600,
+          cursor: 'pointer', fontFamily: 'Sora, sans-serif',
+          boxShadow: '0 2px 12px rgba(139,127,232,0.5)',
+        }}
+      >
+        Skip tour
+      </motion.button>
 
-          {/* Skip button */}
-          <motion.button
+      {/* Progress dots — fixed bottom-center */}
+      <div style={{
+        position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)',
+        display: 'flex', gap: 8, zIndex: 99999,
+      }}>
+        {TOUR_STEPS.map((_, i) => (
+          <div key={i} style={{
+            width: i === step ? 20 : 8, height: 8,
+            borderRadius: 999,
+            background: i === step ? '#8B7FE8' : 'rgba(139,127,232,0.35)',
+            transition: 'all 0.3s',
+          }} />
+        ))}
+      </div>
+
+      {/* Spotlight ring + label + tooltip — only when coords are known */}
+      <AnimatePresence mode="wait">
+        {coords && (
+          <motion.div
+            key={`step-${step}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute top-3 right-3 pointer-events-auto px-3 py-1 rounded-full text-xs font-medium"
-            style={{ background: '#8B7FE8', color: '#FFFFFF', zIndex: 60 }}
-            onClick={dismiss}
+            transition={{ duration: 0.25 }}
+            style={{ position: 'fixed', inset: 0, zIndex: 99998, pointerEvents: 'none' }}
           >
-            Skip tour
-          </motion.button>
-
-          {/* Spotlight highlight on the element */}
-          <motion.div
-            key={`highlight-${step}`}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="absolute rounded-2xl"
-            style={{
-              left: coords.x - coords.width / 2 - 6,
-              top: coords.y - coords.height / 2 - 6,
-              width: coords.width + 12,
-              height: coords.height + 12,
+            {/* Glowing ring around the element */}
+            <div style={{
+              position: 'fixed',
+              left: coords.x - coords.width / 2 - 10,
+              top: coords.y - coords.height / 2 - 10,
+              width: coords.width + 20,
+              height: coords.height + 20,
+              borderRadius: 14,
               border: '2px solid #8B7FE8',
-              boxShadow: '0 0 0 4px rgba(139,127,232,0.2), 0 0 20px rgba(139,127,232,0.3)',
-              pointerEvents: 'none',
-            }}
-          />
+              background: 'rgba(139,127,232,0.18)',
+              boxShadow: '0 0 0 4px rgba(139,127,232,0.2), 0 0 28px rgba(139,127,232,0.5)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              {/* Button label always visible inside ring */}
+              <span style={{
+                color: '#fff', fontSize: 12, fontWeight: 600,
+                fontFamily: 'Sora, sans-serif',
+                textShadow: '0 1px 6px rgba(0,0,0,0.9)',
+                whiteSpace: 'nowrap',
+              }}>
+                {cur.buttonLabel}
+              </span>
+            </div>
 
-          {/* Hand pointing at element */}
-          <motion.div
-            key={`hand-${step}`}
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ type: 'spring', damping: 18, stiffness: 250 }}
-            className="absolute"
-            style={{
-              left: coords.x - 10,
-              top: coords.y + coords.height / 2 + 4,
-            }}
-          >
+            {/* Bouncing arrow below the ring */}
             <motion.div
-              animate={{ y: [0, -6, 0, -6, 0] }}
-              transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
-              style={{ filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))' }}
+              animate={{ y: [0, -5, 0] }}
+              transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
+              style={{
+                position: 'fixed',
+                left: coords.x - 9,
+                top: coords.y + coords.height / 2 + 12,
+              }}
             >
-              {/* Arrow cursor icon instead of emoji */}
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="#8B7FE8" xmlns="http://www.w3.org/2000/svg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#8B7FE8">
                 <path d="M4 0L4 17L7.5 13.5L10.5 20L12.5 19L9.5 12.5L14 12.5L4 0Z"/>
               </svg>
             </motion.div>
-            {/* Ripple */}
-            <motion.div
-              animate={{ scale: [1, 2.5, 1], opacity: [0.5, 0, 0.5] }}
-              transition={{ duration: 1.2, repeat: Infinity }}
-              className="absolute rounded-full"
-              style={{
-                width: '10px',
-                height: '10px',
-                background: 'rgba(139,127,232,0.4)',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-              }}
-            />
-          </motion.div>
 
-          {/* Tooltip */}
-          <motion.div
-            key={`tooltip-${step}`}
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ delay: 0.15, duration: 0.25 }}
-            className="absolute px-3 py-1.5 rounded-xl text-xs font-medium"
-            style={{
-              ...getTooltipStyle(),
+            {/* Tooltip bubble */}
+            <div style={{
+              ...tooltipPos(),
+              zIndex: 99999,
               background: '#8B7FE8',
-              color: '#FFFFFF',
-              maxWidth: '160px',
-              boxShadow: '0 3px 12px rgba(139,127,232,0.35)',
-              lineHeight: '1.4',
-            }}
-          >
-            {currentStep.label}
+              color: '#fff',
+              borderRadius: 12,
+              padding: '8px 12px',
+              fontSize: 12,
+              fontWeight: 500,
+              maxWidth: 170,
+              lineHeight: 1.45,
+              boxShadow: '0 4px 16px rgba(139,127,232,0.45)',
+              fontFamily: 'Sora, sans-serif',
+            }}>
+              {cur.label}
+            </div>
           </motion.div>
-
-          {/* Progress dots */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2"
-          >
-            {TOUR_STEPS.map((_, i) => (
-              <div
-                key={i}
-                className="rounded-full transition-all duration-300"
-                style={{
-                  width: i === step ? '20px' : '8px',
-                  height: '8px',
-                  background: i === step ? '#8B7FE8' : 'rgba(139,127,232,0.3)',
-                }}
-              />
-            ))}
-          </motion.div>
-
-        </div>
-      )}
-    </AnimatePresence>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
-
-
-
-
-
-
-
-
-
-

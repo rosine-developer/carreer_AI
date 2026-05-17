@@ -43,6 +43,7 @@ import type {
   ProfileData,
 } from '../../types/application-helper';
 import { useDarkMode } from '../../hooks/use-dark-mode';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function ResumeBuilderModal({
   isOpen,
@@ -52,6 +53,8 @@ export default function ResumeBuilderModal({
   profileData: initialProfileData,
 }: ResumeBuilderProps) {
   const { isDark } = useDarkMode();
+  const { user } = useAuth();
+  const userId = user?.id;
 
   const t = {
     bg:         isDark ? '#0f1117' : '#FFFFFF',
@@ -85,17 +88,17 @@ export default function ResumeBuilderModal({
     if (isOpen) {
       loadData();
     }
-  }, [isOpen, draftId]);
+  }, [isOpen, userId]);
 
   const loadData = async () => {
     try {
-      // Load profile data
-      const profile = initialProfileData || (await storageManager.loadProfile());
+      // Load profile data scoped to current user
+      const profile = initialProfileData || (await storageManager.loadProfile(userId));
       setProfileData(profile);
 
       // Load draft or create new resume
       if (draftId) {
-        const draft = await storageManager.loadDraft(draftId);
+        const draft = await storageManager.loadDraft(draftId, userId);
         if (draft) {
           setResumeState(draft);
         } else {
@@ -125,10 +128,10 @@ export default function ResumeBuilderModal({
 
     setSaveStatus('saving');
     try {
-      const draftId = await storageManager.saveDraft('resume', resumeState);
+      const savedDraftId = await storageManager.saveDraft('resume', resumeState, userId);
       setResumeState({
         ...resumeState,
-        metadata: { ...resumeState.metadata, draftId },
+        metadata: { ...resumeState.metadata, draftId: savedDraftId },
       });
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);

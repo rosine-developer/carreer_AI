@@ -17,6 +17,7 @@ import { Badge } from '../ui/badge';
 import { X, Plus, Save, Loader2 } from 'lucide-react';
 import storageManager from '../../lib/storage-manager';
 import type { ProfileData, ProfileManagerProps } from '../../types/application-helper';
+import { useAuth } from '../../contexts/AuthContext';
 
 // Validation schema
 const profileSchema = z.object({
@@ -58,6 +59,8 @@ const profileSchema = z.object({
 type ProfileFormData = z.infer<typeof profileSchema>;
 
 export default function ProfileManagerModal({ isOpen, onClose }: ProfileManagerProps) {
+  const { user } = useAuth();
+  const userId = user?.id;
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [newSkill, setNewSkill] = useState('');
   const [newAchievement, setNewAchievement] = useState('');
@@ -109,18 +112,27 @@ export default function ProfileManagerModal({ isOpen, onClose }: ProfileManagerP
   const skills = watch('skills');
   const achievements = watch('achievements');
 
-  // Load profile data on mount
+  // Load profile data when modal opens — scoped to current user
   useEffect(() => {
     if (isOpen) {
       loadProfileData();
     }
-  }, [isOpen]);
+  }, [isOpen, userId]);
 
   const loadProfileData = async () => {
     try {
-      const profile = await storageManager.loadProfile();
+      const profile = await storageManager.loadProfile(userId);
       if (profile) {
         reset(profile);
+      } else {
+        // Reset to empty form for this user — don't show another user's data
+        reset({
+          personal: { fullName: '', email: '', phone: '', location: '', linkedIn: '', portfolio: '' },
+          education: [],
+          experience: [],
+          skills: [],
+          achievements: [],
+        });
       }
     } catch (error) {
       console.error('Failed to load profile:', error);
@@ -130,7 +142,7 @@ export default function ProfileManagerModal({ isOpen, onClose }: ProfileManagerP
   const onSubmit = async (data: ProfileFormData) => {
     setSaveStatus('saving');
     try {
-      await storageManager.saveProfile(data as ProfileData);
+      await storageManager.saveProfile(data as ProfileData, userId);
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);
     } catch (error) {

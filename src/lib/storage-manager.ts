@@ -15,22 +15,25 @@ import type {
 // Each user gets their own namespace so data never leaks between accounts
 // ============================================================================
 
-function getUserId(): string {
-  // Try to get user ID from Supabase session in localStorage
+function getUserId(userId?: string): string {
+  // Use explicitly passed userId first (most reliable)
+  if (userId) return userId;
+
+  // Fall back to reading from Supabase session in localStorage
   try {
     const keys = Object.keys(localStorage);
     const authKey = keys.find(k => k.includes('supabase') && k.includes('auth'));
     if (authKey) {
       const session = JSON.parse(localStorage.getItem(authKey) || '{}');
-      const userId = session?.user?.id;
-      if (userId) return userId;
+      const uid = session?.user?.id;
+      if (uid) return uid;
     }
   } catch {}
   return 'guest';
 }
 
-function getStorageKeys() {
-  const uid = getUserId();
+function getStorageKeys(userId?: string) {
+  const uid = getUserId(userId);
   return {
     PROFILE: `careermind:${uid}:profile`,
     DRAFTS: `careermind:${uid}:drafts`,
@@ -103,14 +106,14 @@ function generateId(): string {
 // Profile Operations
 // ============================================================================
 
-export async function saveProfile(profile: ProfileData): Promise<void> {
+export async function saveProfile(profile: ProfileData, userId?: string): Promise<void> {
   if (!validateData(profile)) {
     throw new Error('Invalid profile data');
   }
 
   return retryOperation(async () => {
     try {
-      localStorage.setItem(getStorageKeys().PROFILE, JSON.stringify(profile));
+      localStorage.setItem(getStorageKeys(userId).PROFILE, JSON.stringify(profile));
     } catch (error) {
       if (error instanceof DOMException && error.name === 'QuotaExceededError') {
         throw new Error('Storage full. Please delete old drafts.');
@@ -120,9 +123,9 @@ export async function saveProfile(profile: ProfileData): Promise<void> {
   });
 }
 
-export async function loadProfile(): Promise<ProfileData | null> {
+export async function loadProfile(userId?: string): Promise<ProfileData | null> {
   try {
-    const data = localStorage.getItem(getStorageKeys().PROFILE);
+    const data = localStorage.getItem(getStorageKeys(userId).PROFILE);
     return safeJSONParse<ProfileData | null>(data, null);
   } catch (error) {
     console.error('Failed to load profile:', error);
@@ -149,7 +152,8 @@ interface DraftData {
 
 export async function saveDraft(
   type: 'resume' | 'coverLetter',
-  draft: any
+  draft: any,
+  userId?: string
 ): Promise<string> {
   if (!validateData(draft)) {
     throw new Error('Invalid draft data');
@@ -158,7 +162,7 @@ export async function saveDraft(
   return retryOperation(async () => {
     try {
       const drafts = safeJSONParse<DraftData>(
-        localStorage.getItem(getStorageKeys().DRAFTS),
+        localStorage.getItem(getStorageKeys(userId).DRAFTS),
         {}
       );
 
@@ -173,7 +177,7 @@ export async function saveDraft(
         content: draft,
       };
 
-      localStorage.setItem(getStorageKeys().DRAFTS, JSON.stringify(drafts));
+      localStorage.setItem(getStorageKeys(userId).DRAFTS, JSON.stringify(drafts));
       return draftId;
     } catch (error) {
       if (error instanceof DOMException && error.name === 'QuotaExceededError') {
@@ -184,10 +188,10 @@ export async function saveDraft(
   });
 }
 
-export async function loadDraft(id: string): Promise<any | null> {
+export async function loadDraft(id: string, userId?: string): Promise<any | null> {
   try {
     const drafts = safeJSONParse<DraftData>(
-      localStorage.getItem(getStorageKeys().DRAFTS),
+      localStorage.getItem(getStorageKeys(userId).DRAFTS),
       {}
     );
     return drafts[id]?.content || null;
@@ -198,11 +202,12 @@ export async function loadDraft(id: string): Promise<any | null> {
 }
 
 export async function listDrafts(
-  type?: 'resume' | 'coverLetter'
+  type?: 'resume' | 'coverLetter',
+  userId?: string
 ): Promise<DraftMetadata[]> {
   try {
     const drafts = safeJSONParse<DraftData>(
-      localStorage.getItem(getStorageKeys().DRAFTS),
+      localStorage.getItem(getStorageKeys(userId).DRAFTS),
       {}
     );
 
@@ -222,16 +227,16 @@ export async function listDrafts(
   }
 }
 
-export async function deleteDraft(id: string): Promise<void> {
+export async function deleteDraft(id: string, userId?: string): Promise<void> {
   return retryOperation(async () => {
     try {
       const drafts = safeJSONParse<DraftData>(
-        localStorage.getItem(getStorageKeys().DRAFTS),
+        localStorage.getItem(getStorageKeys(userId).DRAFTS),
         {}
       );
 
       delete drafts[id];
-      localStorage.setItem(getStorageKeys().DRAFTS, JSON.stringify(drafts));
+      localStorage.setItem(getStorageKeys(userId).DRAFTS, JSON.stringify(drafts));
     } catch (error) {
       throw new Error('Unable to delete draft. Please try again.');
     }
